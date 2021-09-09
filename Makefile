@@ -1,7 +1,7 @@
-SRCS_FOLDER = srcs/
+SRCS_FOLDER = srcs
 SRCS_LIST = lexer.c
 
-SRCS = $(addprefix $(SRCS_FOLDER), $(SRCS_LIST))
+SRCS = $(addprefix $(SRCS_FOLDER)/, $(SRCS_LIST))
 
 OBJS = $(SRCS:.c=.o)
 
@@ -17,17 +17,19 @@ LIBFT	= libft
 
 all: libft_ $(NAME)
 
-$(NAME) : $(OBJS) $(HEADER) main.c | libft_
-	$(CC) $(CFLAGS) -lreadline $(OBJS) main.c -o $(NAME)
+$(NAME) : $(OBJS) $(HEADER) $(SRCS_FOLDER)/main.c | libft_
+	$(CC) $(CFLAGS) -lreadline -L$(LIBFT) -lft $(OBJS) $(SRCS_FOLDER)/main.c -o $(NAME)
 
 libft_:
 	$(MAKE) -C $(LIBFT)
 
 clean:
+	$(MAKE) clean -C $(LIBFT)
 	$(RM) $(OBJS)
 	$(RM) -r $(NAME).dSYM
 
 fclean: clean
+	$(MAKE) fclean -C $(LIBFT)
 	$(RM) $(NAME)
 
 re: fclean all

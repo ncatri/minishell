@@ -2,6 +2,7 @@
 # define LEXER_H
 
 # include <stdio.h> // printf
+# include "minishell.h"
 
 enum e_token_types{
 	WORD,	// cmd, option, args, files
