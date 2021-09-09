@@ -1,0 +1,7 @@
+*.swp
+*.swo
+*.o
+*.dSYM
+minishell
+libft.a
+a.out
