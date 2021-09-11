@@ -13,9 +13,16 @@ enum e_token_types{
 	PIPE	// |
 };
 
-struct s_token{
+typedef struct s_token{
 	enum e_token_types	type;
 	char				*data;
+}				t_token;
+
+enum e_machine_states{
+	ST_START,
+	ST_IN_WORD,
+	ST_OPEN_SQUOTE,
+	ST_OPEN_DQUOTE,
 };
 
 int	tokenizer(char *line);
