@@ -4,6 +4,14 @@
 # include <stdio.h> // printf
 # include "minishell.h"
 
+# define BUF_SIZE (10)
+
+typedef struct s_buffer{
+	char	*buf;
+	size_t	size;
+	size_t	pos;
+}				t_buffer;
+
 enum e_token_types{
 	WORD,	// cmd, option, args, files
 	LESS,	// <
@@ -14,8 +22,8 @@ enum e_token_types{
 };
 
 typedef struct s_token{
-	enum e_token_types	type;
-	char				*data;
+	int		type;
+	char	*data;
 }				t_token;
 
 enum e_machine_states{
@@ -26,5 +34,12 @@ enum e_machine_states{
 };
 
 int	tokenizer(char *line);
+void	analyzer(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
+void	print_token_list(t_list *token_list);
+t_bool	ft_isspace(int c);
+void	print_token(t_token *token);
+void	initialize_buffer(t_buffer *buffer);
+void	append_buffer(t_buffer *buffer, char c);
+t_token *new_token(enum e_token_types type, char *buf);
 
 #endif

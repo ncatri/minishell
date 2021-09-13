@@ -1,5 +1,6 @@
 SRCS_FOLDER = srcs
-SRCS_LIST = lexer.c
+SRCS_LIST = lexer.c \
+			debug.c
 
 SRCS = $(addprefix $(SRCS_FOLDER)/, $(SRCS_LIST))
 
