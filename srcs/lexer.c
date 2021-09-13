@@ -61,10 +61,6 @@ void	analyzer(char cursor, enum e_machine_states *state, t_list **token_list, t_
 
 }
 
-t_bool	ft_isspace(int c)
-{
-	return ((c >= '\t' && c <= '\r') || c == ' ');
-}
 
 
 void	initialize_buffer(t_buffer *buf)
