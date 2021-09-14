@@ -4,7 +4,7 @@
  * output: a list of tokens
 */
 
-int	tokenizer(char *line)
+t_error	tokenizer(char *line)
 {
 	char	*cursor;
 	t_list	*token_list;
@@ -12,16 +12,15 @@ int	tokenizer(char *line)
 	t_buffer	buffer;
 	int		i;
 
-	state = ST_START;
+	state = ST_TRANSITION;
 	token_list = NULL;
 	initialize_buffer(&buffer);
 	if (line == NULL || buffer.buf == NULL)
-		return (-1);
+		return (FAIL);
 	cursor = line;
 	i = ft_strlen(line);
 	while (i-- >= 0)
 	{
-		printf("cursor: %c\n", *cursor);
 		analyzer(*cursor, &state, &token_list, &buffer);
 		// check machine state
 		// depending on the input, update machine state
@@ -31,47 +30,35 @@ int	tokenizer(char *line)
 	// conclude following machine state
 	printf("%s\n", line);
 	print_token_list(token_list);	
-		
-	return (0);
+	return (SUCCESS);
 }
 
-void	analyzer(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
+t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
 {
-	t_token	*token;
+	t_error	(*f[NUM_OF_STATES])(char cursor, \
+			enum e_machine_states *state, t_list** token_list, t_buffer *buffer);
+	t_error check;
 
 	if (!state || !token_list || !buffer)
-		return;
-	if (ft_isalnum(cursor) && (*state == ST_START || *state == ST_IN_WORD))
-	{
-		append_buffer(buffer, cursor);
-		*state = ST_IN_WORD;
-	}
-	else if ((ft_isspace(cursor) || cursor == '\0') && *state == ST_IN_WORD)
-	{
-		append_buffer(buffer, '\0');
-		token = new_token(WORD, buffer->buf);
-		if (!token)
-			return;
-		ft_lstadd_back(token_list, ft_lstnew(token));
-		initialize_buffer(buffer);
-		*state = ST_START;
-	}
-	else
-		return ;
+		return (FAIL);
+	f[ST_TRANSITION] = f_transition;
+	f[ST_IN_WORD] = f_inword;
 
+	check = (*f[*state])(cursor, state, token_list, buffer);
+	return (check);
 }
 
-
-
-void	initialize_buffer(t_buffer *buf)
+t_error	initialize_buffer(t_buffer *buf)
 {
-	// need to return a t_err
 	buf->buf = ft_calloc(sizeof(char), BUF_SIZE);
 	buf->size = BUF_SIZE;
 	buf->pos = 0;
+	if (buf->buf == NULL)
+		return (FAIL);
+	return (SUCCESS);
 }
 
-void	append_buffer(t_buffer *buffer, char c)
+t_error	append_buffer(t_buffer *buffer, char c)
 {
 	char	*tmp;
 
@@ -81,7 +68,7 @@ void	append_buffer(t_buffer *buffer, char c)
 		if (!tmp)
 		{
 			free(buffer->buf);
-			return;
+			return (FAIL);
 		}
 		ft_memcpy(tmp, buffer->buf, buffer->size);
 		buffer->size += BUF_SIZE;
@@ -90,6 +77,7 @@ void	append_buffer(t_buffer *buffer, char c)
 	}
 	buffer->buf[buffer->pos] = c;
 	buffer->pos++;
+	return (SUCCESS);
 }
 
 t_token *new_token(enum e_token_types type, char *buf)

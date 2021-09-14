@@ -1,5 +1,6 @@
 SRCS_FOLDER = srcs
 SRCS_LIST = lexer.c \
+			lex_functions.c \
 			debug.c
 
 SRCS = $(addprefix $(SRCS_FOLDER)/, $(SRCS_LIST))
@@ -7,18 +8,23 @@ SRCS = $(addprefix $(SRCS_FOLDER)/, $(SRCS_LIST))
 OBJS = $(SRCS:.c=.o)
 
 NAME = minishell
-HEADER = includes
+INCLUDES = includes
+
+HEADERS_LIST= $(addprefix $(INCLUDES)/, $(SRCS_LIST:.c=.h))
+# La liste des .h marche comme ca, mais c'est pas opti. Faudrait que seul le .o correspondant
+# au .h modifie soit recompile.
+
 RM = rm -f
 CC = clang
-CFLAGS = -Werror -Wall -Wextra -g -I $(HEADER) -I$(LIBFT)/includes
+CFLAGS = -Werror -Wall -Wextra -g -I $(INCLUDES) -I$(LIBFT)/includes
 LIBFT	= libft
 
-%.o: %.c $(HEADER)/minishell.h $(LIBFT)/$(LIBFT).a
+%.o: %.c $(INCLUDES)/minishell.h $(HEADERS_LIST) $(LIBFT)/$(LIBFT).a
 	$(CC) $(CFLAGS) -c $< -o $@
 
 all: libft_ $(NAME)
 
-$(NAME) : $(OBJS) $(HEADER) $(SRCS_FOLDER)/main.c | libft_
+$(NAME) : $(OBJS) $(INCLUDES) $(SRCS_FOLDER)/main.c | libft_
 	$(CC) $(CFLAGS) -lreadline -L$(LIBFT) -lft $(OBJS) $(SRCS_FOLDER)/main.c -o $(NAME)
 
 libft_:

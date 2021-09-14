@@ -6,7 +6,11 @@
 # include <stdio.h> // printf in lexer.c
 # include "libft.h"
 
-# include "lexer.h"
 
+typedef int t_error;
+# define FAIL (0)
+# define SUCCESS (1)
+
+# include "lexer.h"
 
 #endif
