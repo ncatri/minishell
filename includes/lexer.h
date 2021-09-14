@@ -10,6 +10,8 @@ typedef struct s_buffer{
 	char	*buf;
 	size_t	size;
 	size_t	pos;
+	int		n_squote;
+	int		n_dquote;
 }				t_buffer;
 
 enum e_token_types{
@@ -44,6 +46,7 @@ t_token *new_token(enum e_token_types type, char *buf);
 
 t_error	f_inword(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 t_error	f_transition(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
+t_error	f_doublequote(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 
 /* debug */
 

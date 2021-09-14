@@ -43,6 +43,7 @@ t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list,
 		return (FAIL);
 	f[ST_TRANSITION] = f_transition;
 	f[ST_IN_WORD] = f_inword;
+	f[ST_OPEN_DQUOTE] = f_doublequote;
 
 	check = (*f[*state])(cursor, state, token_list, buffer);
 	return (check);
@@ -53,6 +54,8 @@ t_error	initialize_buffer(t_buffer *buf)
 	buf->buf = ft_calloc(sizeof(char), BUF_SIZE);
 	buf->size = BUF_SIZE;
 	buf->pos = 0;
+	buf->n_squote = 0;
+	buf->n_dquote = 0;
 	if (buf->buf == NULL)
 		return (FAIL);
 	return (SUCCESS);
