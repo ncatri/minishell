@@ -47,6 +47,7 @@ t_token *new_token(enum e_token_types type, char *buf);
 t_error	f_inword(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 t_error	f_transition(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 t_error	f_doublequote(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
+t_error	f_singlequote(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 
 /* debug */
 
