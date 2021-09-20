@@ -1,4 +1,4 @@
-#include "debug.h"
+#include "minishell.h"
 
 void	print_token_list(t_list *token_list)
 {
@@ -19,7 +19,21 @@ void	print_token_list(t_list *token_list)
 void	print_token(t_token *token)
 {
 	int t;
+	char	*str;
 
+	str = NULL;
 	t = token->type;
-	printf("type: %d, data: %s\n", token->type, token->data);
+	if (t == WORD)
+		str = "WORD";
+	else if (t == LESS)
+		str = "LESS";
+	else if (t == DLESS)
+		str = "DLESS";
+	else if (t == GREAT)
+		str = "GREAT";
+	else if (t == DGREAT)
+		str = "DGREAT";
+	else if (t == PIPE)
+		str = "PIPE";
+	printf("%s, data: %s\n", str, token->data);
 }

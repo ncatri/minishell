@@ -27,9 +27,11 @@ t_error	tokenizer(char *line)
 		// do something with the input
 		cursor++;
 	}
+	free(buffer.buf);
 	// conclude following machine state
 	printf("%s\n", line);
 	print_token_list(token_list);	
+	ft_lstclear(&token_list, free_token);
 	return (SUCCESS);
 }
 
@@ -45,6 +47,8 @@ t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list,
 	f[ST_IN_WORD] = f_inword;
 	f[ST_OPEN_DQUOTE] = f_doublequote;
 	f[ST_OPEN_SQUOTE] = f_singlequote;
+	f[ST_LESS] = f_less;
+	f[ST_GREAT] = f_great;
 
 	check = (*f[*state])(cursor, state, token_list, buffer);
 	return (check);
@@ -52,6 +56,7 @@ t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list,
 
 t_error	initialize_buffer(t_buffer *buf)
 {
+	free(buf->buf);
 	buf->buf = ft_calloc(sizeof(char), BUF_SIZE);
 	buf->size = BUF_SIZE;
 	buf->pos = 0;
@@ -97,4 +102,24 @@ t_token *new_token(enum e_token_types type, char *buf)
 			return (NULL);
 	}
 	return (token);
+}
+
+void	free_token(void *token)
+{
+	t_token *tok;
+
+	tok = (t_token*)token;
+	free(tok->data);
+	free(tok);
+}
+
+t_error	add_token(t_list **token_list, int token_type)
+{
+	t_token *token;
+
+	token = new_token(token_type, "");
+	if (!token)
+		return (FAIL);
+	ft_lstadd_back(token_list, ft_lstnew(token));
+	return (SUCCESS);
 }
