@@ -12,5 +12,5 @@ typedef int t_error;
 # define SUCCESS (1)
 
 # include "lexer.h"
-coucou
+
 #endif
