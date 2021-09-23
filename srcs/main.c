@@ -36,7 +36,7 @@ void second_child(int *ab, int *bc)
 void third_child(int *bc)
 {
 	pid_t c;
-	char *argv[] = {"grep", "mini", NULL};
+	char *argv[] = {"wc", "-l", NULL};
 
 	c = fork();
 	if (c == 0)
@@ -44,11 +44,31 @@ void third_child(int *bc)
 		close(bc[WRITE]);
 		//read from b
 		dup2(bc[READ], STDIN_FILENO);
-		execve("/usr/bin/grep", argv, NULL);
+		execve("/usr/bin/wc", argv, NULL);
 		exit(1);
 	}
 
 }
+
+//void	create_all_childs(int **pipesfd, int nb_childs)
+//{
+//	int i;
+//	pid_t pid;
+
+//	i = -1;
+//	while (++i < nb_childs)
+//	{
+//		pid = fork();
+//		if (pid == 0)
+//		{
+//			//child
+//		}
+//		else
+//		{
+//			//dad
+//		}
+//	}
+//}
 
 int main(int argc, char **argv)
 {
@@ -64,19 +84,24 @@ int main(int argc, char **argv)
 	//}
 	//return (0);
 	(void)argc, (void)argv;
-	int ab[2], bc[2];
-	pid_t wait_return;
+	int nb_pipes = 1;
+	int pipesfd[2][2];
 	int status;
+	int i = -1;
+	pid_t wait_return;
 
-	pipe(ab);
-	pipe(bc);
-	first_child(ab);
-	second_child(ab, bc);
-	third_child(bc);
-	close(ab[WRITE]);
-	close(ab[READ]);
-	close(bc[WRITE]);
-	close(bc[READ]);
+	while (++i <= nb_pipes)
+		pipe(pipesfd[i]);
+	//create_all_childs(pipesfd, 3)
+	first_child(pipesfd[READ]);
+	second_child(pipesfd[READ], pipesfd[WRITE]);
+	third_child(pipesfd[WRITE]);
+	i = -1;
+	while (++i <= nb_pipes)
+	{
+		close(pipesfd[i][READ]);
+		close(pipesfd[i][WRITE]);
+	}
 	while ((wait_return = wait(&status)) > 0)
 		;
 }
