@@ -18,8 +18,7 @@ void first_child(int *ab)
 void second_child(int *ab, int *bc)
 {
 	pid_t b;
-	char *argv[] = {"ls", "-l", NULL};
-
+	char *argv[] = {"ls", NULL};
 	b = fork();
 	if (b == 0)
 	{
@@ -37,7 +36,7 @@ void second_child(int *ab, int *bc)
 void third_child(int *bc)
 {
 	pid_t c;
-	char *argv[] = {"wc", NULL};
+	char *argv[] = {"grep", "mini", NULL};
 
 	c = fork();
 	if (c == 0)
@@ -45,7 +44,7 @@ void third_child(int *bc)
 		close(bc[WRITE]);
 		//read from b
 		dup2(bc[READ], STDIN_FILENO);
-		execve("/usr/bin/wc", argv, NULL);
+		execve("/usr/bin/grep", argv, NULL);
 		exit(1);
 	}
 
