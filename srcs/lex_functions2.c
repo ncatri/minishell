@@ -2,24 +2,18 @@
 
 t_error	f_less(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
 {
-	t_token	*token;
-
 	if (ft_isalnum(cursor) || ft_isspace(cursor) || cursor == '\0')
 	{
-		token = new_token(LESS, "");
-		if (!token)
+		if (add_token_to_list(token_list, LESS, "") == FAIL)
 			return (FAIL);
-		ft_lstadd_back(token_list, ft_lstnew(token));
 		if (ft_isalnum(cursor))
 			append_buffer(buffer, cursor); // need to save the character
-		*state = ST_IN_WORD;
+		set_machine_state(cursor, state);
 	}
 	else if (cursor == '<')
 	{
-		token = new_token(DLESS, "");
-		if (!token)
+		if (add_token_to_list(token_list, DLESS, "") == FAIL)
 			return (FAIL);
-		ft_lstadd_back(token_list, ft_lstnew(token));
 		*state = ST_TRANSITION;
 	}
 	else if (cursor == '>')
@@ -31,24 +25,18 @@ t_error	f_less(char cursor, enum e_machine_states *state, t_list **token_list, t
 
 t_error	f_great(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
 {
-	t_token	*token;
-
 	if (ft_isalnum(cursor) || ft_isspace(cursor) || cursor == '\0')
 	{
-		token = new_token(GREAT, "");
-		if (!token)
+		if (add_token_to_list(token_list, GREAT, "") == FAIL)
 			return (FAIL);
-		ft_lstadd_back(token_list, ft_lstnew(token));
 		if (ft_isalnum(cursor))
 			append_buffer(buffer, cursor); // need to save the character
-		*state = ST_IN_WORD;
+		set_machine_state(cursor, state);
 	}
 	else if (cursor == '>')
 	{
-		token = new_token(DGREAT, "");
-		if (!token)
+		if (add_token_to_list(token_list, DGREAT, "") == FAIL)
 			return (FAIL);
-		ft_lstadd_back(token_list, ft_lstnew(token));
 		*state = ST_TRANSITION;
 	}
 	else if (cursor == '<')
@@ -56,4 +44,22 @@ t_error	f_great(char cursor, enum e_machine_states *state, t_list **token_list, 
 	else
 		printf("non covered case in f_less\n");
 	return (SUCCESS);
+}
+
+void	set_machine_state(char cursor, enum e_machine_states *state)
+{
+	if (ft_isspace(cursor))
+		*state = ST_TRANSITION;
+	else if (ft_isalnum(cursor))
+		*state = ST_IN_WORD;
+	else if (cursor == '<')
+		*state = ST_LESS;
+	else if (cursor == '>')
+		*state = ST_GREAT;
+	else if (cursor == '"')
+		*state = ST_OPEN_DQUOTE;
+	else if (cursor == '\'')
+		*state = ST_OPEN_SQUOTE;
+	else if (cursor == '|')
+		*state = ST_TRANSITION;
 }

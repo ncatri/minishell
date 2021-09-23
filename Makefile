@@ -2,10 +2,12 @@ SRCS_FOLDER = srcs
 SRCS_LIST = lexer.c \
 			lex_functions.c \
 			lex_functions2.c \
+			token_utils.c \
 			debug.c
 
 SRCS = $(addprefix $(SRCS_FOLDER)/, $(SRCS_LIST))
 
+OBJS_FOLDER = objs
 OBJS = $(SRCS:.c=.o)
 
 NAME = minishell
@@ -17,19 +19,22 @@ HEADERS_LIST= $(addprefix $(INCLUDES)/, $(SRCS_LIST:.c=.h))
 
 RM = rm -f
 CC = clang
-CFLAGS = -Werror -Wall -Wextra -g -I $(INCLUDES) -I$(LIBFT)/includes
+CFLAGS = -Werror -Wall -Wextra -g -I $(INCLUDES) -I$(LIBFT)/includes #-fsanitize=address
 LIBFT	= libft
 
-%.o: %.c $(INCLUDES)/minishell.h $(HEADERS_LIST) $(LIBFT)/$(LIBFT).a
+$(OBJS_FOLDER)/%.o: %.c $(INCLUDES)/minishell.h $(HEADERS_LIST) $(LIBFT)/$(LIBFT).a
 	$(CC) $(CFLAGS) -c $< -o $@
 
-all: libft_ $(NAME)
+all: libft_ objs_folder $(NAME) 
 
 $(NAME) : $(OBJS) $(INCLUDES) $(SRCS_FOLDER)/main.c | libft_
 	$(CC) $(CFLAGS) -lreadline -L$(LIBFT) -lft $(OBJS) $(SRCS_FOLDER)/main.c -o $(NAME)
 
 libft_:
 	$(MAKE) -C $(LIBFT)
+
+objs_folder:
+	mkdir -p $(OBJS_FOLDER)
 
 clean:
 	$(MAKE) clean -C $(LIBFT)

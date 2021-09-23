@@ -24,27 +24,25 @@ t_error	f_transition(char cursor, enum e_machine_states *state, t_list **token_l
 	else if (cursor == '>')
 		*state = ST_GREAT;
 	else if (cursor == '|')
-		if (add_token(token_list, PIPE) == FAIL)
+		if (add_token_to_list(token_list, PIPE, "") == FAIL)
 			return (FAIL);
 	return (SUCCESS);
 }
 
 t_error	f_inword(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
 {
-	t_token *token;
 
 	if (ft_isalnum(cursor))
 		append_buffer(buffer, cursor);
 	else if (ft_isspace(cursor) || cursor == '\0' || cursor == '<' || cursor == '>' || cursor == '|')
 	{
 		append_buffer(buffer, '\0');
-		token = new_token(WORD, buffer->buf);
-		if (!token)
+		if (add_token_to_list(token_list, WORD, buffer->buf) == FAIL)
 			return (FAIL);
-		ft_lstadd_back(token_list, ft_lstnew(token));
+		free(buffer->buf);
 		initialize_buffer(buffer);// si on est a la fin de la ligne, il faut free le buffer.buf
 		if (cursor == '|')
-			if (add_token(token_list, PIPE) == FAIL)
+			if (add_token_to_list(token_list, PIPE, "") == FAIL)
 				return (FAIL);
 	}
 	else if (cursor == '"')
@@ -55,23 +53,6 @@ t_error	f_inword(char cursor, enum e_machine_states *state, t_list **token_list,
 	return (SUCCESS);
 }
 
-void	set_machine_state(char cursor, enum e_machine_states *state)
-{
-	if (ft_isspace(cursor))
-		*state = ST_TRANSITION;
-	else if (ft_isalnum(cursor))
-		*state = ST_IN_WORD;
-	else if (cursor == '<')
-		*state = ST_LESS;
-	else if (cursor == '>')
-		*state = ST_GREAT;
-	else if (cursor == '"')
-		*state = ST_OPEN_DQUOTE;
-	else if (cursor == '\'')
-		*state = ST_OPEN_SQUOTE;
-	else if (cursor == '|')
-		*state = ST_TRANSITION;
-}
 
 t_error	f_doublequote(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
 {

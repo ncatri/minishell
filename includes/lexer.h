@@ -43,7 +43,7 @@ t_error	initialize_buffer(t_buffer *buffer);
 t_error	append_buffer(t_buffer *buffer, char c);
 t_token *new_token(enum e_token_types type, char *buf);
 void	free_token(void *token);
-t_error	add_token(t_list **token_list, int token_type);
+t_error	add_token_to_list(t_list **token_list, int token_type, char *data);
 
 /* tableau pointeurs sur fonction */
 
