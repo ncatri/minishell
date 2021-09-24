@@ -1,14 +1,16 @@
+# detecting OS to compile on Linux
+UNAME = $(shell uname)
+
 SRCS_FOLDER = srcs
-SRCS_LIST = lexer.c \
-			lex_functions.c \
-			lex_functions2.c \
-			token_utils.c \
-			debug.c
+OBJS_FOLDER = bin
 
-SRCS = $(addprefix $(SRCS_FOLDER)/, $(SRCS_LIST))
+SRCS = 	lexer.c \
+		lex_functions.c \
+		lex_functions2.c \
+		token_utils.c \
+		debug.c
 
-OBJS_FOLDER = objs
-OBJS = $(SRCS:.c=.o)
+OBJS = $(addprefix $(OBJS_FOLDER)/, $(SRCS:.c=.o))
 
 NAME = minishell
 INCLUDES = includes
@@ -22,23 +24,26 @@ CC = clang
 CFLAGS = -Werror -Wall -Wextra -g -I $(INCLUDES) -I$(LIBFT)/includes #-fsanitize=address
 LIBFT	= libft
 
-$(OBJS_FOLDER)/%.o: %.c $(INCLUDES)/minishell.h $(HEADERS_LIST) $(LIBFT)/$(LIBFT).a
+$(OBJS_FOLDER)/%.o: $(SRCS_FOLDER)/%.c $(INCLUDES)/minishell.h $(HEADERS_LIST) $(LIBFT)/$(LIBFT).a
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-all: libft_ objs_folder $(NAME) 
+all: libft_ $(NAME) 
 
+ifeq ($(UNAME), Linux)
+$(NAME) : $(OBJS) $(INCLUDES) $(SRCS_FOLDER)/main.c | libft_
+	$(CC) $(CFLAGS) -lreadline -L$(LIBFT)  $(OBJS) $(SRCS_FOLDER)/main.c -o $(NAME) -lft
+else
 $(NAME) : $(OBJS) $(INCLUDES) $(SRCS_FOLDER)/main.c | libft_
 	$(CC) $(CFLAGS) -lreadline -L$(LIBFT) -lft $(OBJS) $(SRCS_FOLDER)/main.c -o $(NAME)
+endif
 
 libft_:
 	$(MAKE) -C $(LIBFT)
 
-objs_folder:
-	mkdir -p $(OBJS_FOLDER)
-
 clean:
 	$(MAKE) clean -C $(LIBFT)
-	$(RM) $(OBJS)
+	$(RM) -r $(OBJS_FOLDER)
 	$(RM) -r $(NAME).dSYM
 
 fclean: clean
