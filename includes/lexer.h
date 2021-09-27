@@ -39,7 +39,7 @@ enum e_machine_states{
 };
 # define NUM_OF_STATES (6)
 
-t_error	tokenizer(char *line);
+t_list	*tokenizer(char *line);
 t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 t_error	initialize_buffer(t_buffer *buffer);
 t_error	append_buffer(t_buffer *buffer, char c);

@@ -4,11 +4,12 @@ UNAME = $(shell uname)
 SRCS_FOLDER = srcs
 OBJS_FOLDER = bin
 
-SRCS = 	lexer.c \
-		lex_functions.c \
-		lex_functions2.c \
-		token_utils.c \
-		debug.c
+SRCS = 	tokenizer/lexer.c \
+		tokenizer/lex_functions.c \
+		tokenizer/lex_functions2.c \
+		tokenizer/token_utils.c \
+		tokenizer/debug.c \
+		parser/parser.c
 
 OBJS = $(addprefix $(OBJS_FOLDER)/, $(SRCS:.c=.o))
 

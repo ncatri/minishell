@@ -4,7 +4,7 @@
  * output: a list of tokens
 */
 
-t_error	tokenizer(char *line)
+t_list	*tokenizer(char *line)
 {
 	char	*cursor;
 	t_list	*token_list;
@@ -22,13 +22,14 @@ t_error	tokenizer(char *line)
 	while (i-- >= 0)
 	{
 		if (analyzer(*cursor, &state, &token_list, &buffer) == FAIL)
+		{
+			ft_lstclear(&token_list, free_token);
 			break;
+		}
 		cursor++;
 	}
 	free(buffer.buf);
-	print_token_list(token_list);	
-	ft_lstclear(&token_list, free_token);
-	return (SUCCESS);
+	return (token_list);
 }
 
 t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)

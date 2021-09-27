@@ -24,16 +24,22 @@ void	print_token(t_token *token)
 	str = NULL;
 	t = token->type;
 	if (t == WORD)
+	{
 		str = "WORD";
-	else if (t == LESS)
-		str = "LESS";
-	else if (t == DLESS)
-		str = "DLESS";
-	else if (t == GREAT)
-		str = "GREAT";
-	else if (t == DGREAT)
-		str = "DGREAT";
-	else if (t == PIPE)
-		str = "PIPE";
-	printf("%s, data: %s\n", str, token->data);
+		printf("%s, data: %s\n", str, token->data);
+	}
+	else
+	{
+		if (t == LESS)
+			str = "LESS";
+		else if (t == DLESS)
+			str = "DLESS";
+		else if (t == GREAT)
+			str = "GREAT";
+		else if (t == DGREAT)
+			str = "DGREAT";
+		else if (t == PIPE)
+			str = "PIPE";
+		printf("%s\n", str);
+	}
 }
