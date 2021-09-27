@@ -74,19 +74,27 @@ int main(int argc, char **argv)
 {
 	//variables
 	(void)argc, (void)argv;
-	int	nb_cmds = 3;
-	char *cmds[] = {"/bin/ls", "/usr/bin/grep", "/usr/bin/wc", NULL};
+	int	nb_cmds = 7;
+	char *cmds[] = {"/bin/ls", "/usr/bin/grep", "/bin/cat", "/usr/bin/rev", "/bin/cat", "/usr/bin/grep", "/usr/bin/wc", NULL};
 	char *first_args[] = {"ls", NULL};
 	char *scnd_args[] = {"grep", "e", NULL};
-	char *thrd_args[] = {"wc", NULL};
-	char **args[4];
+	char *thrd_args[] = {"cat", NULL};
+	char *fourth_args[] = {"rev", NULL};
+	char *fifth_args[] = {"cat", "-e", NULL};
+	char *sixth_args[] = {"grep", "i", NULL};
+	char *seventh_args[] = {"wc", "-c", NULL};
+	char **args[8];
 	args[0] = first_args;
 	args[1] = scnd_args;
 	args[2] = thrd_args;
-	args[3] = NULL;
-	int pipes_idmax = 1;
+	args[3] = fourth_args;
+	args[4] = fifth_args;
+	args[5] = sixth_args;
+	args[6] = seventh_args;
+	args[7] = NULL;
+	int pipes_idmax = 5;
 	int pipesfd[pipes_idmax + 1][2];
-	int pipe_count = 0;
+	int pipe_count;
 
 	//create pipes
 	int i;
@@ -97,17 +105,15 @@ int main(int argc, char **argv)
 	i = -1;
 	while (++i < nb_cmds)
 	{
+		pipe_count = i;
 		if (fork() == 0)
 		{
 			if (i != 0)
 			{
 				//input = cmd d'avant;
-				if (i == 2)
-					pipe_count++;
-				dup2(pipesfd[pipe_count][READ] , STDIN_FILENO);
-				pipe_count++;
+				dup2(pipesfd[pipe_count - 1][READ] , STDIN_FILENO);
 			}
-			if (i < 2)
+			if (i < 6)
 			{
 				//output = cmd d'apres;
 				dup2(pipesfd[pipe_count][WRITE], STDOUT_FILENO);
