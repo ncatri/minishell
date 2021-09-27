@@ -22,6 +22,8 @@ enum e_token_types{
 	PIPE	// |
 };
 
+# define INVALID_WORD_CHAR "&();"
+
 typedef struct s_token{
 	int		type;
 	char	*data;
@@ -44,6 +46,7 @@ t_error	append_buffer(t_buffer *buffer, char c);
 t_token *new_token(enum e_token_types type, char *buf);
 void	free_token(void *token);
 t_error	add_token_to_list(t_list **token_list, int token_type, char *data);
+t_error	syntax_error(char c);
 
 /* tableau pointeurs sur fonction */
 

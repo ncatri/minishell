@@ -2,38 +2,29 @@
 
 t_error	f_transition(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
 {
-	(void)token_list;
-	
-	if (ft_isalnum(cursor))
-	{
-		append_buffer(buffer, cursor);
-		*state = ST_IN_WORD;
-	}
+	if (ft_is_incharset(cursor, INVALID_WORD_CHAR))
+		return (syntax_error(cursor));
 	else if (cursor == '"')
-	{
-		*state = ST_OPEN_DQUOTE;
 		buffer->n_dquote++;
-	}
 	else if (cursor == '\'')
-	{
-		*state = ST_OPEN_SQUOTE;
 		buffer->n_squote++;
-	}
-	else if (cursor == '<')
-		*state = ST_LESS;
-	else if (cursor == '>')
-		*state = ST_GREAT;
+	else if (cursor == '<' || cursor == '>')
+		;
 	else if (cursor == '|')
+	{
 		if (add_token_to_list(token_list, PIPE, "") == FAIL)
 			return (FAIL);
+	}
+	else if (ft_isascii(cursor))
+		append_buffer(buffer, cursor);
+	set_machine_state(cursor, state);
 	return (SUCCESS);
 }
 
 t_error	f_inword(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
 {
-
-	if (ft_isalnum(cursor))
-		append_buffer(buffer, cursor);
+	if (ft_is_incharset(cursor, INVALID_WORD_CHAR))
+		return (syntax_error(cursor));
 	else if (ft_isspace(cursor) || cursor == '\0' || cursor == '<' || cursor == '>' || cursor == '|')
 	{
 		append_buffer(buffer, '\0');
@@ -49,6 +40,8 @@ t_error	f_inword(char cursor, enum e_machine_states *state, t_list **token_list,
 		buffer->n_dquote++;
 	else if (cursor == '\'')
 		buffer->n_squote++;
+	else if (ft_isascii(cursor))
+		append_buffer(buffer, cursor);
 	set_machine_state(cursor, state);
 	return (SUCCESS);
 }

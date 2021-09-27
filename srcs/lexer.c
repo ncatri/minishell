@@ -21,10 +21,8 @@ t_error	tokenizer(char *line)
 	i = ft_strlen(line);
 	while (i-- >= 0)
 	{
-		analyzer(*cursor, &state, &token_list, &buffer);
-		// check machine state
-		// depending on the input, update machine state
-		// do something with the input
+		if (analyzer(*cursor, &state, &token_list, &buffer) == FAIL)
+			break;
 		cursor++;
 	}
 	free(buffer.buf);
