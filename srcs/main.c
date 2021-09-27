@@ -41,12 +41,12 @@ int main(int argc, char **argv)
 		{
 			if (i != 0)
 			{
-				//input = cmd d'avant;
+				//Not the first cmd -> input = previous pipe;
 				dup2(pipesfd[pipe_count - 1][READ] , STDIN_FILENO);
 			}
-			if (i < 6)
+			if (i < nb_cmds - 1)
 			{
-				//output = cmd d'apres;
+				//not the last cmd (i starts at 0 so if i = 6 we are at the 7th cmd) -> output = next pipe;
 				dup2(pipesfd[pipe_count][WRITE], STDOUT_FILENO);
 			}
 			//close
