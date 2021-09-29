@@ -19,8 +19,9 @@ struct s_global{
 struct s_global g_global;
 
 typedef struct s_command{
-	char	*command;
+	char	*executable;
 	char	**args;
+	int		number_args;
 	t_list	*input_redir;
 	t_list	*output_redir;
 

@@ -21,6 +21,7 @@ enum e_token_types{
 	DGREAT, // >>
 	PIPE	// |
 };
+# define NUM_OF_TOKENS (6) /* Needed for parser */
 
 # define INVALID_WORD_CHAR "&();"
 

@@ -9,7 +9,9 @@ SRCS = 	tokenizer/lexer.c \
 		tokenizer/lex_functions2.c \
 		tokenizer/token_utils.c \
 		tokenizer/debug.c \
-		parser/parser.c
+		parser/parser.c \
+		parser/debug.c \
+		parser/array_utils.c \
 
 OBJS = $(addprefix $(OBJS_FOLDER)/, $(SRCS:.c=.o))
 
