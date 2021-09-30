@@ -12,7 +12,7 @@ void	parser(t_list *token_list)
 	t_list				*tok_cursor;
 	enum e_parser_state state;
 
-	print_token_list(token_list);
+//	print_token_list(token_list);
 	g_global.num_cmds = 0;
 	state = WAITING;
 	tok_cursor = token_list;
@@ -20,7 +20,8 @@ void	parser(t_list *token_list)
 	cmd_to_build = init_command();
 	while (tok_cursor)
 	{
-		parse_analyzer(tok_cursor, &cmd_array, &cmd_to_build, &state);
+		if (parse_analyzer(&tok_cursor, &cmd_array, &cmd_to_build, &state) == FAIL)
+			break;
 		tok_cursor = tok_cursor->next;
 	}
 	if (state == COMMAND_IN_PROGRESS)
@@ -29,26 +30,22 @@ void	parser(t_list *token_list)
 	free_array((void**)cmd_array, g_global.num_cmds);
 }
 
-t_error	parse_analyzer(t_list *tok_cursor, t_command ***cmd_array, \
+t_error	parse_analyzer(t_list **tok_cursor, t_command ***cmd_array, \
 		t_command *cmd_to_build, enum e_parser_state *state)
 {
 	t_token		*tok;
 
 	if (!tok_cursor || !cmd_to_build || !state || !cmd_array)
 		return (FAIL);
-	tok = tok_cursor->content;
-
+	tok = (*tok_cursor)->content;
 	if (tok->type == WORD)
 		return (parse_word(tok, cmd_array, cmd_to_build, state));
-	/*
 	else if (tok->type == GREAT || tok->type == DGREAT)
-		func_parse_redirout(tok, cmd_array, cmd_to_build)
+		return (parse_redirout(tok_cursor, cmd_to_build, state));
 	else if (tok->type == LESS || tok->type == DLESS)
-		func_parse_redirin()
-	*/
+		return (parse_redirin(tok_cursor, cmd_to_build, state));
 	else
-		return (parse_pipe(tok, cmd_array, cmd_to_build, state));
-
+		return (parse_pipe(*tok_cursor, cmd_array, cmd_to_build, state));
 }
 
 t_command	init_command(void)
