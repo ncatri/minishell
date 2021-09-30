@@ -69,7 +69,7 @@ int main(int argc, char **argv)
 		{
 			//Not the first cmd and no input file -> input = previous pipe;
 			if (i != 0 && commands[i].input == NULL)
-					dup2(pipesfd[pipe_count - 1][READ] , STDIN_FILENO);
+				dup2(pipesfd[pipe_count - 1][READ] , STDIN_FILENO);
 			//not the last cmd and no output file (i starts at 0 so if i = 6 we are at the 7th cmd) -> output = next pipe;
 			if (i < nb_cmds - 1 && commands[i].output == NULL)
 				dup2(pipesfd[pipe_count][WRITE], STDOUT_FILENO);
