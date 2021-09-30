@@ -10,8 +10,8 @@ typedef struct s_command
 {
 	char	*exec;
 	char	**args;
-	char	*input;
-	char	*output;
+	char	**input;
+	char	**output;
 } t_command;
 
 #endif

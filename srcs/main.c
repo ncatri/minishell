@@ -1,6 +1,6 @@
 #include "../includes/execution.h"
 
-void	fill_commands(t_command *commands, char **cmds, char *args[10][10], char **files)
+void	fill_commands(t_command *commands, char **cmds, char *args[10][10], char *files[][20])
 {
 	int i;
 
@@ -11,12 +11,10 @@ void	fill_commands(t_command *commands, char **cmds, char *args[10][10], char **
 		commands[i].args = args[i];
 		i++;
 	}
-	//commands[0].output = files[0];
-	commands[0].input = files[1];
-	commands[5].output = files[2];
-	commands[5].input = files[3];
-	commands[6].output = files[4];
-	commands[6].input = files[5];
+	commands[0].input = files[0];
+	commands[3].output = files[1];
+	commands[5].input = files[2];
+	commands[6].output = files[3];
 }
 
 int main(int argc, char **argv)
@@ -27,11 +25,13 @@ int main(int argc, char **argv)
 	int pipes_idmax = 5;
 	int pipesfd[pipes_idmax + 1][2];
 	int pipe_count;
+	int j;
 	//struct cmd
 	char *cmds[] = {"/bin/cat", "/usr/bin/grep", "/bin/cat", "/usr/bin/rev", "/bin/cat", "/usr/bin/grep", "/usr/bin/wc", NULL};
 	char *args[][10] = {{"cat", NULL}, {"grep", "file", NULL}, {"cat", NULL}, {"rev", NULL}, {"cat", "-e", NULL}, {"grep", "i", NULL}, {"wc", "-c", NULL}, {NULL}};
-	char *files[]  ={"output1.txt", "input1.txt", "output2.txt", "input2.txt", "input3.txt", "output3.txt", NULL};
+	//char *files[]  ={"output1.txt", "input1.txt", "output2.txt", "input2.txt", "input3.txt", "output3.txt", NULL};
 	t_command commands[10];
+	char *files[][20] = {{"input1.txt", "input2.txt", "input3.txt", NULL}, {"output1.txt", NULL}, {"input4.txt", NULL}, {"output2.txt", "output3.txt", "output4.txt", NULL}, {NULL}};
 	//create pipes
 	int i;
 	i = -1;
@@ -49,21 +49,37 @@ int main(int argc, char **argv)
 			{
 				//Not the first cmd -> input = previous pipe;
 				if (commands[i].input != NULL)
-					dup2(open(commands[i].input, O_RDWR | O_CREAT, 777) , STDIN_FILENO);
+				{
+					j = -1;
+					while (commands[i].input[++j])
+						dup2(open(commands[i].input[j], O_RDWR, 777) , STDIN_FILENO);
+				}
 				else
 					dup2(pipesfd[pipe_count - 1][READ] , STDIN_FILENO);
 				if (commands[i].output != NULL)
-					dup2(open(commands[i].output, O_RDWR | O_TRUNC | O_CREAT, 777), 1);
+				{
+					j = -1;
+					while (commands[i].output[++j])
+						dup2(open(commands[i].output[j], O_RDWR | O_TRUNC | O_CREAT, 777), 1);
+				}
 			}
 			if (i < nb_cmds - 1)
 			{
 				//not the last cmd (i starts at 0 so if i = 6 we are at the 7th cmd) -> output = next pipe;
 				if (commands[i].output != NULL)
-					dup2(open(commands[i].output, O_RDWR | O_TRUNC | O_CREAT, 777), 1);
+				{
+					j = -1;
+					while (commands[i].output[++j])
+						dup2(open(commands[i].output[j], O_RDWR | O_TRUNC | O_CREAT, 777), 1);
+				}
 				else
 					dup2(pipesfd[pipe_count][WRITE], STDOUT_FILENO);
 				if (commands[i].input != NULL)
-					dup2(open(commands[i].input, O_RDWR | O_CREAT, 777) , STDIN_FILENO);
+				{
+					j = -1;
+					while (commands[i].input[++j])
+						dup2(open(commands[i].input[j], O_RDWR, 777) , STDIN_FILENO);
+				}
 			}
 			//close
 			int j = -1;
