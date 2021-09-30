@@ -1,38 +1,43 @@
 #include "../includes/execution.h"
 
+void	fill_commands(t_command *commands, char **cmds, char *args[10][10], char **files)
+{
+	int i;
+
+	i = 0;
+	while (cmds[i])
+	{
+		commands[i].exec = cmds[i];
+		commands[i].args = args[i];
+		i++;
+		if (!(cmds[i]))
+		{
+			commands[i - 1].output = files[0];
+		}
+	}
+	commands[3].output = files[1];
+}
+
 int main(int argc, char **argv)
 {
 	(void)argc, (void)argv;
-	//commands and args
-	char *cmds[] = {"/bin/ls", "/usr/bin/grep", "/bin/cat", "/usr/bin/rev", "/bin/cat", "/usr/bin/grep", "/usr/bin/wc", NULL};
-	char *first_args[] = {"ls", NULL};
-	char *scnd_args[] = {"grep", "e", NULL};
-	char *thrd_args[] = {"cat", NULL};
-	char *fourth_args[] = {"rev", NULL};
-	char *fifth_args[] = {"cat", "-e", NULL};
-	char *sixth_args[] = {"grep", "i", NULL};
-	char *seventh_args[] = {"wc", "-c", NULL};
-	char **args[8];
-	args[0] = first_args;
-	args[1] = scnd_args;
-	args[2] = thrd_args;
-	args[3] = fourth_args;
-	args[4] = fifth_args;
-	args[5] = sixth_args;
-	args[6] = seventh_args;
-	args[7] = NULL;
 	//numeric datas and pipes
 	int	nb_cmds = 7;
 	int pipes_idmax = 5;
 	int pipesfd[pipes_idmax + 1][2];
 	int pipe_count;
-
+	//struct cmd
+	char *cmds[] = {"/bin/ls", "/usr/bin/grep", "/bin/cat", "/usr/bin/rev", "/bin/cat", "/usr/bin/grep", "/usr/bin/wc", NULL};
+	char *args[][10] = {{"ls", NULL}, {"grep", "file", NULL}, {"cat", NULL}, {"rev", NULL}, {"cat", "-e", NULL}, {"grep", "i", NULL}, {"wc", "-c", NULL}, {NULL}};
+	char *files[]  ={"test.txt", "hey.txt", NULL};
+	t_command commands[10];
 	//create pipes
 	int i;
 	i = -1;
 	while (++i <= pipes_idmax)
 		pipe(pipesfd[i]);
 	//forks and processes
+	fill_commands(commands, cmds, args, files);
 	i = -1;
 	while (++i < nb_cmds)
 	{
@@ -47,8 +52,13 @@ int main(int argc, char **argv)
 			if (i < nb_cmds - 1)
 			{
 				//not the last cmd (i starts at 0 so if i = 6 we are at the 7th cmd) -> output = next pipe;
-				dup2(pipesfd[pipe_count][WRITE], STDOUT_FILENO);
+				if (commands[i].output != NULL)
+					dup2(open(commands[i].output, O_RDWR | O_TRUNC | O_CREAT, 777), 1);
+				else
+					dup2(pipesfd[pipe_count][WRITE], STDOUT_FILENO);
 			}
+			if (commands[i].output != NULL)
+				dup2(open(commands[i].output, O_RDWR | O_TRUNC | O_CREAT, 777), 1);
 			//close
 			int j = -1;
 			while (++j <= pipes_idmax)
@@ -56,7 +66,7 @@ int main(int argc, char **argv)
 				close(pipesfd[j][READ]);
 				close(pipesfd[j][WRITE]);
 			}
-			execve(cmds[i], args[i], NULL);
+			execve(commands[i].exec, commands[i].args, NULL);
 		}
 		else
 		{
