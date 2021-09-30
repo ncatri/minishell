@@ -48,39 +48,29 @@ int main(int argc, char **argv)
 			if (i != 0)
 			{
 				//Not the first cmd -> input = previous pipe;
-				if (commands[i].input != NULL)
-				{
-					j = -1;
-					while (commands[i].input[++j])
-						dup2(open(commands[i].input[j], O_RDWR, 777) , STDIN_FILENO);
-				}
-				else
+				if (commands[i].input[0] == NULL)
 					dup2(pipesfd[pipe_count - 1][READ] , STDIN_FILENO);
-				if (commands[i].output != NULL)
-				{
-					j = -1;
-					while (commands[i].output[++j])
-						dup2(open(commands[i].output[j], O_RDWR | O_TRUNC | O_CREAT, 777), 1);
-				}
 			}
 			if (i < nb_cmds - 1)
 			{
 				//not the last cmd (i starts at 0 so if i = 6 we are at the 7th cmd) -> output = next pipe;
-				if (commands[i].output != NULL)
+				if (commands[i].output[0] == NULL)
+					dup2(pipesfd[pipe_count][WRITE], STDOUT_FILENO);
+			}
+			//there are 1 or more inputs specifieds for the cmd
+			if (commands[i].input != NULL)
+			{
+				j = -1;
+				while (commands[i].input[++j])
+					dup2(open(commands[i].input[j], O_RDWR, 777) , STDIN_FILENO);
+			}
+			//there are 1 or more outputs specifieds for the cmd
+			if (commands[i].output != NULL)
 				{
 					j = -1;
 					while (commands[i].output[++j])
 						dup2(open(commands[i].output[j], O_RDWR | O_TRUNC | O_CREAT, 777), 1);
 				}
-				else
-					dup2(pipesfd[pipe_count][WRITE], STDOUT_FILENO);
-				if (commands[i].input != NULL)
-				{
-					j = -1;
-					while (commands[i].input[++j])
-						dup2(open(commands[i].input[j], O_RDWR, 777) , STDIN_FILENO);
-				}
-			}
 			//close
 			int j = -1;
 			while (++j <= pipes_idmax)
