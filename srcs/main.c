@@ -24,9 +24,9 @@ void	fill_commands(t_command *commands, char **cmds, char *args[10][10], char *f
 	}
 	commands[0].input = NULL;
 	commands[0].output = NULL;
-	commands[1].input = files[0];
+	commands[1].input = NULL;
 	commands[1].output = NULL;
-	commands[2].input = NULL;
+	commands[2].input = files[0];
 	commands[2].output = files[1];
 	commands[3].input = NULL;
 	commands[3].output = NULL;
@@ -37,6 +37,24 @@ void	fill_commands(t_command *commands, char **cmds, char *args[10][10], char *f
 	commands[6].input = NULL;
 	commands[6].output = NULL;
 	
+}
+
+int	heredoc(char *terminator)
+{
+	char *line;
+	int fd;
+
+	line = NULL;
+	fd = open("heredoc.txt", O_RDWR | O_CREAT | O_TRUNC, 777);
+	while (get_next_line(READ, &line) != 0 && ft_strncmp(line, terminator, ft_strlen(terminator)) != 0)
+	{
+		write(fd, line, ft_strlen(line));
+		write (fd, "\n", 1);
+		free(line);
+	}
+	write(fd, line, ft_strlen(line));
+	free(line);
+	return (fd);
 }
 
 int main(int argc, char **argv)
@@ -53,7 +71,7 @@ int main(int argc, char **argv)
 	char *args[][10] = {{"ls", NULL}, {"grep", "file", NULL}, {"cat", NULL}, {"rev", NULL}, {"cat", "-e", NULL}, {"grep", "i", NULL}, {"wc", "-c", NULL}, {NULL}};
 	//char *files[]  ={"output1.txt", "input1.txt", "output2.txt", "input2.txt", "input3.txt", "output3.txt", NULL};
 	t_command commands[10];
-	char *files[][20] = {{"input1.txt", "input2.txt", "input3.txt", NULL}, {"output1.txt", NULL}, {"input4.txt", NULL}, {"output2.txt", "output3.txt", "output4.txt", NULL}, {NULL}};
+	char *files[][20] = {{"input1.txt", "input2.txt", "input3.txt", "heredoc", NULL}, {"output1.txt", NULL}, {"input4.txt", NULL}, {"output2.txt", "output3.txt", "output4.txt", NULL}, {NULL}};
 	//create pipes
 	int i;
 	i = -1;
@@ -78,15 +96,25 @@ int main(int argc, char **argv)
 			{
 				j = -1;
 				while (commands[i].input[++j])
-					dup2(open(commands[i].input[j], O_RDWR, 777) , STDIN_FILENO);
+				{
+					if (ft_strncmp(commands[i].input[j], "heredoc", 7) == 0)
+					{
+						int fd = heredoc("eof");
+						dup2(fd, STDIN_FILENO);
+					}
+					else
+						open(commands[i].input[j], O_RDWR, 777);
+				}
+				if (ft_strncmp(commands[i].input[j - 1], "heredoc", 7) != 0)
+					dup2(open(commands[i].input[j - 1], O_RDWR, 777) , STDIN_FILENO);
 			}
 			//there are 1 or more outputs specifieds for the cmd
 			if (commands[i].output != NULL)
-				{
-					j = -1;
-					while (commands[i].output[++j])
-						dup2(open(commands[i].output[j], O_RDWR | O_TRUNC | O_CREAT, 777), 1);
-				}
+			{
+				j = -1;
+				while (commands[i].output[++j])
+					dup2(open(commands[i].output[j], O_RDWR | O_TRUNC | O_CREAT, 777), STDOUT_FILENO);
+			}
 			//close
 			close_all_pipes(pipesfd, pipes_idmax);
 			execve(commands[i].exec, commands[i].args, NULL);
