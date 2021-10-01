@@ -74,6 +74,7 @@ int main(int argc, char **argv)
 	char *files[][20] = {{"input1.txt", "input2.txt", "input3.txt", "heredoc", NULL}, {"output1.txt", NULL}, {"input4.txt", NULL}, {"output2.txt", "output3.txt", "output4.txt", NULL}, {NULL}};
 	//create pipes
 	int i;
+	int fd;
 	i = -1;
 	while (++i <= pipes_idmax)
 		pipe(pipesfd[i]);
@@ -99,7 +100,7 @@ int main(int argc, char **argv)
 				{
 					if (ft_strncmp(commands[i].input[j], "heredoc", 7) == 0)
 					{
-						int fd = heredoc("eof");
+						fd = heredoc("eof");
 						dup2(fd, STDIN_FILENO);
 					}
 					else
