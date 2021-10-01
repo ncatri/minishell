@@ -40,10 +40,9 @@ t_error	parse_analyzer(t_list **tok_cursor, t_command ***cmd_array, \
 	tok = (*tok_cursor)->content;
 	if (tok->type == WORD)
 		return (parse_word(tok, cmd_array, cmd_to_build, state));
-	else if (tok->type == GREAT || tok->type == DGREAT)
-		return (parse_redirout(tok_cursor, cmd_to_build, state));
-	else if (tok->type == LESS || tok->type == DLESS)
-		return (parse_redirin(tok_cursor, cmd_to_build, state));
+	else if (tok->type == GREAT || tok->type == DGREAT || \
+			tok->type == LESS || tok->type == DLESS)
+		return (parse_redirection(tok_cursor, cmd_to_build, state));
 	else
 		return (parse_pipe(*tok_cursor, cmd_array, cmd_to_build, state));
 }

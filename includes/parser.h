@@ -24,10 +24,10 @@ t_error	parse_word(t_token *tok, t_command ***cmd_array, t_command *cmd_to_build
 		enum e_parser_state *state);
 t_error	parse_pipe(t_list *tok_cursor, t_command ***cmd_array, t_command *cmd_to_build,
 		enum e_parser_state *state);
-t_error	parse_redirout(t_list **tok_cursor, t_command *cmd_to_build,
+t_error	parse_redirection(t_list **tok_cursor, t_command *cmd_to_build, 
 		enum e_parser_state *state);
-t_error	parse_redirin(t_list **tok_cursor, t_command *cmd_to_build, 
-		enum e_parser_state *state);
+t_error	parse_output_redir(t_list **tok_cursor, t_command *cmd_to_build);
+t_error	parse_input_redir(t_list **tok_cursor, t_command *cmd_to_build);
 
 t_error	add_redir_to_list(t_list **redir_list, void *redir);
 

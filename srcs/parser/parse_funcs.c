@@ -19,8 +19,7 @@ t_error	parse_word(t_token *tok, t_command ***cmd_array, t_command *cmd_to_build
 	return (ret);
 }
 
-t_error	parse_pipe(t_list *tok_cursor, t_command ***cmd_array, t_command *cmd_to_build,
-		enum e_parser_state *state)
+t_error	parse_pipe(t_list *tok_cursor, t_command ***cmd_array, t_command *cmd_to_build, enum e_parser_state *state)
 {
 	t_error	ret;
 
@@ -38,22 +37,44 @@ t_error	parse_pipe(t_list *tok_cursor, t_command ***cmd_array, t_command *cmd_to
 	return (ret);
 }
 
-t_error	parse_redirout(t_list **tok_cursor, t_command *cmd_to_build, 
+
+t_error	parse_redirection(t_list **tok_cursor, t_command *cmd_to_build, 
 		enum e_parser_state *state)
+{
+	t_token	*tok;
+
+	if ((*tok_cursor)->next == NULL)
+	{
+		printf("\x1B[31m error: unexpected end of line \x1B[0m\n");
+		*state = ERROR;
+		return (FAIL);
+	}
+	tok = (*tok_cursor)->next->content;
+	if (tok->type != WORD)
+	{
+		printf("\x1B[31m error: unexpected token after file redirection\x1B[0m\n");
+		*state = ERROR;
+		return (FAIL);
+	}
+	tok = (*tok_cursor)->content;
+	*state = COMMAND_IN_PROGRESS;
+	if (tok->type == GREAT || tok->type == DGREAT)
+		return (parse_output_redir(tok_cursor, cmd_to_build));
+	else if (tok->type == LESS || tok->type == DLESS)
+		return (parse_input_redir(tok_cursor, cmd_to_build));
+	else
+		return (FAIL);
+}
+
+t_error	parse_output_redir(t_list **tok_cursor, t_command *cmd_to_build)
 {
 	t_redir_out	*redir_out;	
 	t_token		*tok;
 
-	if ((*tok_cursor)->next == NULL)
-	{
-		printf("\x1B[31mredirection: missing file\x1B[0m\n");
-		*state = ERROR;
-		return (FAIL);
-	}
+	tok = (*tok_cursor)->content;
 	redir_out = malloc(sizeof(t_redir_out));
 	if (!redir_out)
 		return (FAIL);
-	tok = (*tok_cursor)->content;
 	if (tok->type == GREAT)
 		redir_out->mode = CREATE;
 	else
@@ -63,26 +84,18 @@ t_error	parse_redirout(t_list **tok_cursor, t_command *cmd_to_build,
 	redir_out->filename = tok->data;
 	if (add_redir_to_list(&cmd_to_build->output_redir, (void*)redir_out) == FAIL)
 		return (FAIL);
-	*state = COMMAND_IN_PROGRESS;
 	return (SUCCESS);
 }
 
-t_error	parse_redirin(t_list **tok_cursor, t_command *cmd_to_build, 
-		enum e_parser_state *state)
+t_error	parse_input_redir(t_list **tok_cursor, t_command *cmd_to_build) 
 {
 	t_redir_in	*redir_in;	
 	t_token		*tok;
-
-	if ((*tok_cursor)->next == NULL)
-	{
-		printf("\x1B[31mredirection: missing file\x1B[0m\n");
-		*state = ERROR;
-		return (FAIL);
-	}
+	
+	tok = (*tok_cursor)->content;
 	redir_in = malloc(sizeof(t_redir_in));
 	if (!redir_in)
 		return (FAIL);
-	tok = (*tok_cursor)->content;
 	if (tok->type == LESS)
 		redir_in->type = NORMAL_FILE;
 	else
@@ -92,7 +105,6 @@ t_error	parse_redirin(t_list **tok_cursor, t_command *cmd_to_build,
 	redir_in->name_delim = tok->data;
 	if (add_redir_to_list(&cmd_to_build->input_redir, (void*)redir_in) == FAIL)
 		return (FAIL);
-	*state = COMMAND_IN_PROGRESS;
 	return (SUCCESS);
 }
 
