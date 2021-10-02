@@ -12,7 +12,7 @@ void	parser(t_list *token_list)
 	t_list				*tok_cursor;
 	enum e_parser_state state;
 
-//	print_token_list(token_list);
+	print_token_list(token_list);
 	g_global.num_cmds = 0;
 	state = WAITING;
 	tok_cursor = token_list;

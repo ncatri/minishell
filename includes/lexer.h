@@ -8,20 +8,19 @@ typedef struct s_buffer{
 	char	*buf;
 	size_t	size;
 	size_t	pos;
-	int		n_squote;
-	int		n_dquote;
 }				t_buffer;
 # define BUF_SIZE (1)
 
 enum e_token_types{
 	WORD,	// cmd, option, args, files
+	WORD_NOEXPAND,
 	LESS,	// <
 	DLESS,	// <<
 	GREAT,	// >
 	DGREAT, // >>
 	PIPE	// |
 };
-# define NUM_OF_TOKENS (6) /* Needed for parser */
+# define NUM_OF_TOKENS (7) /* Needed for parser */
 
 # define INVALID_WORD_CHAR "&();"
 
