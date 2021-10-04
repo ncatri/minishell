@@ -78,7 +78,7 @@ int main(int argc, char **argv)
 	char *cmds[] = {"/bin/ls", "/usr/bin/grep", "/bin/cat", "/usr/bin/rev", "/bin/cat", "/usr/bin/grep", "/usr/bin/wc", NULL};
 	char *args[][10] = {{"ls", NULL}, {"grep", "file", NULL}, {"cat", NULL}, {"rev", NULL}, {"cat", "-e", NULL}, {"grep", "i", NULL}, {"wc", "-c", NULL}, {NULL}};
 	t_command commands[10];
-	char *files[][20] = {{"input1.txt", "input2.txt", "input3.txt", "heredoc", NULL}, {"output1.txt", NULL}, {"input4.txt", "heredoc", NULL}, {"output2.txt", "output3.txt", "output4.txt", NULL}, {NULL}};
+	char *files[][20] = {{"input1.txt", "input2.txt",  "input3.txt", NULL}, {"output1.txt", NULL}, {"input4.txt", "heredoc", NULL}, {"output2.txt", "output3.txt", "output4.txt", NULL}, {NULL}};
 
 	allpipes_action(pipesfd, nb_pipes, CREATE);
 	fill_commands(commands, cmds, args, files);
