@@ -27,6 +27,7 @@ enum e_token_types{
 typedef struct s_token{
 	int		type;
 	char	*data;
+	t_bool	concat_next;
 }				t_token;
 
 enum e_machine_states{
@@ -36,8 +37,9 @@ enum e_machine_states{
 	ST_OPEN_DQUOTE,
 	ST_LESS,
 	ST_GREAT,
+	ST_WORD_TRANSITION,
 };
-# define NUM_OF_STATES (6)
+# define NUM_OF_STATES (7)
 
 t_list	*tokenizer(char *line);
 t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
@@ -58,6 +60,9 @@ t_error	f_less(char cursor, enum e_machine_states *state, t_list **token_list, t
 t_error	f_great(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 
 void	set_machine_state(char cursor, enum e_machine_states *state);
+
+void	link_last_token(t_list *token_list);
+t_error	f_word_transition(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 
 /* debug */
 

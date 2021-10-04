@@ -47,6 +47,7 @@ t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list,
 	f[ST_OPEN_SQUOTE] = f_singlequote;
 	f[ST_LESS] = f_less;
 	f[ST_GREAT] = f_great;
+	f[ST_WORD_TRANSITION] = f_word_transition;
 
 	check = (*f[*state])(cursor, state, token_list, buffer);
 	return (check);

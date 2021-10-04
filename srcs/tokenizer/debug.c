@@ -26,7 +26,7 @@ void	print_token(t_token *token)
 	if (t == WORD)
 	{
 		str = "WORD";
-		printf("%s, data: %s\n", str, token->data);
+		printf("%s, data: %s, link to next: %d\n", str, token->data, token->concat_next);
 	}
 	else
 	{

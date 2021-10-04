@@ -9,6 +9,7 @@ t_token *new_token(enum e_token_types type, char *buf)
 	{
 		token->type = type;
 		token->data = ft_strdup(buf);
+		token->concat_next = FALSE;
 		if (token->data == NULL)
 			return (NULL);
 	}
@@ -37,6 +38,20 @@ t_error	add_token_to_list(t_list **token_list, int token_type, char *data)
 		return (FAIL);
 	ft_lstadd_back(token_list, node);
 	return (SUCCESS);
+}
+
+void	link_last_token(t_list *token_list)
+{
+	t_list	*cursor;
+	t_token	*tok;
+
+	if (!token_list)
+		return;
+	cursor = token_list;
+	while (cursor->next)
+		cursor = cursor->next;	
+	tok = cursor->content;
+	tok->concat_next = TRUE;
 }
 
 t_error	syntax_error(char c)
