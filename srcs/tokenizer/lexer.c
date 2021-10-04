@@ -57,8 +57,6 @@ t_error	initialize_buffer(t_buffer *buf)
 	buf->buf = ft_calloc(sizeof(char), BUF_SIZE);
 	buf->size = BUF_SIZE;
 	buf->pos = 0;
-	buf->n_squote = 0;
-	buf->n_dquote = 0;
 	if (buf->buf == NULL)
 		return (FAIL);
 	return (SUCCESS);

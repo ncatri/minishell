@@ -4,12 +4,8 @@ t_error	f_transition(char cursor, enum e_machine_states *state, t_list **token_l
 {
 	if (ft_is_incharset(cursor, INVALID_WORD_CHAR))
 		return (syntax_error(cursor));
-	else if (cursor == '"')
-		buffer->n_dquote++;
-	else if (cursor == '\'')
-		buffer->n_squote++;
-	else if (cursor == '<' || cursor == '>' || ft_isspace(cursor))
-		;
+	else if (ft_is_incharset(cursor, "<>\"\'") || ft_isspace(cursor))
+		; // do nothing, only update machine state
 	else if (cursor == '|')
 	{
 		if (add_token_to_list(token_list, PIPE, "") == FAIL)
@@ -36,10 +32,8 @@ t_error	f_inword(char cursor, enum e_machine_states *state, t_list **token_list,
 			if (add_token_to_list(token_list, PIPE, "") == FAIL)
 				return (FAIL);
 	}
-	else if (cursor == '"')
-		buffer->n_dquote++;
-	else if (cursor == '\'')
-		buffer->n_squote++;
+	else if (cursor == '"' || cursor == '\'')
+		;	
 	else if (ft_isascii(cursor))
 		append_buffer(buffer, cursor);
 	set_machine_state(cursor, state);
