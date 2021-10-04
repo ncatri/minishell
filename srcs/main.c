@@ -1,13 +1,21 @@
 #include "../includes/execution.h"
 
-void	close_all_pipes(int pipesfd[][2], int pipesid_max)
+void	allpipes_action(int pipesfd[][2], int nb_pipes, pipes action)
 {
-	int j = -1;
+	int i = -1;
 
-	while (++j <= pipesid_max)
+	if (action == CLOSE)
 	{
-		close(pipesfd[j][READ]);
-		close(pipesfd[j][WRITE]);
+		while (++i < nb_pipes)
+		{
+			close(pipesfd[i][READ]);
+			close(pipesfd[i][WRITE]);
+		}
+	}
+	else
+	{
+		while (++i < nb_pipes)
+			pipe(pipesfd[i]);
 	}
 }
 
@@ -33,7 +41,7 @@ void	fill_commands(t_command *commands, char **cmds, char *args[10][10], char *f
 	commands[4].input = files[2];
 	commands[4].output = NULL;
 	commands[5].input = NULL;
-	commands[5].output = files[3];
+	commands[5].output = NULL;
 	commands[6].input = NULL;
 	commands[6].output = NULL;
 	
@@ -56,26 +64,23 @@ void	heredoc(char *terminator, int fd)
 
 int main(int argc, char **argv)
 {
+
 	(void)argc, (void)argv;
 	//numeric datas and pipes
 	int	nb_cmds = 7;
-	int pipes_idmax = 5;
-	int pipesfd[pipes_idmax + 1][2];
+	int nb_pipes = nb_cmds - 1;
+	int pipesfd[nb_pipes][2];
 	int pipe_count;
 	int j;
+	int i;
+	int fd;
 	//struct cmd
 	char *cmds[] = {"/bin/ls", "/usr/bin/grep", "/bin/cat", "/usr/bin/rev", "/bin/cat", "/usr/bin/grep", "/usr/bin/wc", NULL};
 	char *args[][10] = {{"ls", NULL}, {"grep", "file", NULL}, {"cat", NULL}, {"rev", NULL}, {"cat", "-e", NULL}, {"grep", "i", NULL}, {"wc", "-c", NULL}, {NULL}};
 	t_command commands[10];
-	char *files[][20] = {{"input1.txt", "input2.txt", "input3.txt", "heredoc", NULL}, {"output1.txt", NULL}, {"input4.txt", NULL}, {"output2.txt", "output3.txt", "output4.txt", NULL}, {NULL}};
-	//create pipes
-	int i;
-	int fd;
+	char *files[][20] = {{"input1.txt", "input2.txt", "input3.txt", "heredoc", NULL}, {"output1.txt", NULL}, {"input4.txt", "heredoc", NULL}, {"output2.txt", "output3.txt", "output4.txt", NULL}, {NULL}};
 
-	i = -1;
-	while (++i <= pipes_idmax)
-		pipe(pipesfd[i]);
-	//forks and processes
+	allpipes_action(pipesfd, nb_pipes, CREATE);
 	fill_commands(commands, cmds, args, files);
 	i = -1;
 	while (++i < nb_cmds)
@@ -111,12 +116,12 @@ int main(int argc, char **argv)
 				while (commands[i].output[++j])
 					dup2(open(commands[i].output[j], O_RDWR | O_TRUNC | O_CREAT, 777), STDOUT_FILENO);
 			}
-			close_all_pipes(pipesfd, pipes_idmax);
+			allpipes_action(pipesfd, nb_pipes, CLOSE);
 			execve(commands[i].exec, commands[i].args, NULL);
 		}
 	}
 	//closing pipes
-	close_all_pipes(pipesfd, pipes_idmax);
+	allpipes_action(pipesfd, nb_pipes, CLOSE);
 	//waiting chidls
 	int status;
 	pid_t wait_return;
