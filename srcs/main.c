@@ -39,22 +39,19 @@ void	fill_commands(t_command *commands, char **cmds, char *args[10][10], char *f
 	
 }
 
-int	heredoc(char *terminator)
+void	heredoc(char *terminator, int fd)
 {
 	char *line;
-	int fd;
 
 	line = NULL;
-	fd = open("heredoc.txt", O_RDWR | O_CREAT | O_TRUNC, 777);
 	while (get_next_line(READ, &line) != 0 && ft_strncmp(line, terminator, ft_strlen(terminator)) != 0)
 	{
 		write(fd, line, ft_strlen(line));
 		write (fd, "\n", 1);
 		free(line);
 	}
-	write(fd, line, ft_strlen(line));
 	free(line);
-	return (fd);
+	close(fd);
 }
 
 int main(int argc, char **argv)
@@ -69,12 +66,12 @@ int main(int argc, char **argv)
 	//struct cmd
 	char *cmds[] = {"/bin/ls", "/usr/bin/grep", "/bin/cat", "/usr/bin/rev", "/bin/cat", "/usr/bin/grep", "/usr/bin/wc", NULL};
 	char *args[][10] = {{"ls", NULL}, {"grep", "file", NULL}, {"cat", NULL}, {"rev", NULL}, {"cat", "-e", NULL}, {"grep", "i", NULL}, {"wc", "-c", NULL}, {NULL}};
-	//char *files[]  ={"output1.txt", "input1.txt", "output2.txt", "input2.txt", "input3.txt", "output3.txt", NULL};
 	t_command commands[10];
 	char *files[][20] = {{"input1.txt", "input2.txt", "input3.txt", "heredoc", NULL}, {"output1.txt", NULL}, {"input4.txt", NULL}, {"output2.txt", "output3.txt", "output4.txt", NULL}, {NULL}};
 	//create pipes
 	int i;
 	int fd;
+
 	i = -1;
 	while (++i <= pipes_idmax)
 		pipe(pipesfd[i]);
@@ -86,13 +83,10 @@ int main(int argc, char **argv)
 		pipe_count = i;
 		if (fork() == 0)
 		{
-			//Not the first cmd and no input file -> input = previous pipe;
 			if (i != 0 && commands[i].input == NULL)
 				dup2(pipesfd[pipe_count - 1][READ] , STDIN_FILENO);
-			//not the last cmd and no output file (i starts at 0 so if i = 6 we are at the 7th cmd) -> output = next pipe;
 			if (i < nb_cmds - 1 && commands[i].output == NULL)
 				dup2(pipesfd[pipe_count][WRITE], STDOUT_FILENO);
-			//there are 1 or more inputs specifieds for the cmd
 			if (commands[i].input != NULL)
 			{
 				j = -1;
@@ -100,7 +94,9 @@ int main(int argc, char **argv)
 				{
 					if (ft_strncmp(commands[i].input[j], "heredoc", 7) == 0)
 					{
-						fd = heredoc("eof");
+						fd = open("heredoc.txt", O_RDWR | O_CREAT | O_TRUNC, 777);
+						heredoc("eof", fd);
+						fd = open("heredoc.txt", O_RDWR);
 						dup2(fd, STDIN_FILENO);
 					}
 					else
@@ -109,20 +105,14 @@ int main(int argc, char **argv)
 				if (ft_strncmp(commands[i].input[j - 1], "heredoc", 7) != 0)
 					dup2(open(commands[i].input[j - 1], O_RDWR, 777) , STDIN_FILENO);
 			}
-			//there are 1 or more outputs specifieds for the cmd
 			if (commands[i].output != NULL)
 			{
 				j = -1;
 				while (commands[i].output[++j])
 					dup2(open(commands[i].output[j], O_RDWR | O_TRUNC | O_CREAT, 777), STDOUT_FILENO);
 			}
-			//close
 			close_all_pipes(pipesfd, pipes_idmax);
 			execve(commands[i].exec, commands[i].args, NULL);
-		}
-		else
-		{
-			//dad
 		}
 	}
 	//closing pipes
