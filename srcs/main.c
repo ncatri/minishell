@@ -39,7 +39,7 @@ void	fill_commands(t_command *commands, char **cmds, char *args[10][10], char *f
 	commands[3].input = NULL;
 	commands[3].output = NULL;
 	commands[4].input = files[2];
-	commands[4].output = NULL;
+	commands[4].output = files[3];
 	commands[5].input = NULL;
 	commands[5].output = NULL;
 	commands[6].input = NULL;
@@ -78,7 +78,7 @@ int main(int argc, char **argv)
 	char *cmds[] = {"/bin/ls", "/usr/bin/grep", "/bin/cat", "/usr/bin/rev", "/bin/cat", "/usr/bin/grep", "/usr/bin/wc", NULL};
 	char *args[][10] = {{"ls", NULL}, {"grep", "file", NULL}, {"cat", NULL}, {"rev", NULL}, {"cat", "-e", NULL}, {"grep", "i", NULL}, {"wc", "-c", NULL}, {NULL}};
 	t_command commands[10];
-	char *files[][20] = {{"input1.txt", "input2.txt",  "input3.txt", NULL}, {"output1.txt", NULL}, {"input4.txt", "heredoc", NULL}, {"output2.txt", "output3.txt", "output4.txt", NULL}, {NULL}};
+	char *files[][20] = {{"input1.txt", "input2.txt",  "input3.txt", "heredoc", "heredoc", NULL}, {"output1.txt", NULL}, {"input4.txt", NULL}, {"output2.txt", "output3.txt", "output4.txt", NULL}, {NULL}};
 
 	allpipes_action(pipesfd, nb_pipes, CREATE);
 	fill_commands(commands, cmds, args, files);
@@ -99,10 +99,11 @@ int main(int argc, char **argv)
 				{
 					if (ft_strncmp(commands[i].input[j], "heredoc", 7) == 0)
 					{
-						fd = open("heredoc.txt", O_RDWR | O_CREAT | O_TRUNC, 777);
+						fd = open("heredoc.txt", O_RDWR | O_CREAT | O_TRUNC, 0777);
 						heredoc("eof", fd);
-						fd = open("heredoc.txt", O_RDWR);
-						dup2(fd, STDIN_FILENO);
+						fd = open("heredoc.txt", O_RDWR, 0777);
+						if (ft_strncmp(commands[i].input[j + 1], "heredoc", 7) != 0)
+							dup2(fd, STDIN_FILENO);
 					}
 					else
 						open(commands[i].input[j], O_RDWR, 777);
@@ -120,9 +121,7 @@ int main(int argc, char **argv)
 			execve(commands[i].exec, commands[i].args, NULL);
 		}
 	}
-	//closing pipes
 	allpipes_action(pipesfd, nb_pipes, CLOSE);
-	//waiting chidls
 	int status;
 	pid_t wait_return;
 	while ((wait_return = wait(&status)) > 0);
