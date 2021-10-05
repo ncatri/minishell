@@ -1,5 +1,13 @@
 #include "../includes/execution.h"
 
+void	wait_childs()
+{
+	int status;
+	pid_t wait_return;
+
+	while ((wait_return = wait(&status)) > 0);
+}
+
 void	allpipes_action(int pipesfd[][2], int nb_pipes, pipes action)
 {
 	int i = -1;
@@ -39,7 +47,7 @@ void	fill_commands(t_command *commands, char **cmds, char *args[10][10], char *f
 	commands[3].input = NULL;
 	commands[3].output = NULL;
 	commands[4].input = files[2];
-	commands[4].output = files[3];
+	commands[4].output = NULL;
 	commands[5].input = NULL;
 	commands[5].output = NULL;
 	commands[6].input = NULL;
@@ -78,7 +86,7 @@ int main(int argc, char **argv)
 	char *cmds[] = {"/bin/ls", "/usr/bin/grep", "/bin/cat", "/usr/bin/rev", "/bin/cat", "/usr/bin/grep", "/usr/bin/wc", NULL};
 	char *args[][10] = {{"ls", NULL}, {"grep", "file", NULL}, {"cat", NULL}, {"rev", NULL}, {"cat", "-e", NULL}, {"grep", "i", NULL}, {"wc", "-c", NULL}, {NULL}};
 	t_command commands[10];
-	char *files[][20] = {{"input1.txt", "input2.txt",  "input3.txt", "heredoc", "heredoc", NULL}, {"output1.txt", NULL}, {"input4.txt", NULL}, {"output2.txt", "output3.txt", "output4.txt", NULL}, {NULL}};
+	char *files[][20] = {{"input1.txt", "input2.txt",  "input3.txt", "heredoc", NULL}, {"output1.txt", NULL}, {"input4.txt", "heredoc", NULL}, {"output2.txt", "output3.txt", "output4.txt", NULL}, {NULL}};
 
 	allpipes_action(pipesfd, nb_pipes, CREATE);
 	fill_commands(commands, cmds, args, files);
@@ -122,7 +130,5 @@ int main(int argc, char **argv)
 		}
 	}
 	allpipes_action(pipesfd, nb_pipes, CLOSE);
-	int status;
-	pid_t wait_return;
-	while ((wait_return = wait(&status)) > 0);
+	wait_childs();
 }
