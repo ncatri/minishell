@@ -63,3 +63,13 @@ void	set_machine_state(char cursor, enum e_machine_states *state)
 	else if (ft_isascii(cursor))
 		*state = ST_IN_WORD;
 }
+
+t_error	push_buf_to_toklist(t_buffer *buffer, t_list **token_list, enum e_token_types tok_type)
+{
+	append_buffer(buffer, '\0');
+	if (add_token_to_list(token_list, tok_type, buffer->buf) == FAIL)
+		return (FAIL);
+	free(buffer->buf);
+	initialize_buffer(buffer);
+	return (SUCCESS);
+}

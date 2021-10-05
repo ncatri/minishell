@@ -23,10 +23,19 @@ void	print_token(t_token *token)
 
 	str = NULL;
 	t = token->type;
-	if (t == WORD)
+	if (t == WORD || t == WORD_NOEXPAND)
 	{
-		str = "WORD";
-		printf("%s, data: %s, link to next: %d\n", str, token->data, token->concat_next);
+		if (t == WORD)
+			str = "WORD";
+		else if (t == WORD_NOEXPAND)
+			str = "WORD_NOEXPAND";
+		if (t == WORD || t == WORD_NOEXPAND)
+		{
+			printf("%s |%s|", str, token->data);
+			if (token->concat_next)
+				printf(" [linked]");
+			printf("\n");
+		}
 	}
 	else
 	{

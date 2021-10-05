@@ -30,6 +30,8 @@ t_list	*tokenizer(char *line)
 		cursor++;
 	}
 	free(buffer.buf);
+	expand_words(token_list);
+	link_tokens(token_list);
 	return (token_list);
 }
 

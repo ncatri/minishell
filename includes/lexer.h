@@ -49,6 +49,7 @@ t_token *new_token(enum e_token_types type, char *buf);
 void	free_token(void *token);
 t_error	add_token_to_list(t_list **token_list, int token_type, char *data);
 t_error	syntax_error(char c);
+t_error	push_buf_to_toklist(t_buffer *buffer, t_list **token_list, enum e_token_types tok_type);
 
 /* tableau pointeurs sur fonction */
 
@@ -63,6 +64,12 @@ void	set_machine_state(char cursor, enum e_machine_states *state);
 
 void	link_last_token(t_list *token_list);
 t_error	f_word_transition(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
+
+/* post processing of tokens */
+
+t_error	expand_words(t_list *token_list);
+t_error	link_tokens(t_list *token_list);
+void	variable_expansion(char *data);
 
 /* debug */
 
