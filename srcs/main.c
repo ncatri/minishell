@@ -102,7 +102,7 @@ int main(int argc, char **argv)
 						fd = open("heredoc.txt", O_RDWR | O_CREAT | O_TRUNC, 0777);
 						heredoc("eof", fd);
 						fd = open("heredoc.txt", O_RDWR, 0777);
-						if (ft_strncmp(commands[i].input[j + 1], "heredoc", 7) != 0)
+						if (commands[i].input[j + 1] == NULL)
 							dup2(fd, STDIN_FILENO);
 					}
 					else
