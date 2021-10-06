@@ -14,4 +14,9 @@ typedef struct s_command
 	char	**output;
 } t_command;
 
+typedef struct s_pid
+{
+	pid_t 	pid;
+	int		heredoc;
+} t_pid;
 #endif

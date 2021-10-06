@@ -1,5 +1,30 @@
 #include "../includes/execution.h"
 
+int	find_previous_hd(t_pid *pid, int i)
+{
+	i--;
+	while (i >= 0)
+	{
+		if (pid[i].heredoc == 1)
+			return (i);
+		i--;
+	}
+	return(-1);
+}
+
+int	is_heredoc(char **input)
+{
+	int i = 0;
+
+	while (input[i])
+	{
+		if (ft_strncmp(input[i], "heredoc", 7) == 0)
+			return (1);
+		i++;
+	}
+	return (-1);
+}
+
 void	wait_childs()
 {
 	int status;
@@ -47,7 +72,7 @@ void	fill_commands(t_command *commands, char **cmds, char *args[10][10], char *f
 	commands[3].input = NULL;
 	commands[3].output = NULL;
 	commands[4].input = files[2];
-	commands[4].output = NULL;
+	commands[4].output = files[3];
 	commands[5].input = NULL;
 	commands[5].output = NULL;
 	commands[6].input = NULL;
@@ -60,6 +85,7 @@ void	heredoc(char *terminator, int fd)
 	char *line;
 
 	line = NULL;
+	printf("BEGINNING\n");
 	while (get_next_line(READ, &line) != 0 && ft_strncmp(line, terminator, ft_strlen(terminator)) != 0)
 	{
 		write(fd, line, ft_strlen(line));
@@ -75,18 +101,21 @@ int main(int argc, char **argv)
 
 	(void)argc, (void)argv;
 	//numeric datas and pipes
-	int	nb_cmds = 7;
-	int nb_pipes = nb_cmds - 1;
-	int pipesfd[nb_pipes][2];
-	int pipe_count;
-	int j;
-	int i;
-	int fd;
+	int			nb_cmds = 7;
+	int 		nb_pipes = nb_cmds - 1;
+	int 		pipesfd[nb_pipes][2];
+	t_pid 		pids[7];
+	pid_t		fork_res;
+	int			previous_hd;
+	int 		pipe_count;
+	int 		j;
+	int 		i;
+	int 		fd;
 	//struct cmd
-	char *cmds[] = {"/bin/ls", "/usr/bin/grep", "/bin/cat", "/usr/bin/rev", "/bin/cat", "/usr/bin/grep", "/usr/bin/wc", NULL};
-	char *args[][10] = {{"ls", NULL}, {"grep", "file", NULL}, {"cat", NULL}, {"rev", NULL}, {"cat", "-e", NULL}, {"grep", "i", NULL}, {"wc", "-c", NULL}, {NULL}};
+	char 		*cmds[] = {"/bin/ls", "/usr/bin/grep", "/bin/cat", "/usr/bin/rev", "/bin/cat", "/usr/bin/grep", "/usr/bin/wc", NULL};
+	char 		*args[][10] = {{"ls", NULL}, {"grep", "file", NULL}, {"cat", NULL}, {"rev", NULL}, {"cat", "-e", NULL}, {"grep", "i", NULL}, {"wc", "-c", NULL}, {NULL}};
 	t_command commands[10];
-	char *files[][20] = {{"input1.txt", "input2.txt",  "input3.txt", "heredoc", NULL}, {"output1.txt", NULL}, {"input4.txt", "heredoc", NULL}, {"output2.txt", "output3.txt", "output4.txt", NULL}, {NULL}};
+	char 		*files[][20] = {{"input1.txt", "input2.txt",  "input3.txt", "heredoc", NULL}, {"output1.txt", NULL}, {"input4.txt", "heredoc", NULL}, {"output2.txt", "output3.txt", "output4.txt", NULL}, {NULL}};
 
 	allpipes_action(pipesfd, nb_pipes, CREATE);
 	fill_commands(commands, cmds, args, files);
@@ -94,7 +123,14 @@ int main(int argc, char **argv)
 	while (++i < nb_cmds)
 	{
 		pipe_count = i;
-		if (fork() == 0)
+		if (find_previous_hd(pids, i) != -1)
+		{
+			previous_hd = find_previous_hd(pids, i);
+			if (previous_hd != -1)
+				waitpid(pids[previous_hd].pid, 0, 0);
+		}
+		fork_res = fork();
+		if (fork_res == 0)
 		{
 			if (i != 0 && commands[i].input == NULL)
 				dup2(pipesfd[pipe_count - 1][READ] , STDIN_FILENO);
@@ -127,6 +163,14 @@ int main(int argc, char **argv)
 			}
 			allpipes_action(pipesfd, nb_pipes, CLOSE);
 			execve(commands[i].exec, commands[i].args, NULL);
+		}
+		else
+		{
+			pids[i].pid = fork_res;
+			if (i == 2 || i == 4)
+				pids[i].heredoc = 1;
+			else
+				pids[i].heredoc = 0;
 		}
 	}
 	allpipes_action(pipesfd, nb_pipes, CLOSE);
