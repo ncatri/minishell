@@ -16,6 +16,8 @@ int	is_heredoc(char **input)
 {
 	int i = 0;
 
+	if (input == NULL)
+		return (-1);
 	while (input[i])
 	{
 		if (ft_strncmp(input[i], "heredoc", 7) == 0)
@@ -123,7 +125,7 @@ int main(int argc, char **argv)
 	while (++i < nb_cmds)
 	{
 		pipe_count = i;
-		if (find_previous_hd(pids, i) != -1)
+		if (is_heredoc(commands[i].input))
 		{
 			previous_hd = find_previous_hd(pids, i);
 			if (previous_hd != -1)
