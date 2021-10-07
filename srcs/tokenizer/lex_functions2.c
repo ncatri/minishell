@@ -50,43 +50,28 @@ t_error	f_great(char cursor, enum e_machine_states *state, t_list **token_list, 
 
 t_error	f_var_expansion_dquote(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
 {
-	char	*str;
-
-	if (cursor == ' ' && buffer->pos == 0)
+	if ((cursor == ' ' || cursor == '"') && buffer->pos == 0)
 	{
 		append_buffer(buffer, '$');
-		push_buf_to_toklist(buffer, token_list, WORD);
-		link_last_token(*token_list);
+		if (cursor == ' ')
+			append_buffer(buffer, ' ');
+//		push_buf_to_toklist(buffer, token_list, WORD);
+//		link_last_token(*token_list);
 		*state = ST_OPEN_DQUOTE;
-		append_buffer(buffer, ' ');
 	}
 	else if (cursor == '\0')
-	{
-		printf("Error: unclosed double quote\n");
-		return (FAIL);
-	}
+		return (error_message("Error: unclosed double quote\n"));
 	else if (cursor == ' ')
 	{
-		append_buffer(buffer, '\0');
-		str = getenv(buffer->buf);
-		if (str == NULL)
-			str = "";
-		printf("str: %s\n", str);
-		add_token_to_list(token_list, WORD, str);
-		free(buffer->buf);
-		initialize_buffer(buffer);
+		if (expand_buffer_push_toklist(buffer, token_list, SPACE) == FAIL)
+			return (FAIL);
 		*state = ST_OPEN_DQUOTE;
 		link_last_token(*token_list);
 	}
 	else if (cursor == '"')
 	{
-		append_buffer(buffer, '\0');
-		str = getenv(buffer->buf);
-		if (str == NULL)
-			str = "";
-		add_token_to_list(token_list, WORD, str);
-		free(buffer->buf);
-		initialize_buffer(buffer);
+		if (expand_buffer_push_toklist(buffer, token_list, NO_SPACE) == FAIL)
+			return (FAIL);
 		*state = ST_TRANSITION;
 	}
 	else
@@ -122,10 +107,16 @@ t_error	push_buf_to_toklist(t_buffer *buffer, t_list **token_list, enum e_token_
 	return (SUCCESS);
 }
 
-t_error	expand_buffer_push_toklist(t_buffer *buffer, t_list **token_list, enum e_token_types tok_type)
+t_error	expand_buffer_push_toklist(t_buffer *buffer, t_list **token_list, int add_space)
 {
 	char	*str;
 
+	if (buffer->pos == 0) // means we have "$ " -> no expand!
+	{
+		append_buffer(buffer, '$');
+		if (push_buf_to_toklist(buffer, token_list, WORD) == FAIL)
+			return (FAIL);
+	}	
 	append_buffer(buffer, '\0');
 	str = getenv(buffer->buf);
 	if (str == NULL)
@@ -134,5 +125,7 @@ t_error	expand_buffer_push_toklist(t_buffer *buffer, t_list **token_list, enum e
 		return (FAIL);
 	free(buffer->buf);
 	initialize_buffer(buffer);
+	if (add_space) 
+		append_buffer(buffer, ' ');
 	return (SUCCESS);
 }
