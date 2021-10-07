@@ -2,7 +2,8 @@
 
 t_error	f_less(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
 {
-	if (ft_isalnum(cursor) || ft_isspace(cursor) || cursor == '\0')
+	if (ft_isalnum(cursor) || ft_isspace(cursor) || cursor == '\0' || cursor == '"'
+			|| cursor == '\'')
 	{
 		if (add_token_to_list(token_list, LESS, "") == FAIL)
 			return (FAIL);
@@ -25,7 +26,8 @@ t_error	f_less(char cursor, enum e_machine_states *state, t_list **token_list, t
 
 t_error	f_great(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
 {
-	if (ft_isalnum(cursor) || ft_isspace(cursor) || cursor == '\0')
+	if (ft_isalnum(cursor) || ft_isspace(cursor) || cursor == '\0' || cursor == '"'
+			|| cursor == '\'')
 	{
 		if (add_token_to_list(token_list, GREAT, "") == FAIL)
 			return (FAIL);
@@ -42,7 +44,53 @@ t_error	f_great(char cursor, enum e_machine_states *state, t_list **token_list, 
 	else if (cursor == '<')
 		printf("syntax error\n");
 	else
-		printf("non covered case in f_less\n");
+		printf("non covered case in f_great\n");
+	return (SUCCESS);
+}
+
+t_error	f_var_expansion_dquote(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
+{
+	char	*str;
+
+	if (cursor == ' ' && buffer->pos == 0)
+	{
+		append_buffer(buffer, '$');
+		push_buf_to_toklist(buffer, token_list, WORD);
+		link_last_token(*token_list);
+		*state = ST_OPEN_DQUOTE;
+		append_buffer(buffer, ' ');
+	}
+	else if (cursor == '\0')
+	{
+		printf("Error: unclosed double quote\n");
+		return (FAIL);
+	}
+	else if (cursor == ' ')
+	{
+		append_buffer(buffer, '\0');
+		str = getenv(buffer->buf);
+		if (str == NULL)
+			str = "";
+		printf("str: %s\n", str);
+		add_token_to_list(token_list, WORD, str);
+		free(buffer->buf);
+		initialize_buffer(buffer);
+		*state = ST_OPEN_DQUOTE;
+		link_last_token(*token_list);
+	}
+	else if (cursor == '"')
+	{
+		append_buffer(buffer, '\0');
+		str = getenv(buffer->buf);
+		if (str == NULL)
+			str = "";
+		add_token_to_list(token_list, WORD, str);
+		free(buffer->buf);
+		initialize_buffer(buffer);
+		*state = ST_TRANSITION;
+	}
+	else
+		append_buffer(buffer, cursor);
 	return (SUCCESS);
 }
 
@@ -68,6 +116,21 @@ t_error	push_buf_to_toklist(t_buffer *buffer, t_list **token_list, enum e_token_
 {
 	append_buffer(buffer, '\0');
 	if (add_token_to_list(token_list, tok_type, buffer->buf) == FAIL)
+		return (FAIL);
+	free(buffer->buf);
+	initialize_buffer(buffer);
+	return (SUCCESS);
+}
+
+t_error	expand_buffer_push_toklist(t_buffer *buffer, t_list **token_list, enum e_token_types tok_type)
+{
+	char	*str;
+
+	append_buffer(buffer, '\0');
+	str = getenv(buffer->buf);
+	if (str == NULL)
+		str = "";
+	if (add_token_to_list(token_list, WORD, str) == FAIL)
 		return (FAIL);
 	free(buffer->buf);
 	initialize_buffer(buffer);

@@ -24,39 +24,3 @@ t_error	link_tokens(t_list *token_list)
 	}
 	return (SUCCESS);
 }
-
-t_error	expand_words(t_list *token_list)
-{
-	t_list	*cursor;
-	t_token	*tok;
-
-	cursor = token_list;
-	while (cursor)
-	{
-		tok = cursor->content;
-		if (tok->type == WORD)
-			variable_expansion(tok->data);
-		cursor = cursor->next;
-	}
-	return (SUCCESS);
-}
-
-void	variable_expansion(char *data)
-{
-	char	*start;
-	char	*end;
-	char	*tmp;
-
-	start = ft_strchr(data, '$');
-	if (start)
-	{
-		end = start;
-		while (*end && *end != ' ')
-			end++;
-		tmp = malloc(sizeof(char) * (end - start));
-		if (!tmp)
-			return;
-		ft_strlcpy(tmp, start, (end - start));
-		printf("%s\n", tmp);
-	}
-}

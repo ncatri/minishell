@@ -38,8 +38,9 @@ enum e_machine_states{
 	ST_LESS,
 	ST_GREAT,
 	ST_WORD_TRANSITION,
+	ST_EXPAND_VAR_DQUOTE,
 };
-# define NUM_OF_STATES (7)
+# define NUM_OF_STATES (8)
 
 t_list	*tokenizer(char *line);
 t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
@@ -59,6 +60,7 @@ t_error	f_doublequote(char cursor, enum e_machine_states *state, t_list **token_
 t_error	f_singlequote(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 t_error	f_less(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 t_error	f_great(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
+t_error	f_var_expansion_dquote(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 
 void	set_machine_state(char cursor, enum e_machine_states *state);
 
@@ -67,9 +69,7 @@ t_error	f_word_transition(char cursor, enum e_machine_states *state, t_list **to
 
 /* post processing of tokens */
 
-t_error	expand_words(t_list *token_list);
 t_error	link_tokens(t_list *token_list);
-void	variable_expansion(char *data);
 
 /* debug */
 
