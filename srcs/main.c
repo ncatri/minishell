@@ -1,13 +1,5 @@
 #include "execution.h"
 
-void	wait_childs()
-{
-	int status;
-	pid_t wait_return;
-
-	while ((wait_return = wait(&status)) > 0);
-}
-
 void	allpipes_action(int pipesfd[][2], int nb_pipes, pipes action)
 {
 	int i = -1;
@@ -70,7 +62,7 @@ int main(int argc, char **argv)
 	char 		*cmds[] = {"/bin/ls", "/usr/bin/grep", "/bin/cat", "/usr/bin/rev", "/bin/cat", "/usr/bin/grep", "/usr/bin/wc", NULL};
 	char 		*args[][10] = {{"ls", NULL}, {"grep", "file", NULL}, {"cat", NULL}, {"rev", NULL}, {"cat", "-e", NULL}, {"grep", "i", NULL}, {"wc", "-c", NULL}, {NULL}};
 	t_cmd commands[10];
-	char 		*files[][20] = {{"input1.txt", "input2.txt",  "input3.txt", "heredoc", NULL}, {"output1.txt", NULL}, {"input4.txt", "heredoc", NULL}, {"output2.txt", "output3.txt", "output4.txt", NULL}, {NULL}};
+	char 		*files[][20] = {{"input1.txt", "heredoc", "input3.txt", "heredoc", NULL}, {"output1.txt", NULL}, {"input4.txt", "heredoc", NULL}, {"output2.txt", "output3.txt", "output4.txt", NULL}, {NULL}};
 
 	allpipes_action(pipesfd, nb_pipes, INITIALIZE);
 	fill_commands(commands, cmds, args, files);
@@ -89,13 +81,7 @@ int main(int argc, char **argv)
 			execve(commands[i].exec, commands[i].args, NULL);
 		}
 		else
-		{
-			pids[i].pid = fork_res;
-			if (i == 2 || i == 4)
-				pids[i].heredoc = 1;
-			else
-				pids[i].heredoc = 0;
-		}
+			fill_pids(fork_res, commands[i].input, pids, i);
 	}
 	allpipes_action(pipesfd, nb_pipes, DESTROY);
 	wait_childs();

@@ -34,5 +34,7 @@ int		connect_output_pipe(int i, int nb_cmds, char **output, int pipesfd[][2]);
 int		wait_previous_heredoc(char **input, t_pid *pids, int i);
 int		input_redirection(char **input);
 int		output_redirection(char **outputs);
+int		fill_pids(int fork_res, char **input, t_pid *pids, int i);
+void	wait_childs();
 
 #endif
