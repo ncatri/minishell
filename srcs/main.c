@@ -2,20 +2,26 @@
 
 void	allpipes_action(int pipesfd[][2], int nb_pipes, pipes action)
 {
-	int i = -1;
-
+	int i;
+	
+	i = -1;
 	if (action == DESTROY)
 	{
 		while (++i < nb_pipes)
 		{
-			close(pipesfd[i][READ]);
-			close(pipesfd[i][WRITE]);
+			if (close(pipesfd[i][READ]) == -1)
+				return (1);
+			if (close(pipesfd[i][WRITE]) == -1)
+				return (1);
 		}
 	}
 	else
 	{
 		while (++i < nb_pipes)
-			pipe(pipesfd[i]);
+		{
+			if (pipe(pipesfd[i]) == -1)
+				return (-1);
+		}
 	}
 }
 

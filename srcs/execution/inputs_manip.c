@@ -11,11 +11,16 @@ int	browse_inputs(char **input_cmd)
 		if (ft_strncmp(input_cmd[j], "heredoc", 7) == 0)
 		{
 			fd = heredoc("eof", fd);
+			if (fd == -1)
+				return (-1);
 			if (input_cmd[j + 1] == NULL)
 				dup2(fd, STDIN_FILENO);
 		}
 		else
-			open(input_cmd[j], O_RDWR, 777);
+		{
+			if (open(input_cmd[j], O_RDWR, 777) == -1)
+				return (-1);
+		}
 	}
 	return (j);
 }

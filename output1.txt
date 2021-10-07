@@ -1,3 +1,1 @@
-bonsoir
-ok
-trop fun bordel
+Affichage dans output1.txt

@@ -35,7 +35,10 @@ int	wait_previous_heredoc(char **input, t_pid *pids, int i)
 	{
 		previous_hd = find_previous_hd(pids, i);
 		if (previous_hd != -1)
-			waitpid(pids[previous_hd].pid, 0, 0);
+		{
+			if (waitpid(pids[previous_hd].pid, 0, 0) == -1)
+				return (1);
+		}
 	}
 	return (0);
 }
@@ -46,6 +49,8 @@ int	heredoc(char *terminator, int fd)
 
 	line = NULL;
 	fd = open("heredoc.txt", O_RDWR | O_CREAT | O_TRUNC, 0777);
+	if (fd == -1)
+		return (-1);
 	while (get_next_line(READ, &line) != 0 && ft_strncmp(line, terminator, ft_strlen(terminator)) != 0)
 	{
 		write(fd, line, ft_strlen(line));
@@ -55,5 +60,7 @@ int	heredoc(char *terminator, int fd)
 	free(line);
 	close(fd);
 	fd = open("heredoc.txt", O_RDWR, 0777);
+	if (fd == -1)
+		return (-1);
 	return (fd);
 }
