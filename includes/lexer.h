@@ -3,28 +3,32 @@
 
 # include <stdio.h> // printf
 # include "minishell.h"
+#include "libft.h"
 
 typedef struct s_buffer{
 	char	*buf;
 	size_t	size;
 	size_t	pos;
-	int		n_squote;
-	int		n_dquote;
 }				t_buffer;
 # define BUF_SIZE (1)
 
 enum e_token_types{
 	WORD,	// cmd, option, args, files
+	WORD_NOEXPAND,
 	LESS,	// <
 	DLESS,	// <<
 	GREAT,	// >
 	DGREAT, // >>
 	PIPE	// |
 };
+# define NUM_OF_TOKENS (7) /* Needed for parser */
+
+# define INVALID_WORD_CHAR "&();"
 
 typedef struct s_token{
 	int		type;
 	char	*data;
+	t_bool	concat_next;
 }				t_token;
 
 enum e_machine_states{
@@ -34,16 +38,18 @@ enum e_machine_states{
 	ST_OPEN_DQUOTE,
 	ST_LESS,
 	ST_GREAT,
+	ST_WORD_TRANSITION,
 };
-# define NUM_OF_STATES (6)
+# define NUM_OF_STATES (7)
 
-t_error	tokenizer(char *line);
+t_list	*tokenizer(char *line);
 t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 t_error	initialize_buffer(t_buffer *buffer);
 t_error	append_buffer(t_buffer *buffer, char c);
 t_token *new_token(enum e_token_types type, char *buf);
 void	free_token(void *token);
-t_error	add_token(t_list **token_list, int token_type);
+t_error	add_token_to_list(t_list **token_list, int token_type, char *data);
+t_error	syntax_error(char c);
 
 /* tableau pointeurs sur fonction */
 
@@ -55,6 +61,9 @@ t_error	f_less(char cursor, enum e_machine_states *state, t_list **token_list, t
 t_error	f_great(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 
 void	set_machine_state(char cursor, enum e_machine_states *state);
+
+void	link_last_token(t_list *token_list);
+t_error	f_word_transition(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 
 /* debug */
 

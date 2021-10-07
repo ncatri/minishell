@@ -1,12 +1,23 @@
+# detecting OS to compile on Linux
+UNAME = $(shell uname)
+
 SRCS_FOLDER = srcs
-SRCS_LIST = lexer.c \
-			lex_functions.c \
-			lex_functions2.c \
-			debug.c
+OBJS_FOLDER = bin
 
-SRCS = $(addprefix $(SRCS_FOLDER)/, $(SRCS_LIST))
+SRCS = 	tokenizer/lexer.c \
+		tokenizer/lex_functions.c \
+		tokenizer/lex_functions2.c \
+		tokenizer/token_utils.c \
+		tokenizer/debug.c \
+		parser/parser.c \
+		parser/debug.c \
+		parser/array_utils.c \
+		parser/parse_funcs.c \
+		execution/heredocs.c \
+		execution/inputs_manip.c \
+		execution/outputs_manip.c \
 
-OBJS = $(SRCS:.c=.o)
+OBJS = $(addprefix $(OBJS_FOLDER)/, $(SRCS:.c=.o))
 
 NAME = minishell
 INCLUDES = includes
@@ -17,23 +28,29 @@ HEADERS_LIST= $(addprefix $(INCLUDES)/, $(SRCS_LIST:.c=.h))
 
 RM = rm -f
 CC = clang
-CFLAGS = -Werror -Wall -Wextra -g -I $(INCLUDES) -I$(LIBFT)/includes
+CFLAGS = -Werror -Wall -Wextra -g -I $(INCLUDES) -I$(LIBFT)/includes #-fsanitize=address
 LIBFT	= libft
 
-%.o: %.c $(INCLUDES)/minishell.h $(HEADERS_LIST) $(LIBFT)/$(LIBFT).a
+$(OBJS_FOLDER)/%.o: $(SRCS_FOLDER)/%.c $(INCLUDES)/minishell.h $(HEADERS_LIST) $(LIBFT)/$(LIBFT).a
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-all: libft_ $(NAME)
+all: libft_ $(NAME) 
 
+ifeq ($(UNAME), Linux)
+$(NAME) : $(OBJS) $(INCLUDES) $(SRCS_FOLDER)/main.c | libft_
+	$(CC) $(CFLAGS) -lreadline -L$(LIBFT)  $(OBJS) $(SRCS_FOLDER)/main.c -o $(NAME) -lft
+else
 $(NAME) : $(OBJS) $(INCLUDES) $(SRCS_FOLDER)/main.c | libft_
 	$(CC) $(CFLAGS) -lreadline -L$(LIBFT) -lft $(OBJS) $(SRCS_FOLDER)/main.c -o $(NAME)
+endif
 
 libft_:
 	$(MAKE) -C $(LIBFT)
 
 clean:
 	$(MAKE) clean -C $(LIBFT)
-	$(RM) $(OBJS)
+	$(RM) -r $(OBJS_FOLDER)
 	$(RM) -r $(NAME).dSYM
 
 fclean: clean
