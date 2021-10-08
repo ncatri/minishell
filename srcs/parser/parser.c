@@ -5,7 +5,7 @@
  *	output: an array of pointer to commands
 */
 
-void	parser(t_list *token_list)
+t_command	**parser(t_list *token_list)
 {
 	t_command			**cmd_array;
 	t_command			cmd_to_build;
@@ -26,8 +26,9 @@ void	parser(t_list *token_list)
 	}
 	if (state == COMMAND_IN_PROGRESS)
 		push_command_to_array(&cmd_array, &cmd_to_build);
-	print_command_array(cmd_array, g_global.num_cmds);
-	free_array((void**)cmd_array, g_global.num_cmds);
+//	print_command_array(cmd_array, g_global.num_cmds);
+//	free_array((void**)cmd_array, g_global.num_cmds);
+	return (cmd_array);
 }
 
 t_error	parse_analyzer(t_list **tok_cursor, t_command ***cmd_array, \
