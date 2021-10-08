@@ -6,14 +6,6 @@
 # define CHILD (0)
 # include "minishell.h"
 
-typedef struct s_cmd
-{
-	char	*exec;
-	char	**args;
-	char	**input;
-	char	**output;
-} t_cmd;
-
 typedef struct s_pid
 {
 	pid_t 	pid;
@@ -36,5 +28,7 @@ int		input_redirection(char **input);
 int		output_redirection(char **outputs);
 int		fill_pids(int fork_res, char **input, t_pid *pids, int i);
 void	wait_childs();
+int		allpipes_action(int pipesfd[][2], int nb_pipes, pipes action);
+int		execution();
 
 #endif
