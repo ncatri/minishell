@@ -4,7 +4,7 @@
  * output: a list of tokens
 */
 
-t_error	tokenizer(char *line)
+t_list	*tokenizer(char *line)
 {
 	char	*cursor;
 	t_list	*token_list;
@@ -21,18 +21,17 @@ t_error	tokenizer(char *line)
 	i = ft_strlen(line);
 	while (i-- >= 0)
 	{
-		analyzer(*cursor, &state, &token_list, &buffer);
-		// check machine state
-		// depending on the input, update machine state
-		// do something with the input
+		if (analyzer(*cursor, &state, &token_list, &buffer) == FAIL)
+		{
+			ft_lstclear(&token_list, free_token);
+			token_list = NULL;
+			break;
+		}
 		cursor++;
 	}
 	free(buffer.buf);
-	// conclude following machine state
-	printf("%s\n", line);
-	print_token_list(token_list);	
-	ft_lstclear(&token_list, free_token);
-	return (SUCCESS);
+	link_tokens(token_list);
+	return (token_list);
 }
 
 t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
@@ -49,6 +48,8 @@ t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list,
 	f[ST_OPEN_SQUOTE] = f_singlequote;
 	f[ST_LESS] = f_less;
 	f[ST_GREAT] = f_great;
+	f[ST_WORD_TRANSITION] = f_word_transition;
+	f[ST_EXPAND_VAR_DQUOTE] = f_var_expansion_dquote;
 
 	check = (*f[*state])(cursor, state, token_list, buffer);
 	return (check);
@@ -56,12 +57,9 @@ t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list,
 
 t_error	initialize_buffer(t_buffer *buf)
 {
-	free(buf->buf);
 	buf->buf = ft_calloc(sizeof(char), BUF_SIZE);
 	buf->size = BUF_SIZE;
 	buf->pos = 0;
-	buf->n_squote = 0;
-	buf->n_dquote = 0;
 	if (buf->buf == NULL)
 		return (FAIL);
 	return (SUCCESS);
@@ -86,40 +84,5 @@ t_error	append_buffer(t_buffer *buffer, char c)
 	}
 	buffer->buf[buffer->pos] = c;
 	buffer->pos++;
-	return (SUCCESS);
-}
-
-t_token *new_token(enum e_token_types type, char *buf)
-{
-	t_token *token;
-
-	token = malloc(sizeof(t_token));
-	if (token)
-	{
-		token->type = type;
-		token->data = ft_strdup(buf);
-		if (token->data == NULL)
-			return (NULL);
-	}
-	return (token);
-}
-
-void	free_token(void *token)
-{
-	t_token *tok;
-
-	tok = (t_token*)token;
-	free(tok->data);
-	free(tok);
-}
-
-t_error	add_token(t_list **token_list, int token_type)
-{
-	t_token *token;
-
-	token = new_token(token_type, "");
-	if (!token)
-		return (FAIL);
-	ft_lstadd_back(token_list, ft_lstnew(token));
 	return (SUCCESS);
 }
