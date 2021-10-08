@@ -21,25 +21,15 @@ t_error	f_inword(char cursor, enum e_machine_states *state, t_list **token_list,
 {
 	if (ft_is_incharset(cursor, INVALID_WORD_CHAR))
 		return (syntax_error(cursor));
-	else if (ft_isspace(cursor) || cursor == '\0' || cursor == '<' || cursor == '>' || cursor == '|')
+	else if (ft_isspace(cursor) || ft_is_incharset(cursor, "<>|\"\'") || cursor == '\0')
 	{
-		append_buffer(buffer, '\0');
-		if (add_token_to_list(token_list, WORD, buffer->buf) == FAIL)
+		if (push_buf_to_toklist(buffer, token_list, WORD) == FAIL)
 			return (FAIL);
-		free(buffer->buf);
-		initialize_buffer(buffer);
 		if (cursor == '|')
 			if (add_token_to_list(token_list, PIPE, "") == FAIL)
 				return (FAIL);
-	}
-	else if (cursor == '"' || cursor == '\'')
-	{
-		append_buffer(buffer, '\0');
-		if (add_token_to_list(token_list, WORD, buffer->buf) == FAIL)
-			return (FAIL);
-		link_last_token(*token_list);
-		free(buffer->buf);
-		initialize_buffer(buffer);
+		if (cursor == '"' || cursor == '\'')
+			link_last_token(*token_list);
 	}
 	else if (ft_isascii(cursor))
 		append_buffer(buffer, cursor);
@@ -54,17 +44,23 @@ t_error	f_doublequote(char cursor, enum e_machine_states *state, t_list **token_
 	if (cursor == '"') 
 	{
 		*state = ST_WORD_TRANSITION;
-		append_buffer(buffer, '\0');
-		// link to previous ?? --> don't worry, was managed previously!
-		if (add_token_to_list(token_list, WORD, buffer->buf) == FAIL)
+		if (push_buf_to_toklist(buffer, token_list, WORD) == FAIL)
 			return (FAIL);
-		free(buffer->buf);
-		initialize_buffer(buffer);
 	}
 	else if (cursor == '\0')
 	{
 		printf("Error: unclosed double quote\n");
 		return (FAIL);
+	}
+	else if (cursor == '$')
+	{
+		if (buffer->pos > 0)
+		{
+			append_buffer(buffer, '\0');
+			push_buf_to_toklist(buffer, token_list, WORD);
+			link_last_token(*token_list);
+		}
+		*state = ST_EXPAND_VAR_DQUOTE;
 	}
 	else if (ft_isascii(cursor))
 		append_buffer(buffer, cursor);
@@ -78,7 +74,11 @@ t_error	f_singlequote(char cursor, enum e_machine_states *state, t_list **token_
 	(void)token_list;
 
 	if (cursor == '\'') 
-		*state = ST_IN_WORD;
+	{
+		*state = ST_WORD_TRANSITION;
+		if (push_buf_to_toklist(buffer, token_list, WORD_NOEXPAND) == FAIL)
+			return (FAIL);
+	}
 	else if (cursor == '\0')
 	{
 		printf("Error: unclosed single quote\n");
@@ -102,7 +102,7 @@ t_error	f_word_transition(char cursor, enum e_machine_states *state, t_list **to
 	}
 	else if (cursor == '"' || cursor == '\'')
 		link_last_token(*token_list);
-	else if (cursor == '\0')
+	else if (cursor == '\0' || ft_isspace(cursor))
 		;
 	else // all other regular characters
 	{

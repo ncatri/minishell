@@ -30,6 +30,7 @@ t_list	*tokenizer(char *line)
 		cursor++;
 	}
 	free(buffer.buf);
+	link_tokens(token_list);
 	return (token_list);
 }
 
@@ -48,6 +49,7 @@ t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list,
 	f[ST_LESS] = f_less;
 	f[ST_GREAT] = f_great;
 	f[ST_WORD_TRANSITION] = f_word_transition;
+	f[ST_EXPAND_VAR_DQUOTE] = f_var_expansion_dquote;
 
 	check = (*f[*state])(cursor, state, token_list, buffer);
 	return (check);

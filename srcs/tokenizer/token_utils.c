@@ -61,3 +61,9 @@ t_error	syntax_error(char c)
 	write(2, "\n", 1);
 	return (FAIL);
 }
+
+t_error	error_message(char* message)
+{
+	ft_putstr_fd(message, 2);
+	return (FAIL);
+}

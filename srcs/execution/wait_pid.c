@@ -8,7 +8,7 @@ void	wait_childs()
 	while ((wait_return = wait(&status)) > 0);
 }
 
-int	fill_pids(int fork_res, char **input, t_pid *pids, int i)
+int	fill_pids(int fork_res, t_list *input, t_pid *pids, int i)
 {
 	pids[i].pid = fork_res;
 	if (is_heredoc(input) == 1)

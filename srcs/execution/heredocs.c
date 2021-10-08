@@ -12,26 +12,27 @@ int	find_previous_hd(t_pid *pid, int i)
 	return(-1);
 }
 
-int	is_heredoc(char **input)
+t_bool	is_heredoc(t_list *input_list)
 {
-	int i = 0;
+	t_list *cursor;
+	t_redir_in *input;
 
-	if (input == NULL)
-		return (-1);
-	while (input[i])
+	cursor = input_list;
+	while (cursor)
 	{
-		if (ft_strncmp(input[i], "heredoc", 7) == 0)
-			return (1);
-		i++;
+		input = cursor->content;
+		if (input->type == HERE_DOC)
+			return (TRUE);
+		cursor = cursor->next;
 	}
-	return (-1);
+	return (FALSE);
 }
 
-int	wait_previous_heredoc(char **input, t_pid *pids, int i)
+int	wait_previous_heredoc(t_list *input_list, t_pid *pids, int i)
 {
 	int previous_hd;
 
-	if (is_heredoc(input))
+	if (is_heredoc(input_list))
 	{
 		previous_hd = find_previous_hd(pids, i);
 		if (previous_hd != -1)

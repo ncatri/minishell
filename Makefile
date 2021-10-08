@@ -8,6 +8,7 @@ SRCS = 	tokenizer/lexer.c \
 		tokenizer/lex_functions.c \
 		tokenizer/lex_functions2.c \
 		tokenizer/token_utils.c \
+		tokenizer/link_tokens.c \
 		tokenizer/debug.c \
 		parser/parser.c \
 		parser/debug.c \

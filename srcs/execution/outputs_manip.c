@@ -1,20 +1,23 @@
 #include "execution.h"
 
-int	output_redirection(char **outputs)
+int	output_redirection(t_list *output_list)
 {
-	int j;
-	if (outputs != NULL)
+	t_list *cursor;
+	t_redir_out *output;
+
+	cursor = output_list;
+	while (cursor)
 	{
-		j = -1;
-		while (outputs[++j])
-			dup2(open(outputs[j], O_RDWR | O_TRUNC | O_CREAT, 777), STDOUT_FILENO);	
+		output = cursor->content;
+		dup2(open(output->filename, O_RDWR | O_TRUNC | O_CREAT, 777), STDOUT_FILENO);	
+		cursor = cursor->next;
 	}
 	return (0);
 }
 
-int	connect_output_pipe(int i, int nb_cmds, char **output, int pipesfd[][2])
+int	connect_output_pipe(int i, t_list *output_list, int pipesfd[][2])
 {
-	if (i < nb_cmds - 1 && output == NULL)
+	if (i < g_global.num_cmds - 1 && output_list == NULL)
 		dup2(pipesfd[i][WRITE], STDOUT_FILENO);
 	return (0);
 }
