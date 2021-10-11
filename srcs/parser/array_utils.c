@@ -22,3 +22,16 @@ void	free_array(void **ptr_array, int array_size)
 		free(ptr_array[array_size]);
 	free(ptr_array);
 }
+
+char	*last_elt_of_path(char *path)
+{
+	char *backslash;
+
+	if (!path)
+		return (NULL);
+	backslash = ft_strrchr(path, '/');
+	if (!backslash)
+		return (path);
+	else
+		return (backslash + 1);
+}
