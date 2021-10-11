@@ -5,17 +5,10 @@
 # include <readline/readline.h>
 # include <stdio.h> // printf in lexer.c
 
-typedef int t_error;
-# define FAIL (0)
-# define SUCCESS (1)
 # include "lexer.h"
 # include "libft.h"
 //# include "lexer.h"
 //# include "parser.h"
-
-typedef int t_error;
-# define FAIL (0)
-# define SUCCESS (1)
 
 struct s_global{
 	int	num_cmds;

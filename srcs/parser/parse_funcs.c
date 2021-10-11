@@ -12,7 +12,8 @@ t_error	parse_word(t_token *tok, t_command ***cmd_array, t_command *cmd_to_build
 		cmd_to_build->executable = tok->data;
 	else
 	{
-		ret = pushback_array((void***)&cmd_to_build->args, tok->data, cmd_to_build->number_args);
+		ret = ft_pushback_array((void***)&cmd_to_build->args, tok->data,
+				cmd_to_build->number_args);
 		cmd_to_build->number_args++;
 	}
 	*state = COMMAND_IN_PROGRESS;

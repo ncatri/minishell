@@ -9,7 +9,7 @@ int	output_redirection(t_list *output_list)
 	while (cursor)
 	{
 		output = cursor->content;
-		dup2(open(output->filename, O_RDWR | O_TRUNC | O_CREAT, 777), STDOUT_FILENO);	
+		dup2(open(output->filename, O_RDWR | O_TRUNC | O_CREAT, 0644), STDOUT_FILENO);	
 		cursor = cursor->next;
 	}
 	return (0);
