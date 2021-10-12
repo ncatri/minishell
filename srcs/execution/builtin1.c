@@ -12,9 +12,8 @@ int cd(t_command *cmd)
 	//need to change env vars (pwd and oldpwd)
 }
 
-int pwd(t_command *cmd)
+int pwd()
 {
-	cmd = NULL;
 	char buff[PATHMAX];
 	
 	if (getcwd(buff, PATHMAX) == NULL)
@@ -49,10 +48,10 @@ int	check_builtin(t_command *cmd)
 {
 	if (ft_strncmp(cmd->executable, "cd", 2) == 0)
 		return (cd(cmd));
+	if (ft_strncmp(cmd->executable, "pwd", 3) == 0)
+		return (pwd());
 	if (ft_strncmp(cmd->executable, "echo", 4) == 0)
 		return (echo(cmd));
-	if (ft_strncmp(cmd->executable, "pwd", 3) == 0)
-		return (pwd(cmd));
 	//if (ft_strncmp(cmd->executable, "export", 6) == 0)
 	//	return ();
 	//if (ft_strncmp(cmd->executable, "unset", 5) == 0)
