@@ -29,6 +29,11 @@ int		output_redirection(t_list *outputs);
 int		fill_pids(int fork_res, t_list *input, t_pid *pids, int i);
 void	wait_childs();
 int		allpipes_action(int pipesfd[][2], int nb_pipes, pipes action);
-int		execution(t_command **commands);
+int		execution(t_command **commands, char **env);
+void	free_splits(char **chain, int i);
+int		number_of_split(char **splitresult);
+char	*create_command_path(char **env, char *exec);
+void 	print_array(char **array, size_t arr_len);
+
 
 #endif

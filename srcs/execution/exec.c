@@ -28,7 +28,17 @@ int	allpipes_action(int pipesfd[][2], int nb_pipes, pipes action)
 	return (0);
 }
 
-int	execution(t_command **commands)
+int	my_execve(t_command *cmd, char **env)
+{
+	ft_pushfront_array((void ***)&cmd->args, cmd->executable, cmd->number_args);
+	cmd->number_args++;
+	ft_pushback_array((void ***)&cmd->args, NULL, cmd->number_args);
+	cmd->executable = create_command_path(env, cmd->executable);
+	execve(cmd->executable, cmd->args, NULL);
+	return (0);
+}
+
+int	execution(t_command **commands, char **env)
 {
 	int 		nb_pipes = g_global.num_cmds - 1;
 	int 		pipesfd[nb_pipes][2];
@@ -45,13 +55,12 @@ int	execution(t_command **commands)
 		fork_res = fork();
 		if (fork_res == CHILD)
 		{
-			print_command(commands[i]);
 			connect_input_pipe(i, commands[i]->input_redir, pipesfd);
 			connect_output_pipe(i, commands[i]->output_redir, pipesfd);
 			input_redirection(commands[i]->input_redir);
 			output_redirection(commands[i]->output_redir);
 			allpipes_action(pipesfd, nb_pipes, DESTROY);
-			execve(commands[i]->executable, commands[i]->args, NULL);
+			my_execve(commands[i], env);
 		}
 		else
 			fill_pids(fork_res, commands[i]->input_redir, pids, i);

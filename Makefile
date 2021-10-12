@@ -19,6 +19,9 @@ SRCS = 	tokenizer/lexer.c \
 		execution/outputs_manip.c \
 		execution/wait_pid.c \
 		execution/exec.c \
+		execution/free.c \
+		execution/cmd_path.c \
+		execution/debug.c \
 
 OBJS = $(addprefix $(OBJS_FOLDER)/, $(SRCS:.c=.o))
 
