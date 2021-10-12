@@ -28,13 +28,16 @@ int	allpipes_action(int pipesfd[][2], int nb_pipes, pipes action)
 	return (0);
 }
 
-void	my_execve(t_command *cmd, char **env)
+int	my_execve(t_command *cmd, char **env)
 {
+	if (check_builtin(cmd))
+		return (1);
 	ft_pushfront_array((void ***)&cmd->args, cmd->executable, cmd->number_args);
 	cmd->number_args++;
 	ft_pushback_array((void ***)&cmd->args, NULL, cmd->number_args);
 	cmd->executable = create_command_path(env, cmd->executable);
 	execve(cmd->executable, cmd->args, NULL);
+	return (0);
 }
 
 t_error	connections(int i, t_command *cmd, int pipesfd[][2])

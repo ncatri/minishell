@@ -12,7 +12,7 @@ int main(int argc, char **argv, char **env)
 
 	while (1)
 	{
-		line = readline("minishell ===> ");
+		line = readline("\033[0;32mminishell ===> \033[0m");
 		if (line != NULL)
 			add_history(line);
 		token_list = tokenizer(line);

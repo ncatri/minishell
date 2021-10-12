@@ -4,7 +4,10 @@
 # define WRITE (1)
 # define READ (0)
 # define CHILD (0)
+# define PATHMAX (1024)
 # include "minishell.h"
+#include <sys/stat.h>
+
 
 typedef struct s_pid
 {
@@ -34,6 +37,6 @@ void		free_splits(char **chain, int i);
 int			number_of_split(char **splitresult);
 char		*create_command_path(char **env, char *exec);
 void 		print_array(char **array, size_t arr_len);
-
+int			check_builtin(t_command *cmd);
 
 #endif
