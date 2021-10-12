@@ -14,12 +14,12 @@ int main(int argc, char **argv)
 	{
 		line = readline("minishell ===> ");
 		token_list = tokenizer(line);
+		expand_variables(token_list);
 		print_token_list(token_list);
 		cmd_array = parser(token_list);
-		//print_command_array(cmd_array, g_global.num_cmds);
+		print_command_array(cmd_array, g_global.num_cmds);
 //		execution(cmd_array);
 		
-		printf("last elt of path: %s\n", last_elt_of_path(cmd_array[0]->executable));
 		ft_lstclear(&token_list, free_token);
 		free(line);
 	}
