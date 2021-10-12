@@ -1,6 +1,6 @@
 #include "execution.h"
 
-int	output_redirection(t_list *output_list)
+t_error	output_redirection(t_list *output_list)
 {
 	t_list *cursor;
 	t_redir_out *output;
@@ -15,7 +15,7 @@ int	output_redirection(t_list *output_list)
 	return (0);
 }
 
-int	connect_output_pipe(int i, t_list *output_list, int pipesfd[][2])
+t_error	connect_output_pipe(int i, t_list *output_list, int pipesfd[][2])
 {
 	if (i < g_global.num_cmds - 1 && output_list == NULL)
 		dup2(pipesfd[i][WRITE], STDOUT_FILENO);

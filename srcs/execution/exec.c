@@ -28,17 +28,25 @@ int	allpipes_action(int pipesfd[][2], int nb_pipes, pipes action)
 	return (0);
 }
 
-int	my_execve(t_command *cmd, char **env)
+void	my_execve(t_command *cmd, char **env)
 {
 	ft_pushfront_array((void ***)&cmd->args, cmd->executable, cmd->number_args);
 	cmd->number_args++;
 	ft_pushback_array((void ***)&cmd->args, NULL, cmd->number_args);
 	cmd->executable = create_command_path(env, cmd->executable);
 	execve(cmd->executable, cmd->args, NULL);
+}
+
+t_error	connections(int i, t_command *cmd, int pipesfd[][2])
+{
+	connect_input_pipe(i, cmd->input_redir, pipesfd);
+	connect_output_pipe(i, cmd->output_redir, pipesfd);
+	input_redirection(cmd->input_redir);
+	output_redirection(cmd->output_redir);
 	return (0);
 }
 
-int	execution(t_command **commands, char **env)
+t_error	execution(t_command **commands, char **env)
 {
 	int 		nb_pipes = g_global.num_cmds - 1;
 	int 		pipesfd[nb_pipes][2];
@@ -55,10 +63,7 @@ int	execution(t_command **commands, char **env)
 		fork_res = fork();
 		if (fork_res == CHILD)
 		{
-			connect_input_pipe(i, commands[i]->input_redir, pipesfd);
-			connect_output_pipe(i, commands[i]->output_redir, pipesfd);
-			input_redirection(commands[i]->input_redir);
-			output_redirection(commands[i]->output_redir);
+			connections(i, commands[i], pipesfd);
 			allpipes_action(pipesfd, nb_pipes, DESTROY);
 			my_execve(commands[i], env);
 		}

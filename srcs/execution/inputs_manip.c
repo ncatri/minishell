@@ -1,6 +1,6 @@
 #include "execution.h"
 
-int	browse_inputs(t_list *input_list)
+t_error	browse_inputs(t_list *input_list)
 {
 	int 	fd;
 	t_list *cursor;
@@ -30,14 +30,14 @@ int	browse_inputs(t_list *input_list)
 	return (0);
 }
 
-int	connect_input_pipe(int i, t_list *input, int pipesfd[][2])
+t_error	connect_input_pipe(int i, t_list *input, int pipesfd[][2])
 {
 	if (i != 0 && input == NULL)
 		dup2(pipesfd[i - 1][READ] , STDIN_FILENO);
 	return (0);
 }
 
-int	input_redirection(t_list *input_list)
+t_error	input_redirection(t_list *input_list)
 {
 	if (input_list != NULL)
 		browse_inputs(input_list);
