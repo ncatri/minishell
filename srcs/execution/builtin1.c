@@ -44,6 +44,19 @@ int echo(t_command *cmd)
 	return (1);
 }
 
+int env()
+{
+	int i;
+
+	i = 0;
+	while (g_global.envp[i])
+	{
+		printf("%s\n", g_global.envp[i]);
+		i++;
+	}
+	return(1);
+}
+
 int	check_builtin(t_command *cmd)
 {
 	if (ft_strncmp(cmd->executable, "cd", 2) == 0)
@@ -54,10 +67,10 @@ int	check_builtin(t_command *cmd)
 		return (echo(cmd));
 	//if (ft_strncmp(cmd->executable, "export", 6) == 0)
 	//	return ();
-	//if (ft_strncmp(cmd->executable, "unset", 5) == 0)
-	//	return ();
-	//if (ft_strncmp(cmd->executable, "env", 3) == 0)
-	//	return ();
+	if (ft_strncmp(cmd->executable, "unset", 5) == 0)
+		return (unset(cmd));
+	if (ft_strncmp(cmd->executable, "env", 3) == 0)
+		return (env());
 	//if (ft_strncmp(cmd->executable, "exit", 4) == 0)
 	//	return ();
 	return (0);

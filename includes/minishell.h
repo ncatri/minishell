@@ -11,7 +11,8 @@
 //# include "parser.h"
 
 struct s_global{
-	int	num_cmds;
+	int		num_cmds;
+	char 	**envp;
 };
 
 struct s_global g_global;

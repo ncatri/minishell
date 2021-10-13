@@ -2,13 +2,15 @@
 #include "minishell.h"
 #include "parser.h"
 
-int main(int argc, char **argv, char **env)
+int main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
 	char	*line;
 	t_list	*token_list;
 	t_command	**cmd_array;
+
+	g_global.envp = envp;
 	if (argc != 1)
 		return (printf("\x1B[31mToo much args\n\033[0m"));
 	while (1)
@@ -20,7 +22,7 @@ int main(int argc, char **argv, char **env)
 		//print_token_list(token_list);
 		cmd_array = parser(token_list);
 		//print_command_array(cmd_array, g_global.num_cmds);
-		execution(cmd_array, env);
+		execution(cmd_array);
 		
 		//printf("last elt of path: %s\n", last_elt_of_path(cmd_array[0]->executable));
 		//ft_lstclear(&token_list, free_token); --> crash with [ls | rev | rev | cat -e]

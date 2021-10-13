@@ -30,8 +30,6 @@ int	allpipes_action(int pipesfd[][2], int nb_pipes, pipes action)
 
 int	my_execve(t_command *cmd, char **env)
 {
-	if (check_builtin(cmd))
-		return (1);
 	ft_pushfront_array((void ***)&cmd->args, cmd->executable, cmd->number_args);
 	cmd->number_args++;
 	ft_pushback_array((void ***)&cmd->args, NULL, cmd->number_args);
@@ -49,7 +47,7 @@ t_error	connections(int i, t_command *cmd, int pipesfd[][2])
 	return (0);
 }
 
-t_error	execution(t_command **commands, char **env)
+t_error	execution(t_command **commands)
 {
 	int 		nb_pipes = g_global.num_cmds - 1;
 	int 		pipesfd[nb_pipes][2];
@@ -60,6 +58,9 @@ t_error	execution(t_command **commands, char **env)
 	pids = malloc(g_global.num_cmds * sizeof(pid_t));
 	allpipes_action(pipesfd, nb_pipes, INITIALIZE);
 	i = -1;
+	if (g_global.num_cmds == 1)
+		if (check_builtin(commands[0]) == 1)
+			return (0);
 	while (++i < g_global.num_cmds)
 	{
 		wait_previous_heredoc(commands[i]->input_redir, pids, i);
@@ -68,7 +69,7 @@ t_error	execution(t_command **commands, char **env)
 		{
 			connections(i, commands[i], pipesfd);
 			allpipes_action(pipesfd, nb_pipes, DESTROY);
-			my_execve(commands[i], env);
+			my_execve(commands[i], g_global.envp);
 		}
 		else
 			fill_pids(fork_res, commands[i]->input_redir, pids, i);
