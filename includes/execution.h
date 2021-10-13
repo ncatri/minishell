@@ -46,6 +46,7 @@ char		*create_command_path(char **env, char *exec);
 void		free_splits(char **chain, int i);
 int			number_of_split(char **splitresult);
 void 		print_array(char **array, size_t arr_len);
+int			export();
 
 
 #endif

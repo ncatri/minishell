@@ -65,8 +65,8 @@ int	check_builtin(t_command *cmd)
 		return (pwd());
 	if (ft_strncmp(cmd->executable, "echo", 4) == 0)
 		return (echo(cmd));
-	//if (ft_strncmp(cmd->executable, "export", 6) == 0)
-	//	return ();
+	if (ft_strncmp(cmd->executable, "export", 6) == 0)
+		return (export(cmd));
 	if (ft_strncmp(cmd->executable, "unset", 5) == 0)
 		return (unset(cmd));
 	if (ft_strncmp(cmd->executable, "env", 3) == 0)
