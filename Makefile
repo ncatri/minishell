@@ -15,11 +15,16 @@ SRCS = 	tokenizer/lexer.c \
 		parser/debug.c \
 		parser/array_utils.c \
 		parser/parse_funcs.c \
+		signal/signals.c \
 		execution/heredocs.c \
 		execution/inputs_manip.c \
 		execution/outputs_manip.c \
 		execution/wait_pid.c \
 		execution/exec.c \
+		execution/free.c \
+		execution/cmd_path.c \
+		execution/debug.c \
+		execution/builtin1.c \
 
 OBJS = $(addprefix $(OBJS_FOLDER)/, $(SRCS:.c=.o))
 

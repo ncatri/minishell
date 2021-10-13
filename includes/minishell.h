@@ -4,6 +4,8 @@
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <stdio.h> // printf in lexer.c
+# include <signal.h>
+# include <libc.h>
 
 # include "lexer.h"
 # include "libft.h"
