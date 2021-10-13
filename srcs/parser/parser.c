@@ -39,7 +39,7 @@ t_error	parse_analyzer(t_list **tok_cursor, t_command ***cmd_array, \
 	if (!tok_cursor || !cmd_to_build || !state || !cmd_array)
 		return (FAIL);
 	tok = (*tok_cursor)->content;
-	if (tok->type == WORD)
+	if (tok->type == WORD || tok->type == WORD_NOEXPAND)
 		return (parse_word(tok, cmd_array, cmd_to_build, state));
 	else if (tok->type == GREAT || tok->type == DGREAT || \
 			tok->type == LESS || tok->type == DLESS)
