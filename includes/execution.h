@@ -20,6 +20,11 @@ typedef enum pipes{
 	DESTROY,
 } pipes;
 
+typedef enum env_status{
+	CLASSIC,
+	EXPORT,
+} env_status;
+
 //Heredocs
 int			find_previous_hd(t_pid *pid, int i);
 int			is_heredoc(t_list *input);
@@ -37,7 +42,14 @@ t_error		output_redirection(t_list *outputs);
 int			check_builtin(t_command *cmd);
 int			find_key_index(char **env, char *key);
 int 		env();
-int 		unset(t_command *cmd);
+int 		unset(t_command *cmd, int id);
+int 		delete_key(int index);
+char 		**alphasort(char **env);
+int			check_builtin(t_command *cmd);
+int 		cd(t_command *cmd);
+int 		pwd();
+int 		echo(t_command *cmd);
+t_error		pushback_env(void ***array, void *new_elt, size_t array_size);
 //Utils
 int			fill_pids(int fork_res, t_list *input, t_pid *pids, int i);
 void		wait_childs();

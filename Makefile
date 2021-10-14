@@ -24,6 +24,7 @@ SRCS = 	tokenizer/lexer.c \
 		execution/debug.c \
 		execution/builtin1.c \
 		execution/builtin2.c \
+		execution/builtin_utils.c \
 
 OBJS = $(addprefix $(OBJS_FOLDER)/, $(SRCS:.c=.o))
 

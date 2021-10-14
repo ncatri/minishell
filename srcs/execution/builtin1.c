@@ -44,34 +44,33 @@ int echo(t_command *cmd)
 	return (1);
 }
 
-int env()
+int env(char **envp, env_status status)
 {
 	int i;
+	char **export_print;
 
 	i = 0;
-	while (g_global.envp[i])
+	while (envp[i])
 	{
-		printf("%s\n", g_global.envp[i]);
+		if (status == EXPORT)
+		{
+			export_print = ft_split(envp[i], "=");
+			printf("declare -x ");
+			printf("%s", export_print[0]);
+			if (ft_strchr(envp[i], '='))
+			{
+				printf("=\"");
+				if (export_print[1])
+					printf("%s\"\n", export_print[1]);
+				else
+					printf("\"\n");
+			}
+			else
+				printf("\n");
+		}
+		else if (ft_strchr(envp[i], '='))
+			printf("%s\n", envp[i]);
 		i++;
 	}
 	return(1);
-}
-
-int	check_builtin(t_command *cmd)
-{
-	if (ft_strncmp(cmd->executable, "cd", 2) == 0)
-		return (cd(cmd));
-	if (ft_strncmp(cmd->executable, "pwd", 3) == 0)
-		return (pwd());
-	if (ft_strncmp(cmd->executable, "echo", 4) == 0)
-		return (echo(cmd));
-	if (ft_strncmp(cmd->executable, "export", 6) == 0)
-		return (export(cmd));
-	if (ft_strncmp(cmd->executable, "unset", 5) == 0)
-		return (unset(cmd));
-	if (ft_strncmp(cmd->executable, "env", 3) == 0)
-		return (env());
-	//if (ft_strncmp(cmd->executable, "exit", 4) == 0)
-	//	return ();
-	return (0);
 }

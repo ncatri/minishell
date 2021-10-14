@@ -3,7 +3,7 @@
 
 # include <stdio.h> // printf
 # include "minishell.h"
-#include "libft.h"
+# include "libft.h"
 
 typedef struct s_buffer{
 	char	*buf;
