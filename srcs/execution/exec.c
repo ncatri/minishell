@@ -30,13 +30,6 @@ int	allpipes_action(int pipesfd[][2], int nb_pipes, pipes action)
 
 int	my_execve(t_command *cmd, char **env)
 {
-	//The goal of this part is to connect built-in if there is a pipe like [export | wc]
-	//if (check_builtin(cmd) == 1)
-	//{
-	//	//the close (0) make working [export | wc] but its strange way to do it
-	//	close (0);
-	//	return (0);
-	//}
 	ft_pushfront_array((void ***)&cmd->args, cmd->executable, cmd->number_args);
 	cmd->number_args++;
 	ft_pushback_array((void ***)&cmd->args, NULL, cmd->number_args);
@@ -76,7 +69,13 @@ t_error	execution(t_command **commands)
 		{
 			connections(i, commands[i], pipesfd);
 			allpipes_action(pipesfd, nb_pipes, DESTROY);
-			my_execve(commands[i], g_global.envp);
+			if (is_builtin(commands[i]))
+			{
+				check_builtin(commands[i]);
+				exit(1);
+			}
+			else
+				my_execve(commands[i], g_global.envp);
 		}
 		else
 			fill_pids(fork_res, commands[i]->input_redir, pids, i);

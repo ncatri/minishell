@@ -78,6 +78,25 @@ t_error	pushback_env(void ***array, void *new_elt, size_t array_size)
 }
 
 
+int	is_builtin(t_command *cmd)
+{
+	if (ft_strncmp(cmd->executable, "cd", 2) == 0)
+		return (1);
+	if (ft_strncmp(cmd->executable, "pwd", 3) == 0)
+		return (1);
+	if (ft_strncmp(cmd->executable, "echo", 4) == 0)
+		return (1);
+	if (ft_strncmp(cmd->executable, "export", 6) == 0)
+		return (1);
+	if (ft_strncmp(cmd->executable, "unset", 5) == 0)
+		return (1);
+	if (ft_strncmp(cmd->executable, "env", 3) == 0)
+		return (1);
+	//if (ft_strncmp(cmd->executable, "exit", 4) == 0)
+	//	return ();
+	return (0);
+}
+
 int	check_builtin(t_command *cmd)
 {
 	if (ft_strncmp(cmd->executable, "cd", 2) == 0)

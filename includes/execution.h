@@ -49,6 +49,7 @@ int			check_builtin(t_command *cmd);
 int 		cd(t_command *cmd);
 int 		pwd();
 int 		echo(t_command *cmd);
+int	is_builtin(t_command *cmd);
 t_error		pushback_env(void ***array, void *new_elt, size_t array_size);
 //Utils
 int			fill_pids(int fork_res, t_list *input, t_pid *pids, int i);
