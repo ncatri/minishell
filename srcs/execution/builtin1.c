@@ -3,11 +3,13 @@
 int cd(t_command *cmd)
 {
 	struct stat stat_ret;
-
-	stat(cmd->args[0], &stat_ret);
-	if (!S_ISDIR(stat_ret.st_mode))
-		return (printf("Directory doesn't exists\n"));
-	chdir(cmd->args[0]);
+	if (cmd->number_args > 0)
+	{
+		stat(cmd->args[0], &stat_ret);
+		if (!S_ISDIR(stat_ret.st_mode))
+			return (printf("Directory doesn't exists\n"));
+		chdir(cmd->args[0]);
+	}
 	return (1);
 	//need to change env vars (pwd and oldpwd)
 }

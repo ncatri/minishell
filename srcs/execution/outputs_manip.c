@@ -14,15 +14,23 @@ t_error	output_redirection(t_list *output_list)
 			fd = open(output->filename, O_RDWR | O_APPEND | O_CREAT, 0644);
 		else
 			fd = open(output->filename, O_RDWR | O_TRUNC | O_CREAT, 0644);
-		dup2(fd, STDOUT_FILENO);	
+		if (fd == -1)
+			return (FAIL);
+		if (dup2(fd, STDOUT_FILENO) == -1)
+			return (FAIL);	
 		cursor = cursor->next;
 	}
-	return (0);
+	return (SUCCESS);
 }
 
 t_error	connect_output_pipe(int i, t_list *output_list, int pipesfd[][2])
 {
+	int ret;
+
+	ret = 0;
 	if (i < g_global.num_cmds - 1 && output_list == NULL)
-		dup2(pipesfd[i][WRITE], STDOUT_FILENO);
-	return (0);
+		ret = dup2(pipesfd[i][WRITE], STDOUT_FILENO);
+	if (ret == -1)
+		return (FAIL);
+	return (SUCCESS);
 }
