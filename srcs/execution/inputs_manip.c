@@ -32,6 +32,7 @@ t_error	browse_inputs(t_list *input_list)
 
 t_error	connect_input_pipe(int i, t_list *input, int pipesfd[][2])
 {
+//	printf("in connect_input_pipe, pid %d, parent %d\n", getpid(), getppid());
 	if (i != 0 && input == NULL)
 		dup2(pipesfd[i - 1][READ] , STDIN_FILENO);
 	return (0);

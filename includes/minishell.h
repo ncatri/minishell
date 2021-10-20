@@ -1,19 +1,22 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <stdio.h> // printf in lexer.c
 # include <stdlib.h>
 # include <readline/readline.h>
-# include <stdio.h> // printf in lexer.c
 # include <signal.h>
 # include <libc.h>
 
 # include "lexer.h"
 # include "libft.h"
+# include "signals.h"
 //# include "lexer.h"
 //# include "parser.h"
 
 struct s_global{
-	int	num_cmds;
+	int		num_cmds;
+	char 	**envp;
+	struct termios term_save;
 };
 
 struct s_global g_global;

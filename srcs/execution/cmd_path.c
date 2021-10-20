@@ -13,16 +13,19 @@ char	*last_elt_of_path(char *path)
 		return (backslash + 1);
 }
 
-static int	find_path_index(char **env)
+int	find_key_index(char **env, char *key)
 {
 	int	i;
+	char **split;
 
 	i = 0;
 	while (env[i])
 	{
-		if (ft_strncmp(env[i], "PATH", 4) == 0)
+		split = ft_split(env[i], "=");
+		if (ft_strncmp(split[0], key, ft_strlen(split[0])) == 0)
 			return (i);
 		i++;
+		free_split(split);
 	}
 	return (-1);
 }
@@ -33,7 +36,7 @@ static char	**create_env_paths(char **env)
 	char	**paths;
 	int		index;
 
-	index = find_path_index(env);
+	index = find_key_index(env, "PATH");
 	tmp = ft_split(env[index], "=");
 	paths = ft_split(tmp[1], ":");
 	free_splits(tmp, number_of_split(tmp));

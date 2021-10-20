@@ -25,6 +25,8 @@ SRCS = 	tokenizer/lexer.c \
 		execution/cmd_path.c \
 		execution/debug.c \
 		execution/builtin1.c \
+		execution/builtin2.c \
+		execution/builtin_utils.c \
 
 OBJS = $(addprefix $(OBJS_FOLDER)/, $(SRCS:.c=.o))
 
@@ -37,8 +39,11 @@ HEADERS_LIST= $(addprefix $(INCLUDES)/, $(SRCS_LIST:.c=.h))
 
 RM = rm -f
 CC = clang
-CFLAGS = -Werror -Wall -Wextra -g -I $(INCLUDES) -I$(LIBFT)/includes #-fsanitize=address
+CFLAGS = -Werror -Wall -Wextra -g -I $(INCLUDES) -I$(LIBFT)/includes -fsanitize=address
 LIBFT	= libft
+#readline stuffs:
+LDFLAGS="-L/Users/ncatrien/.brew/opt/readline/lib"
+CPPFLAGS="-I/Users/ncatrien/.brew/opt/readline/include"
 
 $(OBJS_FOLDER)/%.o: $(SRCS_FOLDER)/%.c $(INCLUDES)/minishell.h $(HEADERS_LIST) $(LIBFT)/$(LIBFT).a
 	@mkdir -p $(dir $@)
@@ -48,10 +53,10 @@ all: libft_ $(NAME)
 
 ifeq ($(UNAME), Linux)
 $(NAME) : $(OBJS) $(INCLUDES) $(SRCS_FOLDER)/main.c | libft_
-	$(CC) $(CFLAGS) -lreadline -L$(LIBFT)  $(OBJS) $(SRCS_FOLDER)/main.c -o $(NAME) -lft
+	$(CC) $(CFLAGS) -lreadline $(LDFLAGS) $(CPPFLAGS) -L$(LIBFT)  $(OBJS) $(SRCS_FOLDER)/main.c -o $(NAME) -lft
 else
 $(NAME) : $(OBJS) $(INCLUDES) $(SRCS_FOLDER)/main.c | libft_
-	$(CC) $(CFLAGS) -lreadline -L$(LIBFT) -lft $(OBJS) $(SRCS_FOLDER)/main.c -o $(NAME)
+	$(CC) $(CFLAGS) -lreadline $(LDFLAGS) $(CPPFLAGS) -L$(LIBFT) -lft $(OBJS) $(SRCS_FOLDER)/main.c -o $(NAME)
 endif
 
 libft_:

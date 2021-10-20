@@ -44,7 +44,7 @@ enum e_machine_states{
 
 enum e_add_space{
 	NO_SPACE = 0,
-	SPACE = 1,
+	YES_SPACE = 1,
 };
 
 t_list	*tokenizer(char *line);
