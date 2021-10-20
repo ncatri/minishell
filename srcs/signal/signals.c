@@ -1,6 +1,6 @@
 #include "signals.h"
 
-void	setup_signals(void)
+void	setup_main_signals(void)
 {
 	struct termios term_buff;
 
@@ -12,23 +12,35 @@ void	setup_signals(void)
 //	term_buff.c_lflag &= ICANON;
 	tcsetattr(STDIN_FILENO, TCSANOW, &term_buff);
 
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, signal_handler);
+	signal(SIGINT, main_signal_handler);
+	signal(SIGQUIT, SIG_IGN);
 }
 
-void	signal_handler(int signal)
+void	main_signal_handler(int signal)
 {
+	(void)signal;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
+void	setup_cmd_signals(void)
+{
+	signal(SIGINT, cmd_signal_handler);
+	signal(SIGQUIT, cmd_signal_handler);
+}
+
+void	cmd_signal_handler(int signal)
+{
+	(void)signal;
 	if (signal == SIGINT)
 	{
-		//printf("received SIGINT\n");
 		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
+		return ;
 	}
 	else if (signal == SIGQUIT)
 	{
-		printf("received SIGQUIT\n");
-		exit(0);
+		printf("Quit: 3\n");
 	}
 }

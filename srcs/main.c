@@ -17,10 +17,15 @@ int main(int argc, char **argv, char **envp)
 		return (printf("\x1B[31mToo much args\n\033[0m"));
 	while (1)
 	{
-		setup_signals();
+		setup_main_signals();
 		line = readline("\033[0;32m minishell ===> \033[0m");
-		if (line != NULL)
-			add_history(line);
+		if (line == NULL)
+		{
+			tcsetattr(STDIN_FILENO, TCSANOW, &g_global.term_save);
+			printf("exit\n");
+			exit(0);
+		}
+		add_history(line);
 		token_list = tokenizer(line);
 		expand_variables(token_list);
 	//	print_token_list(token_list);
@@ -35,6 +40,7 @@ int main(int argc, char **argv, char **envp)
 		
 		//ft_lstclear(&token_list, free_token); --> crash with [ls | rev | rev | cat -e]
 		free(line);
+		tcsetattr(STDIN_FILENO, TCSANOW, &g_global.term_save);
 	}
 	return (0);
 }

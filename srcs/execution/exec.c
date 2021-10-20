@@ -64,10 +64,13 @@ t_error	execution(t_command **commands)
 			return (0);
 	while (++i < g_global.num_cmds)
 	{
+		setup_cmd_signals();
 		wait_previous_heredoc(commands[i]->input_redir, pids, i);
 		fork_res = fork();
+		tcsetattr(STDIN_FILENO, TCSANOW, &g_global.term_save);
 		if (fork_res == CHILD)
 		{
+		//	setup_forks_signals();
 			connections(i, commands[i], pipesfd);
 			allpipes_action(pipesfd, nb_pipes, DESTROY);
 			if (is_builtin(commands[i]))
