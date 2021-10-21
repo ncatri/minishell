@@ -79,7 +79,7 @@ t_error	execution(t_command **commands)
 	pid_t		fork_res;
 	int 		i;
 
-	pids = malloc(g_global.num_cmds * sizeof(pid_t));
+	pids = malloc(g_global.num_cmds * sizeof(t_pid));
 	if (pids == NULL)
 		return (FAIL);
 	if (allpipes_action(pipesfd, nb_pipes, INITIALIZE) == FAIL)

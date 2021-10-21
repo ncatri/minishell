@@ -31,13 +31,15 @@ int echo(t_command *cmd)
 	int newline;
 
 	i = 0;
-	newline = ft_strncmp(cmd->args[0], "-n", 2);
+	newline = 0;
+	if (cmd->number_args > 0)
+		newline = ft_strncmp(cmd->args[0], "-n", 2);
 	if (newline == 0)
 		i = 1;
 	while (i < cmd->number_args)
 	{
 		printf("%s", cmd->args[i]);
-		if (cmd->args[i + 1])
+		if (i != cmd->number_args - 1)
 			printf(" ");
 		i++;
 	}
