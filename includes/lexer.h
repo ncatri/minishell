@@ -3,7 +3,7 @@
 
 # include <stdio.h> // printf
 # include "minishell.h"
-#include "libft.h"
+# include "libft.h"
 
 typedef struct s_buffer{
 	char	*buf;
@@ -39,13 +39,12 @@ enum e_machine_states{
 	ST_LESS,
 	ST_GREAT,
 	ST_WORD_TRANSITION,
-	ST_EXPAND_VAR_DQUOTE,
 };
-# define NUM_OF_STATES (8)
+# define NUM_OF_STATES (7)
 
 enum e_add_space{
 	NO_SPACE = 0,
-	SPACE = 1,
+	YES_SPACE = 1,
 };
 
 t_list	*tokenizer(char *line);
@@ -78,6 +77,12 @@ t_error	f_word_transition(char cursor, enum e_machine_states *state, t_list **to
 /* post processing of tokens */
 
 t_error	link_tokens(t_list *token_list);
+
+/* variable substitution */
+
+t_error	expand_variables(t_list *token_list);
+t_error	expansion(char **string);
+t_error	rebuild_string(char **string, char *middle, char *variable, char *after);
 
 /* debug */
 

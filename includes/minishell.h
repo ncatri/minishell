@@ -1,24 +1,23 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <stdlib.h>
-# include <readline/readline.h>
 # include <stdio.h> // printf in lexer.c
+# include <stdlib.h>
+# include <signal.h>
+# include <libc.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
-typedef int t_error;
-# define FAIL (0)
-# define SUCCESS (1)
 # include "lexer.h"
 # include "libft.h"
+# include "signals.h"
 //# include "lexer.h"
 //# include "parser.h"
 
-typedef int t_error;
-# define FAIL (0)
-# define SUCCESS (1)
-
 struct s_global{
-	int	num_cmds;
+	int		num_cmds;
+	char 	**envp;
+	struct termios term_save;
 };
 
 struct s_global g_global;

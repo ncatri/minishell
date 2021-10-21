@@ -52,16 +52,6 @@ t_error	f_doublequote(char cursor, enum e_machine_states *state, t_list **token_
 		printf("Error: unclosed double quote\n");
 		return (FAIL);
 	}
-	else if (cursor == '$')
-	{
-		if (buffer->pos > 0)
-		{
-			append_buffer(buffer, '\0');
-			push_buf_to_toklist(buffer, token_list, WORD);
-			link_last_token(*token_list);
-		}
-		*state = ST_EXPAND_VAR_DQUOTE;
-	}
 	else if (ft_isascii(cursor))
 		append_buffer(buffer, cursor);
 	else

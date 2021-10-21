@@ -9,16 +9,24 @@ SRCS = 	tokenizer/lexer.c \
 		tokenizer/lex_functions2.c \
 		tokenizer/token_utils.c \
 		tokenizer/link_tokens.c \
+		tokenizer/variable_expansion.c \
 		tokenizer/debug.c \
 		parser/parser.c \
 		parser/debug.c \
 		parser/array_utils.c \
 		parser/parse_funcs.c \
+		signal/signals.c \
 		execution/heredocs.c \
 		execution/inputs_manip.c \
 		execution/outputs_manip.c \
 		execution/wait_pid.c \
 		execution/exec.c \
+		execution/free.c \
+		execution/cmd_path.c \
+		execution/debug.c \
+		execution/builtin1.c \
+		execution/builtin2.c \
+		execution/builtin_utils.c \
 
 OBJS = $(addprefix $(OBJS_FOLDER)/, $(SRCS:.c=.o))
 
@@ -31,8 +39,11 @@ HEADERS_LIST= $(addprefix $(INCLUDES)/, $(SRCS_LIST:.c=.h))
 
 RM = rm -f
 CC = clang
-CFLAGS = -Werror -Wall -Wextra -g -I $(INCLUDES) -I$(LIBFT)/includes #-fsanitize=address
+CFLAGS = -Werror -Wall -Wextra -I$(INCLUDES) -I$(LIBFT)/includes -g3 -fsanitize=address
 LIBFT	= libft
+#readline stuffs:
+LDFLAGS="-L/Users/ncatrien/.brew/opt/readline/lib"
+CPPFLAGS="-I/Users/ncatrien/.brew/opt/readline/include"
 
 $(OBJS_FOLDER)/%.o: $(SRCS_FOLDER)/%.c $(INCLUDES)/minishell.h $(HEADERS_LIST) $(LIBFT)/$(LIBFT).a
 	@mkdir -p $(dir $@)
@@ -42,10 +53,10 @@ all: libft_ $(NAME)
 
 ifeq ($(UNAME), Linux)
 $(NAME) : $(OBJS) $(INCLUDES) $(SRCS_FOLDER)/main.c | libft_
-	$(CC) $(CFLAGS) -lreadline -L$(LIBFT)  $(OBJS) $(SRCS_FOLDER)/main.c -o $(NAME) -lft
+	$(CC) $(CFLAGS) -lreadline $(LDFLAGS) $(CPPFLAGS) -L$(LIBFT)  $(OBJS) $(SRCS_FOLDER)/main.c -o $(NAME) -lft
 else
 $(NAME) : $(OBJS) $(INCLUDES) $(SRCS_FOLDER)/main.c | libft_
-	$(CC) $(CFLAGS) -lreadline -L$(LIBFT) -lft $(OBJS) $(SRCS_FOLDER)/main.c -o $(NAME)
+	$(CC) $(CFLAGS) -lreadline $(LDFLAGS) $(CPPFLAGS) -L$(LIBFT) -lft $(OBJS) $(SRCS_FOLDER)/main.c -o $(NAME)
 endif
 
 libft_:
