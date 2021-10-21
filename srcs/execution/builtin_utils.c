@@ -36,7 +36,7 @@ char **alphasort(char **env)
 	char 	**copy;
 
 
-	copy = malloc(number_of_split(env) * sizeof(char *) + 1);
+	copy = malloc(number_of_split(env) * (sizeof(char *) + 1));
 	i = 0;
 	while (env[i])
 	{

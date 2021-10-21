@@ -2,8 +2,9 @@
 # define MINISHELL_H
 
 # include <stdlib.h>
-# include <readline/readline.h>
 # include <stdio.h> // printf in lexer.c
+# include <readline/readline.h>
+# include <readline/history.h>
 
 # include "lexer.h"
 # include "libft.h"
