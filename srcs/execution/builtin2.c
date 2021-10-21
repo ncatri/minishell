@@ -42,10 +42,10 @@ int	export(t_command *cmd)
 		if (find_key_index(g_global.envp, split[0]) >= 0)
 		{
 			unset(cmd, i);
-			pushback_env((void ***)&g_global.envp, cmd->args[i], number_of_split(g_global.envp));
+			pushback_env((void ***)&g_global.envp, ft_strdup(cmd->args[i]), number_of_split(g_global.envp));
 		}
 		else
-			pushback_env((void ***)&g_global.envp, cmd->args[i], number_of_split(g_global.envp));
+			pushback_env((void ***)&g_global.envp, ft_strdup(cmd->args[i]), number_of_split(g_global.envp));
 		i++;
 	}
 	return (1);
