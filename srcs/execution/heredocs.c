@@ -38,10 +38,10 @@ int	wait_previous_heredoc(t_list *input_list, t_pid *pids, int i)
 		if (previous_hd != -1)
 		{
 			if (waitpid(pids[previous_hd].pid, 0, 0) == -1)
-				return (1);
+				return (FAIL);
 		}
 	}
-	return (0);
+	return (SUCCESS);
 }
 
 int	heredoc(char *terminator, int fd)
@@ -51,7 +51,7 @@ int	heredoc(char *terminator, int fd)
 	line = NULL;
 	fd = open("heredoc.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
-		return (-1);
+		return (FAIL);
 	while (get_next_line(READ, &line) != 0 && ft_strncmp(line, terminator, ft_strlen(terminator)) != 0)
 	{
 		write(fd, line, ft_strlen(line));
@@ -62,6 +62,6 @@ int	heredoc(char *terminator, int fd)
 	close(fd);
 	fd = open("heredoc.txt", O_RDWR, 0777);
 	if (fd == -1)
-		return (-1);
+		return (FAIL);
 	return (fd);
 }

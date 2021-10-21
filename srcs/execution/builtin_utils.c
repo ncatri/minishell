@@ -80,38 +80,38 @@ t_error	pushback_env(void ***array, void *new_elt, size_t array_size)
 
 int	is_builtin(t_command *cmd)
 {
-	if (ft_strncmp(cmd->executable, "cd", 2) == 0)
+	if (ft_strcmp(cmd->executable, "cd") == 0)
 		return (1);
-	if (ft_strncmp(cmd->executable, "pwd", 3) == 0)
+	if (ft_strcmp(cmd->executable, "pwd") == 0)
 		return (1);
-	if (ft_strncmp(cmd->executable, "echo", 4) == 0)
+	if (ft_strcmp(cmd->executable, "echo") == 0)
 		return (1);
-	if (ft_strncmp(cmd->executable, "export", 6) == 0)
+	if (ft_strcmp(cmd->executable, "export") == 0)
 		return (1);
-	if (ft_strncmp(cmd->executable, "unset", 5) == 0)
+	if (ft_strcmp(cmd->executable, "unset") == 0)
 		return (1);
-	if (ft_strncmp(cmd->executable, "env", 3) == 0)
+	if (ft_strcmp(cmd->executable, "env") == 0)
 		return (1);
-	//if (ft_strncmp(cmd->executable, "exit", 4) == 0)
+	//if (ft_strcmp(cmd->executable, "exit") == 0)
 	//	return ();
 	return (0);
 }
 
 int	check_builtin(t_command *cmd)
 {
-	if (ft_strncmp(cmd->executable, "cd", 2) == 0)
+	if (ft_strcmp(cmd->executable, "cd") == 0)
 		return (cd(cmd));
-	if (ft_strncmp(cmd->executable, "pwd", 3) == 0)
+	if (ft_strcmp(cmd->executable, "pwd") == 0)
 		return (pwd());
-	if (ft_strncmp(cmd->executable, "echo", 4) == 0)
+	if (ft_strcmp(cmd->executable, "echo") == 0)
 		return (echo(cmd));
-	if (ft_strncmp(cmd->executable, "export", 6) == 0)
+	if (ft_strcmp(cmd->executable, "export") == 0)
 		return (export(cmd));
-	if (ft_strncmp(cmd->executable, "unset", 5) == 0)
+	if (ft_strcmp(cmd->executable, "unset") == 0)
 		return (unset(cmd, -1));
-	if (ft_strncmp(cmd->executable, "env", 3) == 0)
+	if (ft_strcmp(cmd->executable, "env") == 0)
 		return (env(g_global.envp, CLASSIC));
-	//if (ft_strncmp(cmd->executable, "exit", 4) == 0)
+	//if (ft_strcmp(cmd->executable, "exit") == 0)
 	//	return ();
 	return (0);
 }
