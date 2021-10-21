@@ -42,8 +42,8 @@ CC = clang
 CFLAGS = -Werror -Wall -Wextra -I$(INCLUDES) -I$(LIBFT)/includes -g3 -fsanitize=address
 LIBFT	= libft
 #readline stuffs:
-LDFLAGS="-L/Users/ncatrien/.brew/opt/readline/lib"
-CPPFLAGS="-I/Users/ncatrien/.brew/opt/readline/include"
+LDFLAGS="-L$(HOME)/.brew/opt/readline/lib"
+CPPFLAGS="-I$(HOME)/.brew/opt/readline/include"
 
 $(OBJS_FOLDER)/%.o: $(SRCS_FOLDER)/%.c $(INCLUDES)/minishell.h $(HEADERS_LIST) $(LIBFT)/$(LIBFT).a
 	@mkdir -p $(dir $@)
