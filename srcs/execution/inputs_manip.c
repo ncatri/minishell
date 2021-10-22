@@ -13,7 +13,7 @@ t_error	browse_inputs(t_list *input_list)
 		if (input->type == HERE_DOC)
 		{
 			fd = heredoc(input->name_delim, fd);
-			if (fd == -1)
+			if (fd == FAIL)
 				return (FAIL);
 			if (cursor->next == NULL)
 				dup2(fd, STDIN_FILENO);
