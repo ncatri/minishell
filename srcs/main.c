@@ -40,7 +40,13 @@ int main(int argc, char **argv, char **envp)
 		
 		//ft_lstclear(&token_list, free_token); --> crash with [ls | rev | rev | cat -e]
 		free(line);
-		free(*cmd_array);
+		int i;
+		i = 0;
+		while (i < g_global.num_cmds)
+		{
+			free(cmd_array[i]);
+			i++;
+		}
 		free(cmd_array);
 		tcsetattr(STDIN_FILENO, TCSANOW, &g_global.term_save);
 	}
