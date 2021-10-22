@@ -12,13 +12,13 @@ int main(int argc, char **argv, char **envp)
 	t_list	*token_list;
 	t_command	**cmd_array;
 
-	g_global.envp = envp;
+	g_global.envp = copy_env(envp);
 	if (argc != 1)
 		return (printf("\x1B[31mToo much args\n\033[0m"));
 	while (1)
 	{
 		setup_main_signals();
-		line = readline("\033[0;32m minishell ===> \033[0m");
+		line = readline("\033[0;32mminishell ===> \033[0m");
 		if (line == NULL)
 		{
 			tcsetattr(STDIN_FILENO, TCSANOW, &g_global.term_save);
@@ -40,7 +40,10 @@ int main(int argc, char **argv, char **envp)
 		
 		//ft_lstclear(&token_list, free_token); --> crash with [ls | rev | rev | cat -e]
 		free(line);
+		free(*cmd_array);
+		free(cmd_array);
 		tcsetattr(STDIN_FILENO, TCSANOW, &g_global.term_save);
 	}
+	free(g_global.envp);
 	return (0);
 }

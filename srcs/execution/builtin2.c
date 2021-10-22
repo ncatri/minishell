@@ -33,6 +33,7 @@ int	export(t_command *cmd)
 	{
 		sorted_env = alphasort(g_global.envp);
 		env(sorted_env, EXPORT);
+		free(sorted_env);
 		return (1);
 	}
 	i  = 0;
@@ -48,5 +49,6 @@ int	export(t_command *cmd)
 			pushback_env((void ***)&g_global.envp, ft_strdup(cmd->args[i]), number_of_split(g_global.envp));
 		i++;
 	}
+	free_splits(split, number_of_split(split));
 	return (1);
 }
