@@ -17,6 +17,7 @@ t_error	browse_inputs(t_list *input_list)
 				return (FAIL);
 			if (cursor->next == NULL)
 				dup2(fd, STDIN_FILENO);
+			unlink("heredoc.txt");
 		}
 		else
 		{
