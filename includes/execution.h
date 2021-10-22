@@ -25,6 +25,10 @@ typedef enum env_status{
 	EXPORT,
 } env_status;
 
+typedef enum pwd_replace{
+	OLDPWD,
+	PWD,
+} pwd_replace;
 //Heredocs
 int			find_previous_hd(t_pid *pid, int i);
 int			is_heredoc(t_list *input);
@@ -49,7 +53,9 @@ int			check_builtin(t_command *cmd);
 int 		cd(t_command *cmd);
 int 		pwd();
 int 		echo(t_command *cmd);
-int	is_builtin(t_command *cmd);
+int 		replace_pwd(pwd_replace var);
+int			is_builtin(t_command *cmd);
+int			export();
 t_error		pushback_env(void ***array, void *new_elt, size_t array_size);
 //Utils
 int			fill_pids(int fork_res, t_list *input, t_pid *pids, int i);
@@ -59,7 +65,8 @@ char		*create_command_path(char **env, char *exec);
 void		free_splits(char **chain, int i);
 int			number_of_split(char **splitresult);
 void 		print_array(char **array, size_t arr_len);
-int			export();
+char		 **copy_env(char **envp);
+
 
 
 #endif

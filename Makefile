@@ -27,6 +27,8 @@ SRCS = 	tokenizer/lexer.c \
 		execution/builtin1.c \
 		execution/builtin2.c \
 		execution/builtin_utils.c \
+		execution/replace_pwd.c \
+		execution/copy_env.c \
 
 OBJS = $(addprefix $(OBJS_FOLDER)/, $(SRCS:.c=.o))
 
@@ -39,7 +41,7 @@ HEADERS_LIST= $(addprefix $(INCLUDES)/, $(SRCS_LIST:.c=.h))
 
 RM = rm -f
 CC = clang
-CFLAGS = -Werror -Wall -Wextra -I$(INCLUDES) -I$(LIBFT)/includes -g3 -fsanitize=address
+CFLAGS = -Werror -Wall -Wextra -I$(INCLUDES) -I$(LIBFT)/includes -g3 #-fsanitize=address
 LIBFT	= libft
 #readline stuffs:
 LDFLAGS="-L$(HOME)/.brew/opt/readline/lib"

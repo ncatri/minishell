@@ -23,9 +23,12 @@ int	find_key_index(char **env, char *key)
 	{
 		split = ft_split(env[i], "=");
 		if (ft_strncmp(split[0], key, ft_strlen(split[0])) == 0)
+		{
+			free_splits(split, number_of_split(split));
 			return (i);
+		}
 		i++;
-		free_split(split);
+		free_splits(split, number_of_split(split));
 	}
 	return (-1);
 }
