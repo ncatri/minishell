@@ -76,7 +76,7 @@ t_error	f_word_transition(char cursor, enum e_machine_states *state, t_list **to
 
 /* post processing of tokens */
 
-t_error	link_tokens(t_list *token_list);
+t_error	link_tokens(t_list **token_list);
 
 /* variable substitution */
 
