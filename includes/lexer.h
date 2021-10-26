@@ -38,9 +38,10 @@ enum e_machine_states{
 	ST_OPEN_DQUOTE,
 	ST_LESS,
 	ST_GREAT,
-	ST_WORD_TRANSITION,
+	ST_WORD_TRANSITION, // useless state?? I think so!
+	ST_SUBSTITUTION,
 };
-# define NUM_OF_STATES (7)
+# define NUM_OF_STATES (8)
 
 enum e_add_space{
 	NO_SPACE = 0,
@@ -68,6 +69,8 @@ t_error	f_singlequote(char cursor, enum e_machine_states *state, t_list **token_
 t_error	f_less(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 t_error	f_great(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 t_error	f_var_expansion_dquote(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
+
+t_error	f_var_substitution(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 
 void	set_machine_state(char cursor, enum e_machine_states *state);
 
