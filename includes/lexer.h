@@ -86,6 +86,7 @@ t_error	link_tokens(t_list **token_list);
 t_error	expand_variables(t_list *token_list);
 t_error	expansion(char **string);
 t_error	rebuild_string(char **string, char *middle, char *variable, char *after);
+char	*my_getenv(char *var);
 
 /* debug */
 

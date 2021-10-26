@@ -1,4 +1,5 @@
 #include "lexer.h"
+#include "execution.h"
 
 t_error	f_transition(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
 {
@@ -31,7 +32,7 @@ t_error	f_inword(char cursor, enum e_machine_states *state, t_list **token_list,
 //		if (cursor == '"' || cursor == '\'')
 //			link_last_token(*token_list);
 	}
-	else if (ft_isascii(cursor) && !ft_is_incharset(cursor, "\"\'$"))
+	else if (ft_isascii(cursor) && !ft_is_incharset(cursor, "\"\'$")) // if $: token not closed, buffer full
 		append_buffer(buffer, cursor);
 	set_machine_state(cursor, state);
 	return (SUCCESS);
@@ -83,29 +84,45 @@ t_error	f_singlequote(char cursor, enum e_machine_states *state, t_list **token_
 
 t_error	f_var_substitution(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
 {
-
-	(void)state;
-	(void)token_list;
-	(void)buffer;
+	char	*str;
+	char	*str2;
 	static t_buffer	var_buf = {NULL, 0, 0};
 
-	if (ft_isspace(cursor) || cursor == '\0')
+	if (ft_isalnum(cursor) || cursor == '_')
+		append_buffer(&var_buf, cursor);
+	else
 	{
 		if (var_buf.buf == NULL)
 			append_buffer(&var_buf, '$');
 		append_buffer(&var_buf, '\0');
-		printf("var_buf: %s\n", var_buf.buf);
-		
+		str = my_getenv(var_buf.buf);
+		printf("var_buf: %s, after substitution: %s\n", var_buf.buf, str);
 		free(var_buf.buf);
 		initialize_buffer(&var_buf);
-//		push_buf_to_toklist(buffer, token_list, WORD);
+		if (str)
+		{
+			str2 = ft_strjoin(buffer->buf, str);
+			buffer->size += ft_strlen(str);
+			buffer->buf = ft_strdup(str2);
+			free(str2);
+			if (ft_isspace(cursor) || cursor == '\0')
+				push_buf_to_toklist(buffer, token_list, WORD);
+		}
+		set_machine_state(cursor, state);
 	}
-	else if (ft_is_incharset("\"\'")
-
-	else if (ft_isalnum(cursor) || cursor == '_')
-		append_buffer(&var_buf, cursor);
-	
 	return (SUCCESS);
+}
+
+char	*my_getenv(char	*var)
+{
+	int		i;
+	char	*str;
+
+	i = find_key_index(g_global.envp, var);
+	if (i == -1)
+		return (NULL);
+	str = ft_strchr(g_global.envp[i], '=');
+	return (str + 1);
 }
 
 /*    USELESS FUNCTION?? I THINK SO !
