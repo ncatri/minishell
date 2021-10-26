@@ -67,6 +67,7 @@ void		free_splits(char **chain, int i);
 int			number_of_split(char **splitresult);
 void 		print_array(char **array, size_t arr_len);
 char		 **copy_env(char **envp);
+void		free_loop(char *line, t_command **cmd_array);
 
 
 
