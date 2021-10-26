@@ -16,10 +16,10 @@ SRCS = 	tokenizer/lexer.c \
 		parser/array_utils.c \
 		parser/parse_funcs.c \
 		signal/signals.c \
-		execution/heredocs.c \
-		execution/inputs_manip.c \
-		execution/outputs_manip.c \
-		execution/wait_pid.c \
+		execution/plugs/heredocs.c \
+		execution/plugs/inputs_manip.c \
+		execution/plugs/outputs_manip.c \
+		execution/plugs/wait_pid.c \
 		execution/exec.c \
 		execution/free.c \
 		execution/cmd_path.c \

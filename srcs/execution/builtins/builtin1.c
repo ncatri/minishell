@@ -31,16 +31,11 @@ int echo(t_command *cmd)
 {
 	int i;
 	int newline;
-	char *option;
 
 	i = 0;
 	newline = 0;
 	if (cmd->number_args > 0)
-	{
-		option = join_option(ft_strlen(cmd->args[0]));
-		newline = ft_strcmp(cmd->args[0], option);
-		free(option);
-	}
+		newline = check_n(cmd->args[0]);
 	else
 		return (printf("\n"));
 	if (newline == 0)
