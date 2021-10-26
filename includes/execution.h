@@ -55,6 +55,7 @@ int 		pwd();
 int 		echo(t_command *cmd);
 int 		replace_pwd(pwd_replace var);
 int			is_builtin(t_command *cmd);
+char 		*join_option(int len);
 int			export();
 t_error		pushback_env(void ***array, void *new_elt, size_t array_size);
 //Utils

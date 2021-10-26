@@ -24,9 +24,10 @@ SRCS = 	tokenizer/lexer.c \
 		execution/free.c \
 		execution/cmd_path.c \
 		execution/debug.c \
-		execution/builtin1.c \
-		execution/builtin2.c \
-		execution/builtin_utils.c \
+		execution/builtins/builtin1.c \
+		execution/builtins/builtin2.c \
+		execution/builtins/builtin_utils.c \
+		execution/builtins/echo_utils.c \
 		execution/replace_pwd.c \
 		execution/copy_env.c \
 
