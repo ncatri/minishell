@@ -16,20 +16,20 @@ SRCS = 	tokenizer/lexer.c \
 		parser/array_utils.c \
 		parser/parse_funcs.c \
 		signal/signals.c \
+		execution/free.c \
+		execution/exec.c \
+		execution/debug.c \
+		execution/copy_env.c \
+		execution/cmd_path.c \
+		execution/replace_pwd.c \
 		execution/plugs/heredocs.c \
+		execution/plugs/wait_pid.c \
 		execution/plugs/inputs_manip.c \
 		execution/plugs/outputs_manip.c \
-		execution/plugs/wait_pid.c \
-		execution/exec.c \
-		execution/free.c \
-		execution/cmd_path.c \
-		execution/debug.c \
 		execution/builtins/builtin1.c \
 		execution/builtins/builtin2.c \
-		execution/builtins/builtin_utils.c \
 		execution/builtins/echo_utils.c \
-		execution/replace_pwd.c \
-		execution/copy_env.c \
+		execution/builtins/builtin_utils.c \
 
 OBJS = $(addprefix $(OBJS_FOLDER)/, $(SRCS:.c=.o))
 
