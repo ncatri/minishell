@@ -27,7 +27,8 @@ void	free_loop(char *line, t_command **cmd_array)
 	free(line);
 	while (i < g_global.num_cmds)
 	{
-		free(cmd_array[i]->input_redir);
+		ft_lstclear(&cmd_array[i]->input_redir, free);
+		ft_lstclear(&cmd_array[i]->output_redir, free);
 		free(cmd_array[i]->args);
 		free(cmd_array[i]);
 		i++;
