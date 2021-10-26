@@ -22,7 +22,7 @@ t_error	browse_inputs(t_list *input_list)
 		else
 		{
 			if (open(input->name_delim, O_RDWR, 777) == -1)
-				return (FAIL);
+				return (return_message("\x1B[31mInput file does not exist\n\033[0m", FAIL));
 			if (cursor->next == NULL)
 				dup2(open(input->name_delim, O_RDWR, 777) , STDIN_FILENO);
 		}

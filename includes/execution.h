@@ -46,6 +46,7 @@ t_error		output_redirection(t_list *outputs);
 int 		env();
 int 		pwd();
 int			export();
+void		my_exit();
 int 		check_n(char *arg);
 int 		cd(t_command *cmd);
 int 		echo(t_command *cmd);
@@ -68,5 +69,5 @@ void 		print_array(char **array, size_t arr_len);
 char		*create_command_path(char **env, char *exec);
 void		free_loop(char *line, t_command **cmd_array);
 int			fill_pids(int fork_res, t_list *input, t_pid *pids, int i);
-
+int			return_message(char *message, int return_status);
 #endif

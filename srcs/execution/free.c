@@ -35,3 +35,10 @@ void	free_loop(char *line, t_command **cmd_array)
 	}
 	free(cmd_array);
 }
+
+int	return_message(char *message, int return_status)
+{
+	if (message != NULL)
+		printf("%s", message);
+	return (return_status);
+}

@@ -37,7 +37,11 @@ int	build_exec(t_command *cmd, char **env)
 	if (open(cmd->executable, O_RDONLY) == -1)
 		cmd->executable = create_command_path(env, cmd->executable);
 	if (cmd->executable == NULL)
-		exit (printf("Bad command\n"));
+	{
+		g_global.ret = 127;
+		printf("\x1B[31mCommand not found\n\033[0m");
+		exit(g_global.ret);
+	}
 	return (SUCCESS);
 }
 
@@ -58,7 +62,10 @@ int	child_stuff(int i, t_command **commands, int nb_pipes, int pipesfd[][2])
 {
 	build_exec(commands[i], g_global.envp);
 	if (connections(i, commands[i], pipesfd) == FAIL)
-		return (FAIL);
+	{
+		g_global.ret = 1;
+		exit (g_global.ret);
+	}
 	if (allpipes_action(pipesfd, nb_pipes, DESTROY) == FAIL)
 		return (FAIL);
 	if (is_builtin(commands[i]))

@@ -16,6 +16,7 @@
 
 struct s_global{
 	int		num_cmds;
+	int		ret;
 	char 	**envp;
 	struct termios term_save;
 };

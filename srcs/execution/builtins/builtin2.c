@@ -52,3 +52,9 @@ int	export(t_command *cmd)
 	free_splits(split, number_of_split(split));
 	return (1);
 }
+
+void	my_exit()
+{
+	printf("exit\n");
+	exit(g_global.ret);
+}

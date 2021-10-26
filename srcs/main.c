@@ -13,6 +13,7 @@ int main(int argc, char **argv, char **envp)
 	t_command	**cmd_array;
 
 	g_global.envp = copy_env(envp);
+	g_global.ret = 0;
 	if (argc != 1)
 		return (printf("\x1B[31mToo much args\n\033[0m"));
 	while (1)
