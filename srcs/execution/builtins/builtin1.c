@@ -35,7 +35,7 @@ int echo(t_command *cmd)
 	i = 0;
 	newline = 0;
 	if (cmd->number_args > 0)
-		newline = ft_strncmp(cmd->args[0], "-n", 2);
+		newline = check_n(cmd->args[0]);
 	else
 		return (printf("\n"));
 	if (newline == 0)

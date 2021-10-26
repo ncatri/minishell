@@ -33,17 +33,14 @@ int main(int argc, char **argv, char **envp)
 	//	print_command_array(cmd_array, g_global.num_cmds);
 		if (cmd_array)
 			execution(cmd_array);
-		
 		ft_lstclear(&token_list, free_token);
 		//print_token_list(token_list);
 		//print_command_array(cmd_array, g_global.num_cmds);
 		
 		//ft_lstclear(&token_list, free_token); --> crash with [ls | rev | rev | cat -e]
-		free(line);
-		free(*cmd_array);
-		free(cmd_array);
+		free_loop(line, cmd_array);
 		tcsetattr(STDIN_FILENO, TCSANOW, &g_global.term_save);
 	}
-	free(g_global.envp);
+	free_splits(g_global.envp, number_of_split(g_global.envp));
 	return (0);
 }

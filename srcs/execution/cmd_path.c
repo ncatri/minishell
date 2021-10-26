@@ -22,7 +22,7 @@ int	find_key_index(char **env, char *key)
 	while (env[i])
 	{
 		split = ft_split(env[i], "=");
-		if (ft_strncmp(split[0], key, ft_strlen(split[0])) == 0)
+		if (ft_strcmp(split[0], key) == 0)
 		{
 			free_splits(split, number_of_split(split));
 			return (i);
