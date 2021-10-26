@@ -5,6 +5,8 @@ int check_n(char *arg)
 	int i;
 
 	i = 1;
+	if (arg[0] != '-')
+		return (-1);
 	while (arg[i])
 	{
 		if (arg[i] == 'n')
