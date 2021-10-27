@@ -49,7 +49,7 @@ int	heredoc(char *terminator, int fd)
 	char	*line;
 
 	line = NULL;
-	fd = open("heredoc.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
+	fd = open("heredoc.txt", O_WRONLY | O_CREAT | O_TRUNC);
 	if (fd == -1)
 		return (FAIL);
 	while (get_next_line(READ, &line) != 0 && ft_strncmp(line, terminator, \
@@ -61,7 +61,7 @@ int	heredoc(char *terminator, int fd)
 	}
 	free(line);
 	close(fd);
-	fd = open("heredoc.txt", O_RDWR, 0777);
+	fd = open("heredoc.txt", O_RDONLY);
 	if (fd == -1)
 		return (FAIL);
 	return (fd);

@@ -11,9 +11,9 @@ t_error	output_redirection(t_list *output_list)
 	{
 		output = cursor->content;
 		if (output->mode == APPEND)
-			fd = open(output->filename, O_RDWR | O_APPEND | O_CREAT, 0644);
+			fd = open(output->filename, O_WRONLY | O_APPEND | O_CREAT, 0644);
 		else
-			fd = open(output->filename, O_RDWR | O_TRUNC | O_CREAT, 0644);
+			fd = open(output->filename, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 		if (fd == -1)
 			return (FAIL);
 		if (dup2(fd, STDOUT_FILENO) == -1)

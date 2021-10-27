@@ -21,10 +21,10 @@ t_error	browse_inputs(t_list *input_list)
 		}
 		else
 		{
-			if (open(input->name_delim, O_RDWR, 777) == -1)
+			if (open(input->name_delim, O_RDONLY) == -1)
 				return (ret_msg("Input file does not exist\n", FAIL));
 			if (cursor->next == NULL)
-				dup2(open(input->name_delim, O_RDWR, 777), STDIN_FILENO);
+				dup2(open(input->name_delim, O_RDONLY), STDIN_FILENO);
 		}
 		cursor = cursor->next;
 	}
