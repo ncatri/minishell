@@ -13,18 +13,19 @@ int delete_key(int index)
 		return (-1);
 	while (i < index)
 	{
-		new[j] = g_global.envp[i];
+		new[j] = strdup(g_global.envp[i]);
 		i++;
 		j++;
 	}
 	i++;
 	while (g_global.envp[i])
 	{
-		new[j] = g_global.envp[i];
+		new[j] = strdup(g_global.envp[i]);
 		i++;
 		j++;
 	}
-	new[j] = 0;
+	new[j] = NULL;
+	free_splits(g_global.envp, number_of_split(g_global.envp));
 	g_global.envp = new;
 	return (0);
 }
@@ -72,7 +73,7 @@ t_error	pushback_env(void ***array, void *new_elt, size_t array_size)
 	ft_memcpy(new_array, *array, sizeof(void*) * array_size);
 	new_array[array_size] = new_elt;
 	new_array[array_size + 1] = 0;
-	//free(*array);
+	free(*array);
 	*array = new_array;
 	return (SUCCESS);
 }

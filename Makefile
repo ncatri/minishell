@@ -16,17 +16,20 @@ SRCS = 	tokenizer/lexer.c \
 		parser/array_utils.c \
 		parser/parse_funcs.c \
 		signal/signals.c \
-		execution/heredocs.c \
-		execution/inputs_manip.c \
-		execution/outputs_manip.c \
-		execution/wait_pid.c \
-		execution/exec.c \
 		execution/free.c \
-		execution/cmd_path.c \
+		execution/exec.c \
 		execution/debug.c \
-		execution/builtin1.c \
-		execution/builtin2.c \
-		execution/builtin_utils.c \
+		execution/copy_env.c \
+		execution/cmd_path.c \
+		execution/replace_pwd.c \
+		execution/plugs/heredocs.c \
+		execution/plugs/wait_pid.c \
+		execution/plugs/inputs_manip.c \
+		execution/plugs/outputs_manip.c \
+		execution/builtins/builtin1.c \
+		execution/builtins/builtin2.c \
+		execution/builtins/echo_utils.c \
+		execution/builtins/builtin_utils.c \
 
 OBJS = $(addprefix $(OBJS_FOLDER)/, $(SRCS:.c=.o))
 
@@ -39,7 +42,7 @@ HEADERS_LIST= $(addprefix $(INCLUDES)/, $(SRCS_LIST:.c=.h))
 
 RM = rm -f
 CC = clang
-CFLAGS = -Werror -Wall -Wextra -I$(INCLUDES) -I$(LIBFT)/includes -g3 -fsanitize=address
+CFLAGS = -Werror -Wall -Wextra -I$(INCLUDES) -I$(LIBFT)/includes -g3 #-fsanitize=address
 LIBFT	= libft
 #readline stuffs:
 LDFLAGS="-L$(HOME)/.brew/opt/readline/lib"
