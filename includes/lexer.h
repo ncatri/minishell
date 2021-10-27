@@ -15,13 +15,14 @@ typedef struct s_buffer{
 enum e_token_types{
 	WORD,	// cmd, option, args, files
 	WORD_NOEXPAND,
+	WORD_EXPANDED,
 	LESS,	// <
 	DLESS,	// <<
 	GREAT,	// >
 	DGREAT, // >>
 	PIPE	// |
 };
-# define NUM_OF_TOKENS (7) /* Needed for parser */
+# define NUM_OF_TOKENS (8) /* Needed for parser */
 
 # define INVALID_WORD_CHAR "&();"
 
@@ -76,6 +77,8 @@ void	set_machine_state(char cursor, enum e_machine_states *state);
 
 void	link_last_token(t_list *token_list);
 t_error	f_word_transition(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
+
+t_error	tokenize_variable(char *expanded_var, t_buffer *buffer, t_list **token_list);
 
 /* post processing of tokens */
 

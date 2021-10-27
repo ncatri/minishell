@@ -85,7 +85,6 @@ t_error	f_singlequote(char cursor, enum e_machine_states *state, t_list **token_
 t_error	f_var_substitution(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
 {
 	char	*str;
-	char	*str2;
 	static t_buffer	var_buf = {NULL, 0, 0};
 
 	if (ft_isalnum(cursor) || cursor == '_')
@@ -98,21 +97,32 @@ t_error	f_var_substitution(char cursor, enum e_machine_states *state, t_list **t
 		str = my_getenv(var_buf.buf);
 		free(var_buf.buf);
 		initialize_buffer(&var_buf);
-		if (str)
-		{
-			str2 = ft_strjoin(buffer->buf, str);
-			buffer->size += ft_strlen(str);
-			buffer->pos += ft_strlen(str);
-			free(buffer->buf);
-			buffer->buf = ft_strdup(str2);
-			free(str2);
-			free(str);
-			if (ft_isspace(cursor) || cursor == '\0')
-			{
-				push_buf_to_toklist(buffer, token_list, WORD);
-			}
-		}
+		tokenize_variable(str, buffer, token_list);
+		free(str);
+		if (ft_isspace(cursor) || cursor == '\0')
+			push_buf_to_toklist(buffer, token_list, WORD);
 		set_machine_state(cursor, state);
+	}
+	return (SUCCESS);
+}
+
+t_error	tokenize_variable(char *expanded_var, t_buffer *buffer, t_list **token_list)
+{
+	char	*str;
+
+	if (expanded_var == NULL)
+		return (SUCCESS);
+	str = expanded_var;
+	while (*str)
+	{
+		if (ft_isspace(*str))
+		{
+			if (buffer->pos > 0)
+				push_buf_to_toklist(buffer, token_list, WORD);
+		}
+		else
+			append_buffer(buffer, *str);
+		str++;
 	}
 	return (SUCCESS);
 }
