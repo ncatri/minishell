@@ -4,11 +4,14 @@ int	unset(t_command *cmd, int id)
 {
 	int	i;
 	int	index;
+	char **split;
 
 	i = 0;
 	if (id != -1)
 	{
-		index = find_key_index(g_global.envp, cmd->args[id]);
+		split = ft_split(cmd->args[id], "=");
+		index = find_key_index(g_global.envp, split[0]);
+		free_splits(split, number_of_split(split));
 		if (index != -1)
 			delete_key(index);
 		return (1);
