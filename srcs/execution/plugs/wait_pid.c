@@ -1,9 +1,9 @@
 #include "execution.h"
 
-void	wait_childs()
+void	wait_childs(void)
 {
-	int status;
-	pid_t wait_return;
+	int		status;
+	pid_t	wait_return;
 
 	while ((wait_return = wait(&status)) > 0);
 }

@@ -1,10 +1,10 @@
 #include "execution.h"
 
-int delete_key(int index)
+int	delete_key(int index)
 {
-	char **new;
-	int i;
-	int j;
+	char	**new;
+	int		i;
+	int		j;
 
 	i = 0;
 	j = 0;
@@ -30,12 +30,11 @@ int delete_key(int index)
 	return (0);
 }
 
-char **alphasort(char **env)
+char	**alphasort(char **env)
 {
 	int		i;
 	char	*temp;
-	char 	**copy;
-
+	char	**copy;
 
 	copy = malloc(number_of_split(env) * (sizeof(char *) + 1));
 	i = 0;
@@ -67,17 +66,16 @@ t_error	pushback_env(void ***array, void *new_elt, size_t array_size)
 
 	if (!array)
 		return (FAIL);
-	new_array = malloc(sizeof(void*) * (array_size + 2));
+	new_array = malloc(sizeof(void *) * (array_size + 2));
 	if (!new_array)
 		return (FAIL);
-	ft_memcpy(new_array, *array, sizeof(void*) * array_size);
+	ft_memcpy(new_array, *array, sizeof(void *) * array_size);
 	new_array[array_size] = new_elt;
 	new_array[array_size + 1] = 0;
 	free(*array);
 	*array = new_array;
 	return (SUCCESS);
 }
-
 
 int	is_builtin(t_command *cmd)
 {

@@ -1,8 +1,8 @@
 #include "execution.h"
 
-int cd(t_command *cmd)
+int	cd(t_command *cmd)
 {
-	struct stat stat_ret;
+	struct stat	stat_ret;
 
 	if (cmd->number_args > 0)
 	{
@@ -16,10 +16,10 @@ int cd(t_command *cmd)
 	return (1);
 }
 
-int pwd()
+int	pwd(void)
 {
-	char buff[PATHMAX];
-	
+	char	buff[PATHMAX];
+
 	if (getcwd(buff, PATHMAX) == NULL)
 		return (printf("Error on the pwd\n"));
 	else
@@ -27,10 +27,10 @@ int pwd()
 	return (1);
 }
 
-int echo(t_command *cmd)
+int	echo(t_command *cmd)
 {
-	int i;
-	int newline;
+	int	i;
+	int	newline;
 
 	i = 0;
 	newline = 0;
@@ -52,10 +52,10 @@ int echo(t_command *cmd)
 	return (1);
 }
 
-int env(char **envp, env_status status)
+int	env(char **envp, t_env_status status)
 {
-	int i;
-	char **export_print;
+	int		i;
+	char	**export_print;
 
 	i = 0;
 	while (envp[i])
@@ -81,5 +81,5 @@ int env(char **envp, env_status status)
 			printf("%s\n", envp[i]);
 		i++;
 	}
-	return(1);
+	return (1);
 }

@@ -2,10 +2,10 @@
 #include "minishell.h"
 #include "parser.h"
 
-int	allpipes_action(int pipesfd[][2], int nb_pipes, pipes action)
+int	allpipes_action(int pipesfd[][2], int nb_pipes, t_pipes action)
 {
-	int i;
-	
+	int	i;
+
 	i = -1;
 	if (action == DESTROY)
 	{
@@ -27,7 +27,6 @@ int	allpipes_action(int pipesfd[][2], int nb_pipes, pipes action)
 	}
 	return (SUCCESS);
 }
-
 
 int	build_exec(t_command *cmd, char **env)
 {
@@ -80,11 +79,11 @@ int	child_stuff(int i, t_command **commands, int nb_pipes, int pipesfd[][2])
 
 t_error	execution(t_command **commands)
 {
-	int 		nb_pipes = g_global.num_cmds - 1;
-	int 		pipesfd[nb_pipes][2];
-	t_pid 		*pids;
-	pid_t		fork_res;
-	int 		i;
+	int		nb_pipes = g_global.num_cmds - 1;
+	int		pipesfd[nb_pipes][2];
+	t_pid	*pids;
+	pid_t	fork_res;
+	int		i;
 
 	pids = malloc(g_global.num_cmds * sizeof(t_pid));
 	if (pids == NULL)

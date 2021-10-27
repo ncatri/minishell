@@ -9,13 +9,13 @@ int	find_previous_hd(t_pid *pid, int i)
 			return (i);
 		i--;
 	}
-	return(-1);
+	return (-1);
 }
 
 t_bool	is_heredoc(t_list *input_list)
 {
-	t_list *cursor;
-	t_redir_in *input;
+	t_list		*cursor;
+	t_redir_in	*input;
 
 	cursor = input_list;
 	while (cursor)
@@ -30,7 +30,7 @@ t_bool	is_heredoc(t_list *input_list)
 
 int	wait_previous_heredoc(t_list *input_list, t_pid *pids, int i)
 {
-	int previous_hd;
+	int	previous_hd;
 
 	if (is_heredoc(input_list))
 	{
@@ -46,13 +46,14 @@ int	wait_previous_heredoc(t_list *input_list, t_pid *pids, int i)
 
 int	heredoc(char *terminator, int fd)
 {
-	char *line;
+	char	*line;
 
 	line = NULL;
 	fd = open("heredoc.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 		return (FAIL);
-	while (get_next_line(READ, &line) != 0 && ft_strncmp(line, terminator, ft_strlen(terminator)) != 0)
+	while (get_next_line(READ, &line) != 0 && ft_strncmp(line, terminator, \
+		ft_strlen(terminator)) != 0)
 	{
 		write(fd, line, ft_strlen(line));
 		write (fd, "\n", 1);

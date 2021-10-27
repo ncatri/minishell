@@ -2,7 +2,7 @@
 
 char	*last_elt_of_path(char *path)
 {
-	char *backslash;
+	char	*backslash;
 
 	if (!path)
 		return (NULL);
@@ -15,8 +15,8 @@ char	*last_elt_of_path(char *path)
 
 int	find_key_index(char **env, char *key)
 {
-	int	i;
-	char **split;
+	int		i;
+	char	**split;
 
 	i = 0;
 	while (env[i])

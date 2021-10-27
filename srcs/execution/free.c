@@ -21,7 +21,7 @@ int	number_of_split(char **splitresult)
 
 void	free_loop(char *line, t_command **cmd_array)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	free(line);
@@ -36,7 +36,7 @@ void	free_loop(char *line, t_command **cmd_array)
 	free(cmd_array);
 }
 
-int	return_message(char *message, int return_status)
+int	ret_msg(char *message, int return_status)
 {
 	if (message != NULL)
 		printf("%s", message);
