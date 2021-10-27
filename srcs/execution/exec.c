@@ -59,7 +59,8 @@ t_error	connections(int i, t_command *cmd, int pipesfd[][2])
 
 int	child_stuff(int i, t_command **commands, int nb_pipes, int pipesfd[][2])
 {
-	build_exec(commands[i], g_global.envp);
+	if (!is_builtin(commands[i]))
+		build_exec(commands[i], g_global.envp);
 	if (connections(i, commands[i], pipesfd) == FAIL)
 	{
 		g_global.ret = 1;
