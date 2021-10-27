@@ -111,6 +111,6 @@ int	check_builtin(t_command *cmd)
 	if (ft_strcmp(cmd->executable, "env") == 0)
 		return (env(g_global.envp, CLASSIC));
 	if (ft_strcmp(cmd->executable, "exit") == 0)
-		my_exit();
+		my_exit(cmd);
 	return (0);
 }

@@ -7,6 +7,8 @@
 # define PATHMAX (1024)
 # include "minishell.h"
 # include <sys/stat.h>
+# include <sys/wait.h>
+# include <sys/types.h>
 
 typedef struct s_pid
 {
@@ -44,12 +46,12 @@ t_error		input_redirection(t_list *input);
 t_error		output_redirection(t_list *outputs);
 //Builtins
 int			pwd(void);
-void		my_exit(void);
 int			check_n(char *arg);
 int			cd(t_command *cmd);
 int			echo(t_command *cmd);
 int			delete_key(int index);
 int			export(t_command *cmd);
+void		my_exit(t_command *cmd);
 char		**alphasort(char **env);
 int			is_builtin(t_command *cmd);
 int			replace_pwd(t_pwd_replace var);

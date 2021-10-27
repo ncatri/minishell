@@ -55,8 +55,17 @@ int	export(t_command *cmd)
 	return (1);
 }
 
-void	my_exit(void)
+void	my_exit(t_command *cmd)
 {
-	printf("exit\n");
+	if (cmd->number_args == 1)
+		g_global.ret = ft_atoi(cmd->args[0]);
+	if (cmd->number_args > 1)
+	{
+		g_global.ret = 1;
+		ret_msg("Exit : too many arguments\n", FAIL);
+	}
+	else
+		printf("exit\n");
+	printf("%d\n", g_global.ret);
 	exit(g_global.ret);
 }
