@@ -9,6 +9,7 @@ Makefile.gen
 *~
 \#*\#
 *.swp
+*.vim
 
 ## Other
 .DS_STORE

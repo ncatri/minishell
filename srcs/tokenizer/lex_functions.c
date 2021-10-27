@@ -96,17 +96,21 @@ t_error	f_var_substitution(char cursor, enum e_machine_states *state, t_list **t
 			append_buffer(&var_buf, '$');
 		append_buffer(&var_buf, '\0');
 		str = my_getenv(var_buf.buf);
-		printf("var_buf: %s, after substitution: %s\n", var_buf.buf, str);
 		free(var_buf.buf);
 		initialize_buffer(&var_buf);
 		if (str)
 		{
 			str2 = ft_strjoin(buffer->buf, str);
 			buffer->size += ft_strlen(str);
+			buffer->pos += ft_strlen(str);
+			free(buffer->buf);
 			buffer->buf = ft_strdup(str2);
 			free(str2);
+			free(str);
 			if (ft_isspace(cursor) || cursor == '\0')
+			{
 				push_buf_to_toklist(buffer, token_list, WORD);
+			}
 		}
 		set_machine_state(cursor, state);
 	}
@@ -116,13 +120,15 @@ t_error	f_var_substitution(char cursor, enum e_machine_states *state, t_list **t
 char	*my_getenv(char	*var)
 {
 	int		i;
-	char	*str;
+	char	*variable;
+	char	*ret_str;
 
 	i = find_key_index(g_global.envp, var);
 	if (i == -1)
 		return (NULL);
-	str = ft_strchr(g_global.envp[i], '=');
-	return (str + 1);
+	variable = ft_strchr(g_global.envp[i], '=');
+	ret_str = ft_strdup(variable + 1);
+	return (ret_str);
 }
 
 /*    USELESS FUNCTION?? I THINK SO !
