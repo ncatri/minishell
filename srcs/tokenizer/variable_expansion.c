@@ -7,12 +7,15 @@ t_error	f_var_substitution(char cursor, enum e_machine_states *state, t_list **t
 	static t_buffer	var_buf = {NULL, 0, 0};
 
 	if (cursor == '?')
+	{
 		tokenize_variable(ft_itoa(g_global.ret), buffer, token_list);
+		*state = ST_IN_WORD;
+	}
 	else if (ft_isalnum(cursor) || cursor == '_')
 		append_buffer(&var_buf, cursor);
 	else
 	{
-		if (var_buf.pos == 0) // if single $. But pb if $?
+		if (var_buf.pos == 0)
 			tokenize_variable("$", buffer, token_list);
 		else
 		{
