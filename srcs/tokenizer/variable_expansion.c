@@ -1,71 +1,66 @@
 #include "lexer.h"
+#include "execution.h"
 
-t_error	expand_variables(t_list *token_list)
+t_error	f_var_substitution(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
 {
-	t_list *cursor;
-	t_token	*tok;
+	char	*str;
+	static t_buffer	var_buf = {NULL, 0, 0};
 
-	cursor = token_list;
-	while (cursor)
+	if (cursor == '?')
+		tokenize_variable(ft_itoa(g_global.ret), buffer, token_list);
+	else if (ft_isalnum(cursor) || cursor == '_')
+		append_buffer(&var_buf, cursor);
+	else
 	{
-		tok = cursor->content;
-		if (tok->type == WORD)
-			expansion(&tok->data);
-		cursor = cursor->next;
+		if (var_buf.pos == 0) // if single $. But pb if $?
+			tokenize_variable("$", buffer, token_list);
+		else
+		{
+			append_buffer(&var_buf, '\0');
+			str = my_getenv(var_buf.buf);
+			tokenize_variable(str, buffer, token_list);
+			free(str);
+			free(var_buf.buf);
+			initialize_buffer(&var_buf);
+		}
+		if (ft_isspace(cursor) || cursor == '\0')
+			push_buf_to_toklist(buffer, token_list, WORD);
+		set_machine_state(cursor, state);
 	}
 	return (SUCCESS);
 }
 
-t_error	expansion(char **string)
+t_error	tokenize_variable(char *expanded_var, t_buffer *buffer, t_list **token_list)
 {
-	char	*cursor;
-	char	**split;
-	char	*after_var;
-	char	*variable;
+	char	*str;
 
-	cursor = ft_strchr(*string, '$');
-	while (cursor && *cursor)
+	if (expanded_var == NULL)
+		return (SUCCESS);
+	str = expanded_var;
+	while (*str)
 	{
-		if (*(cursor + 1) && *(cursor + 1) != ' ')
+		if (ft_isspace(*str))
 		{
-			split = ft_split(cursor, "$ \'\"");
-			if (split[0])
-			{
-				after_var = cursor + ft_strlen(split[0]) + 1;
-				variable = getenv(split[0]);
-				printf("cursor: (%s), variable: (%s), after: (%s)\n", cursor, variable, after_var);
-				if (rebuild_string(string, cursor, variable, after_var) == FAIL)
-					return (FAIL);
-			}
-			free_split(split);
-			cursor = ft_strchr(*string, '$');
+			if (buffer->pos > 0)
+				push_buf_to_toklist(buffer, token_list, WORD);
 		}
 		else
-			cursor = ft_strchr(cursor + 1, '$');
+			append_buffer(buffer, *str);
+		str++;
 	}
 	return (SUCCESS);
 }
 
-t_error	rebuild_string(char **string, char *middle, char *variable, char *after)
+char	*my_getenv(char	*var)
 {
-	char	*begining;
-	char	*new_string;
-	char	*tmp;
+	int		i;
+	char	*variable;
+	char	*ret_str;
 
-	if (variable == NULL)
-		variable = "";
-	begining = malloc(sizeof(char) * (middle - *string + 1));
-	if (!begining)
-		return (FAIL);
-	ft_memcpy(begining, *string, middle - *string);
-	begining[middle - *string] = '\0';
-	tmp = ft_strjoin(begining, variable);
-	new_string = ft_strjoin(tmp, after);
-	if (!tmp || !new_string)
-		return (FAIL);
-	free(tmp);
-	free(begining);
-	free(*string);
-	*string = new_string;
-	return (SUCCESS);
+	i = find_key_index(g_global.envp, var);
+	if (i == -1)
+		return (NULL);
+	variable = ft_strchr(g_global.envp[i], '=');
+	ret_str = ft_strdup(variable + 1);
+	return (ret_str);
 }
