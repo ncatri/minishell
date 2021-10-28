@@ -91,14 +91,25 @@ t_error	f_var_substitution(char cursor, enum e_machine_states *state, t_list **t
 		append_buffer(&var_buf, cursor);
 	else
 	{
-		if (var_buf.buf == NULL)
+		if (var_buf.pos == 0) // if single $
+		{
 			append_buffer(&var_buf, '$');
-		append_buffer(&var_buf, '\0');
-		str = my_getenv(var_buf.buf);
-		free(var_buf.buf);
-		initialize_buffer(&var_buf);
-		tokenize_variable(str, buffer, token_list);
-		free(str);
+			append_buffer(&var_buf, '\0');
+			printf("cocuocu\n");
+			//printf("var_buf.buf: (%s), buffer->buf: (%s)\n", var_buf.buf, buffer->buf);
+			tokenize_variable(var_buf.buf, buffer, token_list);
+			free(var_buf.buf);
+			initialize_buffer(&var_buf);
+		}
+		else
+		{
+			append_buffer(&var_buf, '\0');
+			str = my_getenv(var_buf.buf);
+			free(var_buf.buf);
+			initialize_buffer(&var_buf);
+			tokenize_variable(str, buffer, token_list);
+			free(str);
+		}
 		if (ft_isspace(cursor) || cursor == '\0')
 			push_buf_to_toklist(buffer, token_list, WORD);
 		set_machine_state(cursor, state);
