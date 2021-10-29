@@ -14,22 +14,19 @@ typedef struct s_buffer{
 
 enum e_token_types{
 	WORD,	// cmd, option, args, files
-	WORD_NOEXPAND,
-	WORD_EXPANDED,
 	LESS,	// <
 	DLESS,	// <<
 	GREAT,	// >
 	DGREAT, // >>
 	PIPE	// |
 };
-# define NUM_OF_TOKENS (8) /* Needed for parser */
+# define NUM_OF_TOKENS (6) /* Needed for parser */
 
 # define INVALID_WORD_CHAR "&();"
 
 typedef struct s_token{
 	int		type;
 	char	*data;
-	t_bool	concat_next;
 }				t_token;
 
 enum e_machine_states{
@@ -43,11 +40,6 @@ enum e_machine_states{
 	ST_SUBSTIT_DQUOTE,
 };
 # define NUM_OF_STATES (8)
-
-enum e_add_space{
-	NO_SPACE = 0,
-	YES_SPACE = 1,
-};
 
 t_list	*tokenizer(char *line);
 t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);

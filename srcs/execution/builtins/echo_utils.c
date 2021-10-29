@@ -1,8 +1,8 @@
 #include "execution.h"
 
-int check_n(char *arg)
+int	check_n(char *arg)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	if (arg[0] != '-')

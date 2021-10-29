@@ -12,7 +12,6 @@ t_command	**parser(t_list *token_list)
 	t_list				*tok_cursor;
 	enum e_parser_state state;
 
-	//print_token_list(token_list);
 	g_global.num_cmds = 0;
 	state = WAITING;
 	tok_cursor = token_list;
@@ -26,8 +25,6 @@ t_command	**parser(t_list *token_list)
 	}
 	if (state == COMMAND_IN_PROGRESS)
 		push_command_to_array(&cmd_array, &cmd_to_build);
-//	print_command_array(cmd_array, g_global.num_cmds);
-//	free_array((void**)cmd_array, g_global.num_cmds);
 	return (cmd_array);
 }
 
@@ -39,7 +36,7 @@ t_error	parse_analyzer(t_list **tok_cursor, t_command ***cmd_array, \
 	if (!tok_cursor || !cmd_to_build || !state || !cmd_array)
 		return (FAIL);
 	tok = (*tok_cursor)->content;
-	if (tok->type == WORD || tok->type == WORD_NOEXPAND || tok->type == WORD_EXPANDED)
+	if (tok->type == WORD) 
 		return (parse_word(tok, cmd_array, cmd_to_build, state));
 	else if (tok->type == GREAT || tok->type == DGREAT || \
 			tok->type == LESS || tok->type == DLESS)
