@@ -40,6 +40,16 @@ t_error	add_token_to_list(t_list **token_list, int token_type, char *data)
 	return (SUCCESS);
 }
 
+t_error	push_buf_to_toklist(t_buffer *buffer, t_list **token_list, enum e_token_types tok_type)
+{
+	append_buffer(buffer, '\0');
+	if (add_token_to_list(token_list, tok_type, buffer->buf) == FAIL)
+		return (FAIL);
+	free(buffer->buf);
+	initialize_buffer(buffer);
+	return (SUCCESS);
+}
+
 t_error	syntax_error(char c)
 {
 	ft_putstr_fd("syntax error near unexpected token ", 2);

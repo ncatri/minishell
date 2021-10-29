@@ -8,8 +8,8 @@ SRCS = 	tokenizer/lexer.c \
 		tokenizer/lex_functions.c \
 		tokenizer/lex_functions2.c \
 		tokenizer/token_utils.c \
-		tokenizer/link_tokens.c \
 		tokenizer/variable_expansion.c \
+		tokenizer/buffers.c \
 		tokenizer/debug.c \
 		parser/parser.c \
 		parser/debug.c \
@@ -42,7 +42,7 @@ HEADERS_LIST= $(addprefix $(INCLUDES)/, $(SRCS_LIST:.c=.h))
 
 RM = rm -f
 CC = clang
-CFLAGS = -Werror -Wall -Wextra -I$(INCLUDES) -I$(LIBFT)/includes -g3 -fsanitize=address
+CFLAGS = -Werror -Wall -Wextra -I$(INCLUDES) -I$(LIBFT)/includes -g3 #-fsanitize=address
 LIBFT	= libft
 #readline stuffs:
 LDFLAGS="-L$(HOME)/.brew/opt/readline/lib"

@@ -88,7 +88,10 @@ t_error	f_var_substit_dquote(char cursor, enum e_machine_states *state,
 		append_buffer(&var_buf, '\0');
 		str = my_getenv(var_buf.buf);
 		append_str_to_buffer(buffer, str);
-		*state = ST_OPEN_DQUOTE;
+		if (cursor == '\"')
+			*state = ST_IN_WORD;
+		else
+			*state = ST_OPEN_DQUOTE;
 	}
 	return (SUCCESS);
 }
