@@ -86,8 +86,13 @@ t_error	execution(t_command **commands)
 		return (FAIL);
 	i = -1;
 	if (g_global.num_cmds == 1 && !commands[0]->output_redir)
+	{
 		if (check_builtin(commands[0]) == 1)
+		{
+			free(pids);
 			return (SUCCESS);
+		}
+	}
 	while (++i < g_global.num_cmds)
 	{
 		setup_cmd_signals();
@@ -103,6 +108,7 @@ t_error	execution(t_command **commands)
 	}
 	if (allpipes_action(pipesfd, nb_pipes, DESTROY) == FAIL)
 		return (FAIL);
+	free(pids);
 	wait_childs();
 	return (SUCCESS);
 }

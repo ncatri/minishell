@@ -15,13 +15,14 @@ typedef struct s_buffer{
 enum e_token_types{
 	WORD,	// cmd, option, args, files
 	WORD_NOEXPAND,
+	WORD_EXPANDED,
 	LESS,	// <
 	DLESS,	// <<
 	GREAT,	// >
 	DGREAT, // >>
 	PIPE	// |
 };
-# define NUM_OF_TOKENS (7) /* Needed for parser */
+# define NUM_OF_TOKENS (8) /* Needed for parser */
 
 # define INVALID_WORD_CHAR "&();"
 
@@ -38,9 +39,10 @@ enum e_machine_states{
 	ST_OPEN_DQUOTE,
 	ST_LESS,
 	ST_GREAT,
-	ST_WORD_TRANSITION,
+	ST_WORD_TRANSITION, // useless state?? I think so!
+	ST_SUBSTITUTION,
 };
-# define NUM_OF_STATES (7)
+# define NUM_OF_STATES (8)
 
 enum e_add_space{
 	NO_SPACE = 0,
@@ -69,10 +71,15 @@ t_error	f_less(char cursor, enum e_machine_states *state, t_list **token_list, t
 t_error	f_great(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 t_error	f_var_expansion_dquote(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 
+t_error	f_var_substitution(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
+t_error	process_expanded_var(t_buffer *var_buf, t_buffer *buffer, t_list **token_list);
+
 void	set_machine_state(char cursor, enum e_machine_states *state);
 
 void	link_last_token(t_list *token_list);
 t_error	f_word_transition(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
+
+t_error	tokenize_variable(char *expanded_var, t_buffer *buffer, t_list **token_list);
 
 /* post processing of tokens */
 
@@ -83,6 +90,7 @@ t_error	link_tokens(t_list **token_list);
 t_error	expand_variables(t_list *token_list);
 t_error	expansion(char **string);
 t_error	rebuild_string(char **string, char *middle, char *variable, char *after);
+char	*my_getenv(char *var);
 
 /* debug */
 

@@ -9,10 +9,11 @@ Makefile.gen
 *~
 \#*\#
 *.swp
+*.vim
 
 ## Other
 .DS_STORE
-
+*.txt
 
 
 ## Template from https://github.com/github/gitignore

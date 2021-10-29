@@ -62,6 +62,8 @@ void	set_machine_state(char cursor, enum e_machine_states *state)
 		*state = ST_OPEN_SQUOTE;
 	else if (cursor == '|')
 		*state = ST_TRANSITION;
+	else if (cursor == '$')
+		*state = ST_SUBSTITUTION;
 	else if (ft_isascii(cursor))
 		*state = ST_IN_WORD;
 }
