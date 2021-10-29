@@ -1,31 +1,28 @@
 #include "lexer.h"
 #include "execution.h"
 
-t_error	f_var_substitution(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
+t_error	f_var_substitution(char cursor, enum e_machine_states *state,
+		t_list **token_list, t_buffer *buffer)
 {
-	char	*str;
+	char			*str;
 	static t_buffer	var_buf = {NULL, 0, 0};
 
 	if (cursor == '?')
 	{
-		tokenize_variable(ft_itoa(g_global.ret), buffer, token_list);
+		str = ft_itoa(g_global.ret);
+		tokenize_variable(str, buffer, token_list);
+		free(str);
 		*state = ST_IN_WORD;
 	}
 	else if (ft_isalnum(cursor) || cursor == '_')
 		append_buffer(&var_buf, cursor);
 	else
 	{
-		if (var_buf.pos == 0)
+		if (var_buf.pos == 0 && !ft_is_incharset(cursor, "\"\'"))
 			tokenize_variable("$", buffer, token_list);
 		else
-		{
-			append_buffer(&var_buf, '\0');
-			str = my_getenv(var_buf.buf);
-			tokenize_variable(str, buffer, token_list);
-			free(str);
-			free(var_buf.buf);
-			initialize_buffer(&var_buf);
-		}
+			if (process_expanded_var(&var_buf, buffer, token_list) == FAIL)
+				return (FAIL);
 		if (ft_isspace(cursor) || cursor == '\0')
 			push_buf_to_toklist(buffer, token_list, WORD);
 		set_machine_state(cursor, state);
@@ -33,7 +30,23 @@ t_error	f_var_substitution(char cursor, enum e_machine_states *state, t_list **t
 	return (SUCCESS);
 }
 
-t_error	tokenize_variable(char *expanded_var, t_buffer *buffer, t_list **token_list)
+t_error	process_expanded_var(t_buffer *var_buf, t_buffer *buffer,
+		t_list **token_list)
+{
+	char	*str;
+
+	append_buffer(var_buf, '\0');
+	str = my_getenv(var_buf->buf);
+	if (tokenize_variable(str, buffer, token_list) == FAIL)
+		return (FAIL);
+	free(str);
+	free(var_buf->buf);
+	initialize_buffer(var_buf);
+	return (SUCCESS);
+}
+
+t_error	tokenize_variable(char *expanded_var, t_buffer *buffer,
+		t_list **token_list)
 {
 	char	*str;
 

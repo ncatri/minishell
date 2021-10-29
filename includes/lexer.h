@@ -72,6 +72,7 @@ t_error	f_great(char cursor, enum e_machine_states *state, t_list **token_list, 
 t_error	f_var_expansion_dquote(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 
 t_error	f_var_substitution(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
+t_error	process_expanded_var(t_buffer *var_buf, t_buffer *buffer, t_list **token_list);
 
 void	set_machine_state(char cursor, enum e_machine_states *state);
 
