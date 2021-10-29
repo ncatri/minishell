@@ -1,9 +1,9 @@
 #include "execution.h"
 
-char **copy_env(char **envp)
+char	**copy_env(char **envp)
 {
-	char 	**copy;
-	int 	i;
+	char	**copy;
+	int		i;
 
 	copy = malloc(sizeof(char *) * (number_of_split(envp) + 1));
 	i = 0;

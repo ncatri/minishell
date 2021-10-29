@@ -2,7 +2,7 @@
 
 char	*last_elt_of_path(char *path)
 {
-	char *backslash;
+	char	*backslash;
 
 	if (!path)
 		return (NULL);
@@ -15,8 +15,8 @@ char	*last_elt_of_path(char *path)
 
 int	find_key_index(char **env, char *key)
 {
-	int	i;
-	char **split;
+	int		i;
+	char	**split;
 
 	i = 0;
 	while (env[i])
@@ -68,7 +68,7 @@ char	*create_command_path(char **env, char *exec)
 	while (paths[i])
 	{
 		cmd_path = join_cmd_to_path(paths[i], exec);
-		if (open(cmd_path, O_RDONLY) != -1)
+		if (open(cmd_path, O_RDONLY | O_EXCL) != -1)
 		{
 			free_splits(paths, number_of_split(paths));
 			return (cmd_path);
