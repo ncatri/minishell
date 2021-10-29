@@ -64,7 +64,7 @@ void	set_machine_state(char cursor, enum e_machine_states *state)
 		*state = ST_TRANSITION;
 	else if (cursor == '$')
 		*state = ST_SUBSTITUTION;
-	else if (ft_isascii(cursor))
+	else
 		*state = ST_IN_WORD;
 }
 
@@ -75,28 +75,5 @@ t_error	push_buf_to_toklist(t_buffer *buffer, t_list **token_list, enum e_token_
 		return (FAIL);
 	free(buffer->buf);
 	initialize_buffer(buffer);
-	return (SUCCESS);
-}
-
-t_error	expand_buffer_push_toklist(t_buffer *buffer, t_list **token_list, int add_space)
-{
-	char	*str;
-
-	if (buffer->pos == 0) // means we have "$ " -> no expand!
-	{
-		append_buffer(buffer, '$');
-		if (push_buf_to_toklist(buffer, token_list, WORD) == FAIL)
-			return (FAIL);
-	}	
-	append_buffer(buffer, '\0');
-	str = getenv(buffer->buf);
-	if (str == NULL)
-		str = "";
-	if (add_token_to_list(token_list, WORD, str) == FAIL)
-		return (FAIL);
-	free(buffer->buf);
-	initialize_buffer(buffer);
-	if (add_space) 
-		append_buffer(buffer, ' ');
 	return (SUCCESS);
 }

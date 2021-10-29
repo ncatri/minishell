@@ -67,6 +67,32 @@ t_error	tokenize_variable(char *expanded_var, t_buffer *buffer,
 	return (SUCCESS);
 }
 
+t_error	f_var_substit_dquote(char cursor, enum e_machine_states *state,
+		t_list **token_list, t_buffer *buffer)
+{
+	char		*str;
+	static t_buffer var_buf = {NULL, 0, 0};
+	(void)token_list;
+
+	if (cursor == '?')
+	{
+		str = ft_itoa(g_global.ret);
+		append_str_to_buffer(buffer, str);	
+		free(str);
+		*state = ST_OPEN_DQUOTE;
+	}
+	else if (ft_isalnum(cursor) || cursor == '_')
+		append_buffer(&var_buf, cursor);
+	else
+	{
+		append_buffer(&var_buf, '\0');
+		str = my_getenv(var_buf.buf);
+		append_str_to_buffer(buffer, str);
+		*state = ST_OPEN_DQUOTE;
+	}
+	return (SUCCESS);
+}
+
 char	*my_getenv(char	*var)
 {
 	int		i;

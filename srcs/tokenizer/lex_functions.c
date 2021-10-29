@@ -28,8 +28,6 @@ t_error	f_inword(char cursor, enum e_machine_states *state, t_list **token_list,
 		if (cursor == '|')
 			if (add_token_to_list(token_list, PIPE, "") == FAIL)
 				return (FAIL);
-//		if (cursor == '"' || cursor == '\'')
-//			link_last_token(*token_list);
 	}
 	else if (ft_isascii(cursor) && !ft_is_incharset(cursor, "\"\'$")) // if $: token not closed, buffer full
 		append_buffer(buffer, cursor);
@@ -42,11 +40,9 @@ t_error	f_doublequote(char cursor, enum e_machine_states *state, t_list **token_
 	(void)token_list;
 
 	if (cursor == '"') 
-	{
 		*state = ST_IN_WORD;
-//		if (push_buf_to_toklist(buffer, token_list, WORD) == FAIL)
-//			return (FAIL);
-	}
+	else if (cursor == '$')
+		*state = ST_SUBSTIT_DQUOTE;
 	else if (cursor == '\0')
 	{
 		printf("Error: unclosed double quote\n");
@@ -64,11 +60,7 @@ t_error	f_singlequote(char cursor, enum e_machine_states *state, t_list **token_
 	(void)token_list;
 
 	if (cursor == '\'') 
-	{
-		*state = ST_TRANSITION;
-//		if (push_buf_to_toklist(buffer, token_list, WORD_NOEXPAND) == FAIL)
-//			return (FAIL);
-	}
+		*state = ST_IN_WORD;
 	else if (cursor == '\0')
 	{
 		printf("Error: unclosed single quote\n");

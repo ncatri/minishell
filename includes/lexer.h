@@ -39,8 +39,8 @@ enum e_machine_states{
 	ST_OPEN_DQUOTE,
 	ST_LESS,
 	ST_GREAT,
-	ST_WORD_TRANSITION, // useless state?? I think so!
 	ST_SUBSTITUTION,
+	ST_SUBSTIT_DQUOTE,
 };
 # define NUM_OF_STATES (8)
 
@@ -60,6 +60,7 @@ t_error	syntax_error(char c);
 t_error	error_message(char *message);
 t_error	push_buf_to_toklist(t_buffer *buffer, t_list **token_list, enum e_token_types tok_type);
 t_error	expand_buffer_push_toklist(t_buffer *buffer, t_list **token_list, int add_space);
+t_error	append_str_to_buffer(t_buffer *buffer, char *str);
 
 /* tableau pointeurs sur fonction */
 
@@ -73,6 +74,8 @@ t_error	f_var_expansion_dquote(char cursor, enum e_machine_states *state, t_list
 
 t_error	f_var_substitution(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer);
 t_error	process_expanded_var(t_buffer *var_buf, t_buffer *buffer, t_list **token_list);
+t_error	f_var_substit_dquote(char cursor, enum e_machine_states *state,
+		t_list **token_list, t_buffer *buffer);
 
 void	set_machine_state(char cursor, enum e_machine_states *state);
 

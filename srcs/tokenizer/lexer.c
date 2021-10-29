@@ -30,7 +30,6 @@ t_list	*tokenizer(char *line)
 		cursor++;
 	}
 	free(buffer.buf);
-	link_tokens(&token_list);
 	return (token_list);
 }
 
@@ -48,8 +47,8 @@ t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list,
 	f[ST_OPEN_SQUOTE] = f_singlequote;
 	f[ST_LESS] = f_less;
 	f[ST_GREAT] = f_great;
-//	f[ST_WORD_TRANSITION] = f_word_transition; // useless line ????
 	f[ST_SUBSTITUTION] = f_var_substitution;
+	f[ST_SUBSTIT_DQUOTE] = f_var_substit_dquote;
 
 	check = (*f[*state])(cursor, state, token_list, buffer);
 	return (check);
@@ -84,5 +83,16 @@ t_error	append_buffer(t_buffer *buffer, char c)
 	}
 	buffer->buf[buffer->pos] = c;
 	buffer->pos++;
+	return (SUCCESS);
+}
+
+t_error	append_str_to_buffer(t_buffer *buffer, char *str)
+{
+	while (str && *str)
+	{
+		if (append_buffer(buffer, *str) == FAIL)
+			return (FAIL);
+		str++;
+	}
 	return (SUCCESS);
 }

@@ -40,20 +40,6 @@ t_error	add_token_to_list(t_list **token_list, int token_type, char *data)
 	return (SUCCESS);
 }
 
-void	link_last_token(t_list *token_list)
-{
-	t_list	*cursor;
-	t_token	*tok;
-
-	if (!token_list)
-		return;
-	cursor = token_list;
-	while (cursor->next)
-		cursor = cursor->next;	
-	tok = cursor->content;
-	tok->concat_next = TRUE;
-}
-
 t_error	syntax_error(char c)
 {
 	ft_putstr_fd("syntax error near unexpected token ", 2);

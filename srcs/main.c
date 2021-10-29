@@ -28,15 +28,12 @@ int main(int argc, char **argv, char **envp)
 		}
 		add_history(line);
 		token_list = tokenizer(line);
-//		expand_variables(token_list);
 		print_token_list(token_list);
 		cmd_array = parser(token_list);
 		print_command_array(cmd_array, g_global.num_cmds);
 		if (cmd_array)
 			execution(cmd_array);
 		ft_lstclear(&token_list, free_token);
-		//print_token_list(token_list);
-		//print_command_array(cmd_array, g_global.num_cmds);
 		
 		//ft_lstclear(&token_list, free_token); --> crash with [ls | rev | rev | cat -e]
 		free_loop(line, cmd_array);
