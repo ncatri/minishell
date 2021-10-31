@@ -18,9 +18,9 @@ int	cd(t_command *cmd)
 
 int	pwd(void)
 {
-	char	buff[PATHMAX];
+	char	buff[PATH_MAX];
 
-	if (getcwd(buff, PATHMAX) == NULL)
+	if (getcwd(buff, PATH_MAX) == NULL)
 		return (printf("Error on the pwd\n"));
 	else
 		printf("%s\n", buff);

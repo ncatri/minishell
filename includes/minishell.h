@@ -4,7 +4,7 @@
 # include <stdio.h> // printf in lexer.c
 # include <stdlib.h>
 # include <signal.h>
-# include <libc.h>
+//# include <libc.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
