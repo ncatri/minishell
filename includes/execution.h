@@ -4,7 +4,7 @@
 # define WRITE (1)
 # define READ (0)
 # define CHILD (0)
-# define PATHMAX (1024)
+# define PATH_MAX (1024)
 # include "minishell.h"
 # include <sys/stat.h>
 # include <sys/wait.h>

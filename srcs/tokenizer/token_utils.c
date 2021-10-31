@@ -9,7 +9,6 @@ t_token *new_token(enum e_token_types type, char *buf)
 	{
 		token->type = type;
 		token->data = ft_strdup(buf);
-		token->concat_next = FALSE;
 		if (token->data == NULL)
 			return (NULL);
 	}
