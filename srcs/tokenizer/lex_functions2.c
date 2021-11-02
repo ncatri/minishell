@@ -17,10 +17,11 @@ t_error	f_less(char cursor, enum e_machine_states *state, t_list **token_list, t
 			return (FAIL);
 		*state = ST_TRANSITION;
 	}
-	else if (cursor == '>')
-		printf("syntax error\n");
 	else
-		printf("non covered case in f_less\n");
+	{
+		printf("Syntax error near token '<'\n");
+		return (FAIL);
+	}
 	return (SUCCESS);
 }
 
@@ -41,9 +42,10 @@ t_error	f_great(char cursor, enum e_machine_states *state, t_list **token_list, 
 			return (FAIL);
 		*state = ST_TRANSITION;
 	}
-	else if (cursor == '<')
-		printf("syntax error\n");
 	else
-		printf("non covered case in f_great\n");
+	{
+		printf("Syntax error near token '>'\n");
+		return (FAIL);
+	}
 	return (SUCCESS);
 }
