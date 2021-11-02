@@ -51,26 +51,6 @@ int	is_builtin(t_command *cmd)
 	return (0);
 }
 
-int	exit_check(t_command *cmd)
-{
-	int ret;
-
-	ret = 0;
-	if (cmd->number_args == 1)
-	{
-		if (full_digits(cmd->args[0]) == 0)
-			ret_msg("Exit : need numerics args\n", FAIL);
-		g_global.ret = ft_atoi(cmd->args[0]);
-	}
-	if (cmd->number_args > 1)
-	{
-		g_global.ret = 1;
-		ret = ret_msg("Exit : too many arguments\n", 1);
-	}
-	else
-		printf("exit\n");
-	return (ret);
-}
 
 int	check_builtin(t_command *cmd)
 {
