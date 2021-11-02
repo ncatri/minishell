@@ -10,6 +10,8 @@ int	unset(t_command *cmd, int id)
 	if (id != -1)
 	{
 		split = ft_split(cmd->args[id], "=");
+		if (!valid_unset_var(split[0]))
+			return (ret_msg("Bad identifier in the var\n", 1));
 		index = find_key_index(g_global.envp, split[0]);
 		free_splits(split, number_of_split(split));
 		if (index != -1)
@@ -18,6 +20,8 @@ int	unset(t_command *cmd, int id)
 	}
 	while (i < cmd->number_args)
 	{
+		if (!valid_unset_var(cmd->args[i]))
+			return (ret_msg("Bad identifier in the var\n", 1));
 		index = find_key_index(g_global.envp, cmd->args[i]);
 		if (index != -1)
 			delete_key(index);

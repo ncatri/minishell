@@ -72,4 +72,7 @@ void		free_loop(char *line, t_command **cmd_array);
 int			fill_pids(int fork_res, t_list *input, t_pid *pids, int i);
 int			ret_msg(char *message, int return_status);
 int			full_digits(char *str);
+int			exit_check(t_command *cmd);
+int 		valid_unset_var(char *str);
+
 #endif
