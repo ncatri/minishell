@@ -26,7 +26,7 @@ SRCS = 	tokenizer/lexer.c \
 		execution/builtins/builtin1.c \
 		execution/builtins/builtin2.c \
 		execution/builtins/echo_utils.c \
-		execution/array_manip/copy_env.c \
+		execution/array_manip/env.c \
 		execution/array_manip/cmd_path.c \
 		execution/array_manip/replace_pwd.c \
 		execution/builtins/builtin_utils.c \

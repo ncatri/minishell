@@ -51,7 +51,6 @@ int			cd(t_command *cmd);
 int			echo(t_command *cmd);
 int			delete_key(int index);
 int			export(t_command *cmd);
-void		my_exit(t_command *cmd);
 char		**alphasort(char **env);
 int			is_builtin(t_command *cmd);
 int			replace_pwd(t_pwd_replace var);
@@ -72,4 +71,5 @@ char		*create_command_path(char **env, char *exec);
 void		free_loop(char *line, t_command **cmd_array);
 int			fill_pids(int fork_res, t_list *input, t_pid *pids, int i);
 int			ret_msg(char *message, int return_status);
+int			full_digits(char *str);
 #endif
