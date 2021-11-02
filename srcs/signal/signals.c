@@ -28,16 +28,17 @@ void	main_signal_handler(int signal)
 void	setup_cmd_signals(void)
 {
 	signal(SIGINT, cmd_signal_handler);
-	signal(SIGQUIT, cmd_signal_handler);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 void	cmd_signal_handler(int signal)
 {
-	(void)signal;
 	if (signal == SIGINT)
 	{
 		printf("\n");
-		return ;
+		if (open("heredoc.txt", O_RDONLY, 0644) >= 0)
+			unlink("heredoc.txt");
+		exit (SIGINT);
 	}
 	else if (signal == SIGQUIT)
 	{

@@ -61,6 +61,7 @@ t_error	connections(int i, t_command *cmd, int pipesfd[][2])
 
 int	child_stuff(int i, t_command **commands, int nb_pipes, int pipesfd[][2])
 {
+	setup_cmd_signals();
 	if (connections(i, commands[i], pipesfd) == FAIL)
 	{
 		g_global.ret = 1;
@@ -104,14 +105,16 @@ t_error	execution(t_command **commands)
 	i = -1;
 	while (++i < g_global.num_cmds)
 	{
-		setup_cmd_signals();
 		wait_previous_heredoc(commands[i]->input_redir, pids, i);
 		fork_res = fork();
 		tcsetattr(STDIN_FILENO, TCSANOW, &g_global.term_save);
 		if (fork_res == CHILD)
 			child_stuff(i, commands, nb_pipes, pipesfd);
 		else if (fork_res > 0)
+		{
 			fill_pids(fork_res, commands[i]->input_redir, pids, i);
+			signal(SIGINT, SIG_IGN);
+		}
 		else
 			return (FAIL);
 	}
