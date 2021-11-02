@@ -33,10 +33,12 @@ int	build_exec(t_command *cmd, char **env)
 	ft_pushfront_array((void ***)&cmd->args, cmd->executable, cmd->number_args);
 	cmd->number_args++;
 	ft_pushback_array((void ***)&cmd->args, NULL, cmd->number_args);
-	if (open(cmd->executable, O_RDONLY) == -1)
+	if (open(cmd->executable, O_RDONLY) == -1 || open(cmd->executable, O_DIRECTORY))
 		cmd->executable = create_command_path(env, cmd->executable);
 	if (cmd->executable == NULL)
 	{
+			if (cmd->input_redir != NULL)
+				exit (SUCCESS);
 		g_global.ret = 127;
 		printf("\x1B[31mCommand not found\n\033[0m");
 		exit(g_global.ret);
@@ -59,13 +61,13 @@ t_error	connections(int i, t_command *cmd, int pipesfd[][2])
 
 int	child_stuff(int i, t_command **commands, int nb_pipes, int pipesfd[][2])
 {
-	if (!is_builtin(commands[i]))
-		build_exec(commands[i], g_global.envp);
 	if (connections(i, commands[i], pipesfd) == FAIL)
 	{
 		g_global.ret = 1;
 		exit (g_global.ret);
 	}
+	if (!is_builtin(commands[i]))
+		build_exec(commands[i], g_global.envp);
 	if (allpipes_action(pipesfd, nb_pipes, DESTROY) == FAIL)
 		return (FAIL);
 	if (is_builtin(commands[i]))
@@ -91,7 +93,6 @@ t_error	execution(t_command **commands)
 		return (FAIL);
 	if (allpipes_action(pipesfd, nb_pipes, INITIALIZE) == FAIL)
 		return (FAIL);
-	i = -1;
 	if (g_global.num_cmds == 1 && !commands[0]->output_redir)
 	{
 		if (check_builtin(commands[0]) == 1)
@@ -100,6 +101,7 @@ t_error	execution(t_command **commands)
 			return (SUCCESS);
 		}
 	}
+	i = -1;
 	while (++i < g_global.num_cmds)
 	{
 		setup_cmd_signals();

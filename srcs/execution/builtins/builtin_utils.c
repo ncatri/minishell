@@ -30,55 +30,10 @@ int	delete_key(int index)
 	return (0);
 }
 
-char	**alphasort(char **env)
-{
-	int		i;
-	char	*temp;
-	char	**copy;
-
-	copy = malloc(number_of_split(env) * (sizeof(char *) + 1));
-	i = 0;
-	while (env[i])
-	{
-		copy[i] = env[i];
-		i++;
-	}
-	copy[i] = 0;
-	i = 0;
-	while (i < number_of_split(env) - 1)
-	{
-		if (ft_strcmp(copy[i], copy[i + 1]) > 0)
-		{
-			temp = copy[i];
-			copy[i] = copy[i + 1];
-			copy[i + 1] = temp;
-			i = 0;
-		}
-		else
-			i++;
-	}
-	return (copy);
-}
-
-t_error	pushback_env(void ***array, void *new_elt, size_t array_size)
-{
-	void	**new_array;
-
-	if (!array)
-		return (FAIL);
-	new_array = malloc(sizeof(void *) * (array_size + 2));
-	if (!new_array)
-		return (FAIL);
-	ft_memcpy(new_array, *array, sizeof(void *) * array_size);
-	new_array[array_size] = new_elt;
-	new_array[array_size + 1] = 0;
-	free(*array);
-	*array = new_array;
-	return (SUCCESS);
-}
-
 int	is_builtin(t_command *cmd)
 {
+	if (!cmd->executable)
+		return (0);
 	if (ft_strcmp(cmd->executable, "cd") == 0)
 		return (1);
 	if (ft_strcmp(cmd->executable, "pwd") == 0)
@@ -96,8 +51,28 @@ int	is_builtin(t_command *cmd)
 	return (0);
 }
 
+int	exit_check(t_command *cmd)
+{
+	if (cmd->number_args == 1)
+	{
+		if (full_digits(cmd->args[0]) == 0)
+			ret_msg("Exit : need numerics args\n", FAIL);
+		g_global.ret = ft_atoi(cmd->args[0]);
+	}
+	if (cmd->number_args > 1)
+	{
+		g_global.ret = 1;
+		ret_msg("Exit : too many arguments\n", FAIL);
+	}
+	else
+		printf("exit\n");
+	return (0);
+}
+
 int	check_builtin(t_command *cmd)
 {
+	if (!cmd->executable)
+		return (0);
 	if (ft_strcmp(cmd->executable, "cd") == 0)
 		return (cd(cmd));
 	if (ft_strcmp(cmd->executable, "pwd") == 0)
@@ -111,6 +86,9 @@ int	check_builtin(t_command *cmd)
 	if (ft_strcmp(cmd->executable, "env") == 0)
 		return (env(g_global.envp, CLASSIC));
 	if (ft_strcmp(cmd->executable, "exit") == 0)
-		my_exit(cmd);
+	{
+		exit_check(cmd);
+		exit(g_global.ret);
+	}
 	return (0);
 }
