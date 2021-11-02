@@ -35,6 +35,9 @@ void	cmd_signal_handler(int signal)
 {
 	if (signal == SIGINT)
 	{
+		printf("\n");
+		if (open("heredoc.txt", O_RDONLY, 0644) >= 0)
+			unlink("heredoc.txt");
 		exit (SIGINT);
 	}
 	else if (signal == SIGQUIT)
