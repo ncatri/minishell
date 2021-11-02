@@ -41,6 +41,8 @@ t_error	add_token_to_list(t_list **token_list, int token_type, char *data)
 
 t_error	push_buf_to_toklist(t_buffer *buffer, t_list **token_list, enum e_token_types tok_type)
 {
+	if (buffer->pos == 0)
+		return (SUCCESS);
 	append_buffer(buffer, '\0');
 	if (add_token_to_list(token_list, tok_type, buffer->buf) == FAIL)
 		return (FAIL);

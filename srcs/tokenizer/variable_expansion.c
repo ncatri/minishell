@@ -25,6 +25,10 @@ t_error	f_var_substitution(char cursor, enum e_machine_states *state,
 				return (FAIL);
 		if (ft_isspace(cursor) || cursor == '\0')
 			push_buf_to_toklist(buffer, token_list, WORD);
+		else if (ft_is_incharset(cursor, INVALID_WORD_CHAR))
+			return (syntax_error(cursor));
+		else
+			append_buffer(buffer, cursor);
 		set_machine_state(cursor, state);
 	}
 	return (SUCCESS);
