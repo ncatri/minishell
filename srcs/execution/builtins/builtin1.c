@@ -13,6 +13,7 @@ int	cd(t_command *cmd)
 		chdir(cmd->args[0]);
 		replace_pwd(PWD);
 	}
+	g_global.ret = 0;
 	return (1);
 }
 
@@ -24,6 +25,7 @@ int	pwd(void)
 		return (printf("Error on the pwd\n"));
 	else
 		printf("%s\n", buff);
+	g_global.ret = 0;
 	return (1);
 }
 
@@ -49,6 +51,7 @@ int	echo(t_command *cmd)
 	}
 	if (newline != 0)
 		printf("\n");
+	g_global.ret = 0;
 	return (1);
 }
 
@@ -81,5 +84,6 @@ int	env(char **envp, t_env_status status)
 			printf("%s\n", envp[i]);
 		i++;
 	}
+	g_global.ret = 0;
 	return (1);
 }

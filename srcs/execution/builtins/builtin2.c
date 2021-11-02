@@ -23,6 +23,7 @@ int	unset(t_command *cmd, int id)
 			delete_key(index);
 		i++;
 	}
+	g_global.ret = 0;
 	return (1);
 }
 
@@ -55,20 +56,20 @@ int	export(t_command *cmd)
 		i++;
 	}
 	free_splits(split, number_of_split(split));
+	g_global.ret = 0;
 	return (1);
 }
 
-void	my_exit(t_command *cmd)
+int	full_digits(char *str)
 {
-	if (cmd->number_args == 1)
-		g_global.ret = ft_atoi(cmd->args[0]);
-	if (cmd->number_args > 1)
+	int i;
+
+	i = 0;
+	while (str[i])
 	{
-		g_global.ret = 1;
-		ret_msg("Exit : too many arguments\n", FAIL);
+		if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
 	}
-	else
-		printf("exit\n");
-	printf("%d\n", g_global.ret);
-	exit(g_global.ret);
+	return (1);
 }
