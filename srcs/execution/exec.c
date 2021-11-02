@@ -30,15 +30,20 @@ int	allpipes_action(int pipesfd[][2], int nb_pipes, t_pipes action)
 
 int	build_exec(t_command *cmd, char **env)
 {
+	struct stat	stat_ret;
+
+	stat(cmd->executable, &stat_ret);
 	ft_pushfront_array((void ***)&cmd->args, cmd->executable, cmd->number_args);
 	cmd->number_args++;
 	ft_pushback_array((void ***)&cmd->args, NULL, cmd->number_args);
-	if (open(cmd->executable, O_RDONLY) == -1 || open(cmd->executable, O_DIRECTORY))
+	if (open(cmd->executable, O_RDONLY) == -1)
 		cmd->executable = create_command_path(env, cmd->executable);
+	if (open(cmd->executable, O_DIRECTORY) >= 0)
+		cmd->executable = NULL;
 	if (cmd->executable == NULL)
 	{
-			if (cmd->input_redir != NULL)
-				exit (SUCCESS);
+		if (cmd->input_redir != NULL)
+			exit (SUCCESS);
 		g_global.ret = 127;
 		printf("\x1B[31mCommand not found\n\033[0m");
 		exit(g_global.ret);
