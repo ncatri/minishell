@@ -50,8 +50,6 @@ t_error	f_doublequote(char cursor, enum e_machine_states *state, t_list **token_
 	}
 	else if (ft_isascii(cursor))
 		append_buffer(buffer, cursor);
-	else
-		printf("non covered case in f_doublequote\n");
 	return (SUCCESS);
 }
 
@@ -68,7 +66,5 @@ t_error	f_singlequote(char cursor, enum e_machine_states *state, t_list **token_
 	}
 	else if (ft_isascii(cursor))
 		append_buffer(buffer, cursor);
-	else
-		printf("non covered case in f_singlequote\n");
 	return (SUCCESS);
 }

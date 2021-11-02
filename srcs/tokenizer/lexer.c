@@ -24,6 +24,7 @@ t_list	*tokenizer(char *line)
 		if (analyzer(*cursor, &state, &token_list, &buffer) == FAIL)
 		{
 			ft_lstclear(&token_list, free_token);
+			g_global.ret = 258;
 			token_list = NULL;
 			break;
 		}
