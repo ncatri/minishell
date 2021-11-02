@@ -53,6 +53,9 @@ int	is_builtin(t_command *cmd)
 
 int	exit_check(t_command *cmd)
 {
+	int ret;
+
+	ret = 0;
 	if (cmd->number_args == 1)
 	{
 		if (full_digits(cmd->args[0]) == 0)
@@ -62,11 +65,11 @@ int	exit_check(t_command *cmd)
 	if (cmd->number_args > 1)
 	{
 		g_global.ret = 1;
-		ret_msg("Exit : too many arguments\n", FAIL);
+		ret = ret_msg("Exit : too many arguments\n", 1);
 	}
 	else
 		printf("exit\n");
-	return (0);
+	return (ret);
 }
 
 int	check_builtin(t_command *cmd)
@@ -87,8 +90,9 @@ int	check_builtin(t_command *cmd)
 		return (env(g_global.envp, CLASSIC));
 	if (ft_strcmp(cmd->executable, "exit") == 0)
 	{
-		exit_check(cmd);
-		exit(g_global.ret);
+		if (exit_check(cmd) == 0)
+			exit(g_global.ret);
+		return (1);
 	}
 	return (0);
 }
