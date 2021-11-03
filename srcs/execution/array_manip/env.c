@@ -3,13 +3,18 @@
 char	**copy_env(char **envp)
 {
 	char	**copy;
+	int		oldpwd_index;
 	int		i;
 
 	copy = malloc(sizeof(char *) * (number_of_split(envp) + 1));
+	oldpwd_index = find_key_index(envp, "OLDPWD");
 	i = 0;
 	while (envp[i])
 	{
-		copy[i] = ft_strdup(envp[i]);
+		if (i == oldpwd_index)
+			copy[i] = ft_strdup("OLDPWD");
+		else
+			copy[i] = ft_strdup(envp[i]);
 		i++;
 	}
 	copy[i] = NULL;
