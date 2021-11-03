@@ -36,12 +36,12 @@ int	echo(t_command *cmd)
 
 	i = 0;
 	newline = 0;
-	if (cmd->number_args > 0)
-		newline = check_n(cmd->args[0]);
-	else
+	if (cmd->number_args == 0)
 		return (printf("\n"));
-	if (newline == 0)
-		i = 1;
+	while (check_n(cmd->args[i]) != -1)
+		i++;
+	if (i > 0)
+		newline = 1;
 	while (i < cmd->number_args)
 	{
 		printf("%s", cmd->args[i]);
@@ -49,7 +49,7 @@ int	echo(t_command *cmd)
 			printf(" ");
 		i++;
 	}
-	if (newline != 0)
+	if (newline == 0)
 		printf("\n");
 	g_global.ret = 0;
 	return (1);
