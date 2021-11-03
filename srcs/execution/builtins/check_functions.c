@@ -17,45 +17,22 @@ int	check_n(char *arg)
 	return (0);
 }
 
-int	valid_char_exit(char *str)
-{
-	int i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
 int	exit_check(t_command *cmd)
 {
 	int ret;
-	int i;
 
 	ret = 0;
-	if (cmd->number_args == 1)
-	{
-		if (valid_char_exit(cmd->args[0]) == 0)
-			ret_msg("Exit : need numerics args\n", FAIL);
+	
+	if (full_digits(cmd->args[0]) == 0)
+		ret_msg("Exit : need numerics args\n", FAIL);
+	else if (cmd->number_args == 1)
 		g_global.ret = ft_atoi(cmd->args[0]);
-	}
-	if (cmd->number_args > 1)
+	else if (cmd->number_args > 1)
 	{
-		i = 0;
-		while (i < cmd->number_args)
-		{
-			if (valid_char_exit(cmd->args[i]) == 0)
-				return (ret_msg("Exit : need numerics args\n", FAIL));
-			i++;
-		}
 		g_global.ret = 1;
 		ret = ret_msg("Exit : too many arguments\n", 1);
 	}
-	else
+	else if (g_global.num_cmds < 2)
 		printf("exit\n");
 	return (ret);
 }
