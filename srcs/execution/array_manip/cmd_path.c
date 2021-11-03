@@ -40,6 +40,8 @@ static char	**create_env_paths(char **env)
 	int		index;
 
 	index = find_key_index(env, "PATH");
+	if (index == -1)
+		return (NULL);
 	tmp = ft_split(env[index], "=");
 	paths = ft_split(tmp[1], ":");
 	free_splits(tmp, number_of_split(tmp));
@@ -64,6 +66,8 @@ char	*create_command_path(char **env, char *exec)
 	int		i;
 
 	paths = create_env_paths(env);
+	if (paths == NULL)
+		return (NULL);
 	i = 0;
 	while (paths[i])
 	{
