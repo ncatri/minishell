@@ -23,13 +23,17 @@ SRCS = 	tokenizer/lexer.c \
 		execution/plugs/wait_pid.c \
 		execution/plugs/inputs_manip.c \
 		execution/plugs/outputs_manip.c \
-		execution/builtins/builtin1.c \
-		execution/builtins/builtin2.c \
 		execution/builtins/check_functions.c \
+		execution/builtins/builtin_utils.c \
+		execution/builtins/cd/cd.c \
+		execution/builtins/pwd/pwd.c \
+		execution/builtins/export_/export.c \
+		execution/builtins/env_/env.c \
+		execution/builtins/echo/echo.c \
+		execution/builtins/unset/unset.c \
 		execution/array_manip/env.c \
 		execution/array_manip/cmd_path.c \
 		execution/array_manip/replace_pwd.c \
-		execution/builtins/builtin_utils.c \
 
 OBJS = $(addprefix $(OBJS_FOLDER)/, $(SRCS:.c=.o))
 

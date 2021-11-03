@@ -76,3 +76,17 @@ int	check_builtin(t_command *cmd)
 	}
 	return (0);
 }
+
+int	full_digits(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
