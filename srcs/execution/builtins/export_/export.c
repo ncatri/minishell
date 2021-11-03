@@ -1,10 +1,21 @@
 #include "execution.h"
 
-int	export(t_command *cmd)
+static void push_var(t_command *cmd, int i, char **split)
 {
-	char	**sorted_env;
-	char	**split;
-	int		i;
+	if (find_key_index(g_global.envp, split[0]) >= 0)
+	{
+		unset(cmd, i);
+		pushback_env((void ***)&g_global.envp, ft_strdup(cmd->args[i]), \
+			number_of_split(g_global.envp));
+	}
+	else
+		pushback_env((void ***)&g_global.envp, ft_strdup(cmd->args[i]), \
+			number_of_split(g_global.envp));
+}
+
+static int	check_if_arg(t_command *cmd)
+{
+	char **sorted_env;
 
 	if (cmd->number_args == 0)
 	{
@@ -13,6 +24,16 @@ int	export(t_command *cmd)
 		free(sorted_env);
 		return (1);
 	}
+	return (0);
+}
+
+int	export(t_command *cmd)
+{
+	char	**split;
+	int		i;
+
+	if (check_if_arg(cmd))
+		return (1);
 	i = 0;
 	while (i < cmd->number_args)
 	{
@@ -22,15 +43,7 @@ int	export(t_command *cmd)
 			free_splits(split, number_of_split(split)); //delete this line if bugs
 			return(ret_msg("bad identifier in the var\n", 1));
 		}
-		if (find_key_index(g_global.envp, split[0]) >= 0)
-		{
-			unset(cmd, i);
-			pushback_env((void ***)&g_global.envp, ft_strdup(cmd->args[i]), \
-				number_of_split(g_global.envp));
-		}
-		else
-			pushback_env((void ***)&g_global.envp, ft_strdup(cmd->args[i]), \
-				number_of_split(g_global.envp));
+		push_var(cmd, i, split);
 		i++;
 	}
 	free_splits(split, number_of_split(split));

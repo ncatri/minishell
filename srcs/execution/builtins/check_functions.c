@@ -49,7 +49,7 @@ int valid_env_var(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (!isalpha(str[i]) && !isdigit(str[i]))
+		if (!isalpha(str[i]) && !isdigit(str[i]) && str[i] != '_')
 			return (0);
 		i++;
 	}

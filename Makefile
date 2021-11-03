@@ -17,20 +17,20 @@ SRCS = 	tokenizer/lexer.c \
 		parser/parse_funcs.c \
 		signal/signals.c \
 		execution/free.c \
-		execution/exec.c \
-		execution/debug.c \
+		execution/main_exec/exec.c \
 		execution/plugs/heredocs.c \
 		execution/plugs/wait_pid.c \
 		execution/plugs/inputs_manip.c \
 		execution/plugs/outputs_manip.c \
 		execution/builtins/check_functions.c \
-		execution/builtins/builtin_utils.c \
+		execution/builtins/exec_builtin.c \
 		execution/builtins/cd/cd.c \
 		execution/builtins/pwd/pwd.c \
 		execution/builtins/export_/export.c \
 		execution/builtins/env_/env.c \
 		execution/builtins/echo/echo.c \
 		execution/builtins/unset/unset.c \
+		execution/builtins/key_mooves.c \
 		execution/array_manip/env.c \
 		execution/array_manip/cmd_path.c \
 		execution/array_manip/replace_pwd.c \
