@@ -1,5 +1,21 @@
 #include "execution.h"
 
+static void	print_var(char **export_print, char **envp, int i)
+{
+	printf("declare -x ");
+	printf("%s", export_print[0]);
+	if (ft_strchr(envp[i], '='))
+	{
+		printf("=\"");
+		if (export_print[1])
+			printf("%s\"\n", export_print[1]);
+		else
+			printf("\"\n");
+	}
+	else
+		printf("\n");
+}
+
 int	env(char **envp, t_env_status status)
 {
 	int		i;
@@ -11,18 +27,7 @@ int	env(char **envp, t_env_status status)
 		if (status == EXPORT)
 		{
 			export_print = sep_key_value(envp[i], '=');
-			printf("declare -x ");
-			printf("%s", export_print[0]);
-			if (ft_strchr(envp[i], '='))
-			{
-				printf("=\"");
-				if (export_print[1])
-					printf("%s\"\n", export_print[1]);
-				else
-					printf("\"\n");
-			}
-			else
-				printf("\n");
+			print_var(export_print, envp, i);
 			free_splits(export_print, number_of_split(export_print));
 		}
 		else if (ft_strchr(envp[i], '='))
