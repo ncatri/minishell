@@ -24,7 +24,10 @@ int	exit_check(t_command *cmd)
 	ret = 0;
 	
 	if (full_digits(cmd->args[0]) == 0)
+	{
 		ret_msg("Exit : need numerics args\n", FAIL);
+		g_global.ret = 255;
+	}
 	else if (cmd->number_args == 1)
 		g_global.ret = ft_atoi(cmd->args[0]);
 	else if (cmd->number_args > 1)
