@@ -65,7 +65,7 @@ int	env(char **envp, t_env_status status)
 	{
 		if (status == EXPORT)
 		{
-			export_print = ft_split(envp[i], "=");
+			export_print = sep_key_value(envp[i], '=');
 			printf("declare -x ");
 			printf("%s", export_print[0]);
 			if (ft_strchr(envp[i], '='))

@@ -82,7 +82,7 @@ int	child_stuff(int i, t_command **commands, int nb_pipes, int pipesfd[][2])
 		exit(1);
 	}
 	else
-		execve(commands[i]->executable, commands[i]->args, NULL);
+		execve(commands[i]->executable, commands[i]->args, g_global.envp);
 	return (SUCCESS);
 }
 

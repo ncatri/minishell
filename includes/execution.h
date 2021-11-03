@@ -73,6 +73,8 @@ int			fill_pids(int fork_res, t_list *input, t_pid *pids, int i);
 int			ret_msg(char *message, int return_status);
 int			full_digits(char *str);
 int			exit_check(t_command *cmd);
-int 		valid_unset_var(char *str);
+int 		valid_env_var(char *str);
+char 		**sep_key_value(char *str, char c);
+
 
 #endif
