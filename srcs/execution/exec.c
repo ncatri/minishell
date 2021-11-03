@@ -45,7 +45,7 @@ int	build_exec(t_command *cmd, char **env)
 		if (cmd->input_redir != NULL)
 			exit (SUCCESS);
 		g_global.ret = 127;
-		printf("\x1B[31mCommand not found\n\033[0m");
+		ft_putstr_fd("\x1B[31mCommand not found\n\033[0m", 2);
 		exit(g_global.ret);
 	}
 	return (SUCCESS);
