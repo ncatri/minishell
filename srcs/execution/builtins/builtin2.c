@@ -48,8 +48,11 @@ int	export(t_command *cmd)
 	while (i < cmd->number_args)
 	{
 		split = ft_split(cmd->args[i], "=");
-		if (!valid_env_var(split[0]))
+		if (split[0] == 0 || !valid_env_var(split[0]))
+		{
+			free_splits(split, number_of_split(split)); //delete this line if bugs
 			return(ret_msg("bad identifier in the var\n", 1));
+		}
 		if (find_key_index(g_global.envp, split[0]) >= 0)
 		{
 			unset(cmd, i);
