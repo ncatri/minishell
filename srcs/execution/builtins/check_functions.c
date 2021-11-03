@@ -14,6 +14,8 @@ int	check_n(char *arg)
 		else
 			return (-1);
 	}
+	if (i == 1)
+		return (-1);
 	return (0);
 }
 
