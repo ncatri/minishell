@@ -1,12 +1,10 @@
 #include "execution.h"
 
-int	unset(t_command *cmd, int id)
+static int export_call(int id, t_command *cmd)
 {
-	int	i;
-	int	index;
+	int index;
 	char **split;
 
-	i = 0;
 	if (id != -1)
 	{
 		split = ft_split(cmd->args[id], "=");
@@ -18,6 +16,17 @@ int	unset(t_command *cmd, int id)
 			delete_key(index);
 		return (1);
 	}
+	return (0);
+}
+
+int	unset(t_command *cmd, int id)
+{
+	int	i;
+	int	index;
+
+	i = 0;
+	if (export_call(id, cmd))
+		return (1);
 	while (i < cmd->number_args)
 	{
 		if (!valid_env_var(cmd->args[i]))
