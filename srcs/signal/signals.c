@@ -1,6 +1,6 @@
 #include "signals.h"
 
-void	setup_main_signals(void)
+void	setup_terminal()
 {
 	struct termios term_buff;
 
@@ -8,40 +8,59 @@ void	setup_main_signals(void)
 		printf("error tcgetattr\n");
 	term_buff = g_global.term_save;
 	term_buff.c_lflag &= ~ECHOCTL;
-//	term_buff.c_lflag |= ECHONL;
-//	term_buff.c_lflag &= ICANON;
 	tcsetattr(STDIN_FILENO, TCSANOW, &term_buff);
-
-	signal(SIGINT, main_signal_handler);
-	signal(SIGQUIT, SIG_IGN);
 }
 
-void	main_signal_handler(int signal)
+void	setup_main_signals(void)
 {
-	(void)signal;
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	signal(SIGINT, handler);
+	signal(SIGQUIT, handler);
 }
 
-void	setup_cmd_signals(void)
+void	handler(int signal)
 {
-	signal(SIGINT, cmd_signal_handler);
-	signal(SIGQUIT, SIG_IGN);
-}
-
-void	cmd_signal_handler(int signal)
-{
-	if (signal == SIGINT)
+	if ((signal == SIGQUIT || signal == SIGINT) && g_global.pid != 0)
+		process(signal);
+	else
 	{
-		printf("\n");
+		if (signal == SIGINT)
+		{
+			ft_putchar_fd('\n', STDIN_FILENO);
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_redisplay();
+		}
+		if (signal == SIGQUIT)
+		{
+			ft_putchar_fd('\r', 1);
+			rl_on_new_line();
+			rl_redisplay();
+		}
+	}
+}
+
+void	process(int signal)
+{
+	if (kill(g_global.pid, signal) == 0)
+	{
+		if (signal == SIGINT)
+			ft_putchar_fd('\n', 1);
+		if (signal == SIGQUIT && g_global.heredoc == FALSE)
+			ft_putstr_fd("Quit: 3\n", 1);
 		if (open("heredoc.txt", O_RDONLY, 0644) >= 0)
 			unlink("heredoc.txt");
-		exit (SIGINT);
+	}
+	else if (signal == SIGINT)
+	{
+		ft_putchar_fd('\n', STDIN_FILENO);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 	}
 	else if (signal == SIGQUIT)
 	{
-		printf("Quit: 3\n");
+		ft_putchar_fd('\n', 1);
+		rl_on_new_line();
+		rl_redisplay();
 	}
 }

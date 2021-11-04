@@ -66,7 +66,11 @@ t_error	connections(int i, t_command *cmd, int pipesfd[][2])
 
 int	child_stuff(int i, t_command **commands, int nb_pipes, int pipesfd[][2])
 {
-	setup_cmd_signals();
+	signal(SIGINT, SIG_DFL);
+	if (is_heredoc(commands[i]->input_redir) == 1)
+		signal(SIGQUIT, SIG_IGN);
+	else
+		signal(SIGQUIT, SIG_DFL);
 	if (connections(i, commands[i], pipesfd) == FAIL)
 	{
 		g_global.ret = 1;
@@ -82,7 +86,10 @@ int	child_stuff(int i, t_command **commands, int nb_pipes, int pipesfd[][2])
 		exit(1);
 	}
 	else
+	{
 		execve(commands[i]->executable, commands[i]->args, g_global.envp);
+		exit(34);
+	}
 	return (SUCCESS);
 }
 
@@ -111,15 +118,15 @@ t_error	execution(t_command **commands)
 	while (++i < g_global.num_cmds)
 	{
 		wait_previous_heredoc(commands[i]->input_redir, pids, i);
+		if (is_heredoc(commands[i]->input_redir) == 1)
+			g_global.heredoc = TRUE;
 		fork_res = fork();
+		g_global.pid = fork_res;
 		tcsetattr(STDIN_FILENO, TCSANOW, &g_global.term_save);
 		if (fork_res == CHILD)
 			child_stuff(i, commands, nb_pipes, pipesfd);
 		else if (fork_res > 0)
-		{
 			fill_pids(fork_res, commands[i]->input_redir, pids, i);
-			signal(SIGINT, SIG_IGN);
-		}
 		else
 			return (FAIL);
 	}

@@ -48,6 +48,7 @@ int	heredoc(char *terminator, int fd)
 {
 	char	*line;
 
+	setup_terminal();
 	line = NULL;
 	fd = open("heredoc.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
@@ -61,6 +62,7 @@ int	heredoc(char *terminator, int fd)
 	}
 	free(line);
 	close(fd);
+	tcsetattr(STDIN_FILENO, TCSANOW, &g_global.term_save);
 	fd = open("heredoc.txt", O_RDONLY, 0644);
 	if (fd == -1)
 		return (FAIL);
