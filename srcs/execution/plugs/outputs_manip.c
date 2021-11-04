@@ -23,7 +23,7 @@ t_error	output_redirection(t_list *output_list)
 	return (SUCCESS);
 }
 
-t_error	connect_output_pipe(int i, t_list *output_list, int pipesfd[][2])
+t_error	connect_output_pipe(int i, t_list *output_list, int **pipesfd)
 {
 	int	ret;
 

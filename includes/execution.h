@@ -37,13 +37,14 @@ int			heredoc(char *terminator, int fd);
 int			find_previous_hd(t_pid *pid, int i);
 int			wait_previous_heredoc(t_list *input, t_pid *pids, int i);
 //Pipes
-t_error		connect_input_pipe(int i, t_list *input, int pipesfd[][2]);
-t_error		connect_output_pipe(int i, t_list *output, int pipesfd[][2]);
-int			allpipes_action(int pipesfd[][2], int nb_pipes, t_pipes action);
+t_error		connect_input_pipe(int i, t_list *input, int **pipesfd);
+t_error		connect_output_pipe(int i, t_list *output, int **pipesfd);
+int			allpipes_action(int **pipesfd, int nb_pipes, t_pipes action);
 //Inputs and outputs
 t_error		browse_inputs(t_list *input_cmd);
 t_error		input_redirection(t_list *input);
 t_error		output_redirection(t_list *outputs);
+t_error		connections(int i, t_command *cmd, int **pipesfd);
 //Builtins
 int			pwd(void);
 int			check_n(char *arg);
@@ -75,5 +76,8 @@ int			full_digits(char *str);
 int			exit_check(t_command *cmd);
 int			valid_env_var(char *str);
 char		**sep_key_value(char *str, char c);
+//execution
+int			build_exec(t_command *cmd, char **env);
+int			child_stuff(int i, t_command **commands, int nb_pipes, int **pipesfd);
 
 #endif
