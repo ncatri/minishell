@@ -24,6 +24,8 @@ int	exit_check(t_command *cmd)
 	int	ret;
 
 	ret = 0;
+	if (!cmd->args)
+		return (ret);
 	if (full_digits(cmd->args[0]) == 0)
 	{
 		ret_msg("Exit : need numerics args\n", FAIL);
