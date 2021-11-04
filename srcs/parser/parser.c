@@ -10,7 +10,7 @@ t_command	**parser(t_list *token_list)
 	t_command			**cmd_array;
 	t_command			cmd_to_build;
 	t_list				*tok_cursor;
-	enum e_parser_state state;
+	enum e_parser_state	state;
 
 	g_global.num_cmds = 0;
 	state = WAITING;
@@ -19,8 +19,9 @@ t_command	**parser(t_list *token_list)
 	cmd_to_build = init_command();
 	while (tok_cursor)
 	{
-		if (parse_analyzer(&tok_cursor, &cmd_array, &cmd_to_build, &state) == FAIL)
-			break;
+		if (parse_analyzer(&tok_cursor, &cmd_array, \
+					&cmd_to_build, &state) == FAIL)
+			break ;
 		tok_cursor = tok_cursor->next;
 	}
 	if (state == COMMAND_IN_PROGRESS)
@@ -36,7 +37,7 @@ t_error	parse_analyzer(t_list **tok_cursor, t_command ***cmd_array, \
 	if (!tok_cursor || !cmd_to_build || !state || !cmd_array)
 		return (FAIL);
 	tok = (*tok_cursor)->content;
-	if (tok->type == WORD) 
+	if (tok->type == WORD)
 		return (parse_word(tok, cmd_array, cmd_to_build, state));
 	else if (tok->type == GREAT || tok->type == DGREAT || \
 			tok->type == LESS || tok->type == DLESS)
@@ -55,4 +56,15 @@ t_command	init_command(void)
 	cmd.input_redir = NULL;
 	cmd.output_redir = NULL;
 	return (cmd);
+}
+
+t_error	add_redir_to_list(t_list **redir_list, void *redir)
+{
+	t_list	*new_elt;
+
+	new_elt = ft_lstnew(redir);
+	if (!new_elt)
+		return (FAIL);
+	ft_lstadd_back(redir_list, new_elt);
+	return (SUCCESS);
 }
