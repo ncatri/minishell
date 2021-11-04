@@ -11,8 +11,6 @@ void	wait_childs(void)
 		wait_return = wait(&status);
 		if (WEXITSTATUS(status) > 0)
 			g_global.ret = WEXITSTATUS(status);
-		else
-			g_global.ret = 0;
 	}
 }
 
