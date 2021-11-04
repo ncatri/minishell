@@ -40,7 +40,7 @@ t_error	browse_inputs(t_list *input_list)
 	return (SUCCESS);
 }
 
-t_error	connect_input_pipe(int i, t_list *input, int pipesfd[][2])
+t_error	connect_input_pipe(int i, t_list *input, int **pipesfd)
 {
 	int	ret;
 

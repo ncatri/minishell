@@ -2,107 +2,25 @@
 #include "minishell.h"
 #include "parser.h"
 
-int	allpipes_action(int pipesfd[][2], int nb_pipes, t_pipes action)
+int	**create_pipesfd(int nb_pipes)
 {
+	int	**pipesfd;
 	int	i;
 
-	i = -1;
-	if (action == DESTROY)
+	pipesfd = malloc(sizeof(int *) * nb_pipes);
+	if (pipesfd == NULL)
+		return (NULL);
+	i = 0;
+	while (i < nb_pipes)
 	{
-		while (++i < nb_pipes)
-		{
-			if (close(pipesfd[i][READ]) == -1)
-				return (FAIL);
-			if (close(pipesfd[i][WRITE]) == -1)
-				return (FAIL);
-		}
+		pipesfd[i] = malloc(sizeof(int) * 2);
+		i++;
 	}
-	else
-	{
-		while (++i < nb_pipes)
-		{
-			if (pipe(pipesfd[i]) == -1)
-				return (FAIL);
-		}
-	}
-	return (SUCCESS);
+	return (pipesfd);
 }
 
-int	build_exec(t_command *cmd, char **env)
+int	single_builtin(t_pid *pids, t_command **commands)
 {
-	ft_pushfront_array((void ***)&cmd->args, cmd->executable, cmd->number_args);
-	cmd->number_args++;
-	ft_pushback_array((void ***)&cmd->args, NULL, cmd->number_args);
-	if (open(cmd->executable, O_RDONLY) == -1)
-		cmd->executable = create_command_path(env, cmd->executable);
-	if (open(cmd->executable, O_DIRECTORY) >= 0)
-		cmd->executable = NULL;
-	if (cmd->executable == NULL)
-	{
-		if (cmd->input_redir != NULL)
-			exit (SUCCESS);
-		g_global.ret = 127;
-		ft_putstr_fd("\x1B[31mCommand not found\n\033[0m", 2);
-		exit(g_global.ret);
-	}
-	return (SUCCESS);
-}
-
-t_error	connections(int i, t_command *cmd, int pipesfd[][2])
-{
-	if (connect_input_pipe(i, cmd->input_redir, pipesfd) == FAIL)
-		return (FAIL);
-	if (connect_output_pipe(i, cmd->output_redir, pipesfd) == FAIL)
-		return (FAIL);
-	if (input_redirection(cmd->input_redir) == FAIL)
-		return (FAIL);
-	if (output_redirection(cmd->output_redir) == FAIL)
-		return (FAIL);
-	return (SUCCESS);
-}
-
-int	child_stuff(int i, t_command **commands, int nb_pipes, int pipesfd[][2])
-{
-	signal(SIGINT, SIG_DFL);
-	if (is_heredoc(commands[i]->input_redir) == 1)
-		signal(SIGQUIT, SIG_IGN);
-	else
-		signal(SIGQUIT, SIG_DFL);
-	if (connections(i, commands[i], pipesfd) == FAIL)
-	{
-		g_global.ret = 1;
-		exit (g_global.ret);
-	}
-	if (!is_builtin(commands[i]))
-		build_exec(commands[i], g_global.envp);
-	if (allpipes_action(pipesfd, nb_pipes, DESTROY) == FAIL)
-		return (FAIL);
-	if (is_builtin(commands[i]))
-	{
-		check_builtin(commands[i]);
-		exit(1);
-	}
-	else
-	{
-		execve(commands[i]->executable, commands[i]->args, g_global.envp);
-		exit(34);
-	}
-	return (SUCCESS);
-}
-
-t_error	execution(t_command **commands)
-{
-	int		nb_pipes = g_global.num_cmds - 1;
-	int		pipesfd[nb_pipes][2];
-	t_pid	*pids;
-	pid_t	fork_res;
-	int		i;
-
-	pids = malloc(g_global.num_cmds * sizeof(t_pid));
-	if (pids == NULL)
-		return (FAIL);
-	if (allpipes_action(pipesfd, nb_pipes, INITIALIZE) == FAIL)
-		return (FAIL);
 	if (g_global.num_cmds == 1 && !commands[0]->output_redir)
 	{
 		if (check_builtin(commands[0]) == 1)
@@ -111,15 +29,46 @@ t_error	execution(t_command **commands)
 			return (SUCCESS);
 		}
 	}
+	return (0);
+}
+
+int	finish_loop(int **pipesfd, int nb_pipes, t_pid *pids)
+{
+	if (allpipes_action(pipesfd, nb_pipes, DESTROY) == FAIL)
+		return (FAIL);
+	free(pids);
+	wait_childs();
+	return (SUCCESS);
+}
+
+int	before_loop(t_pid *pids, int **pipesfd, int nb_pipes, t_command **commands)
+{
+	if (pids == NULL || pipesfd == NULL)
+		return (FAIL);
+	if (allpipes_action(pipesfd, nb_pipes, INITIALIZE) == FAIL)
+		return (FAIL);
+	if (single_builtin(pids, commands) == SUCCESS)
+		return (0);
+	return (1);
+}
+
+t_error	execution(t_command **commands)
+{
+	int		nb_pipes;
+	int		**pipesfd;
+	t_pid	*pids;
+	pid_t	fork_res;
+	int		i;
+
+	nb_pipes = g_global.num_cmds - 1;
+	pipesfd = create_pipesfd(nb_pipes);
+	pids = malloc(g_global.num_cmds * sizeof(t_pid));
+	if (before_loop(pids, pipesfd, nb_pipes, commands) == 0)
+		return (0);
 	i = -1;
 	while (++i < g_global.num_cmds)
 	{
-		wait_previous_heredoc(commands[i]->input_redir, pids, i);
-		if (is_heredoc(commands[i]->input_redir) == 1)
-			g_global.heredoc = TRUE;
-		fork_res = fork();
-		g_global.pid = fork_res;
-		tcsetattr(STDIN_FILENO, TCSANOW, &g_global.term_save);
+		fork_res = fork_and_wait_hd(commands, i, pids, fork_res);
 		if (fork_res == CHILD)
 			child_stuff(i, commands, nb_pipes, pipesfd);
 		else if (fork_res > 0)
@@ -127,9 +76,7 @@ t_error	execution(t_command **commands)
 		else
 			return (FAIL);
 	}
-	if (allpipes_action(pipesfd, nb_pipes, DESTROY) == FAIL)
+	if (finish_loop(pipesfd, nb_pipes, pids) == FAIL)
 		return (FAIL);
-	free(pids);
-	wait_childs();
 	return (SUCCESS);
 }
