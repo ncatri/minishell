@@ -1,11 +1,12 @@
 #include "lexer.h"
 
-t_error	f_transition(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
+t_error	f_transition(char cursor, enum e_machine_states *state, \
+		t_list **token_list, t_buffer *buffer)
 {
 	if (ft_is_incharset(cursor, INVALID_WORD_CHAR))
 		return (syntax_error(cursor));
 	else if (ft_is_incharset(cursor, "<>\"\'$") || ft_isspace(cursor))
-		; // do nothing, only update machine state
+		;
 	else if (cursor == '|')
 	{
 		if (add_token_to_list(token_list, PIPE, "") == FAIL)
@@ -17,11 +18,13 @@ t_error	f_transition(char cursor, enum e_machine_states *state, t_list **token_l
 	return (SUCCESS);
 }
 
-t_error	f_inword(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
+t_error	f_inword(char cursor, enum e_machine_states *state, \
+		t_list **token_list, t_buffer *buffer)
 {
 	if (ft_is_incharset(cursor, INVALID_WORD_CHAR))
 		return (syntax_error(cursor));
-	else if (ft_isspace(cursor) || ft_is_incharset(cursor, "<>|") || cursor == '\0')
+	else if (ft_isspace(cursor) || ft_is_incharset(cursor, "<>|") \
+			|| cursor == '\0')
 	{
 		if (push_buf_to_toklist(buffer, token_list, WORD) == FAIL)
 			return (FAIL);
@@ -29,17 +32,17 @@ t_error	f_inword(char cursor, enum e_machine_states *state, t_list **token_list,
 			if (add_token_to_list(token_list, PIPE, "") == FAIL)
 				return (FAIL);
 	}
-	else if (ft_isascii(cursor) && !ft_is_incharset(cursor, "\"\'$")) // if $: token not closed, buffer full
+	else if (ft_isascii(cursor) && !ft_is_incharset(cursor, "\"\'$"))
 		append_buffer(buffer, cursor);
 	set_machine_state(cursor, state);
 	return (SUCCESS);
 }
 
-t_error	f_doublequote(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
+t_error	f_doublequote(char cursor, enum e_machine_states *state, \
+		t_list **token_list, t_buffer *buffer)
 {
 	(void)token_list;
-
-	if (cursor == '"') 
+	if (cursor == '"')
 		*state = ST_IN_WORD;
 	else if (cursor == '$')
 		*state = ST_SUBSTIT_DQUOTE;
@@ -53,11 +56,11 @@ t_error	f_doublequote(char cursor, enum e_machine_states *state, t_list **token_
 	return (SUCCESS);
 }
 
-t_error	f_singlequote(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
+t_error	f_singlequote(char cursor, enum e_machine_states *state, \
+		t_list **token_list, t_buffer *buffer)
 {
 	(void)token_list;
-
-	if (cursor == '\'') 
+	if (cursor == '\'')
 		*state = ST_IN_WORD;
 	else if (cursor == '\0')
 	{

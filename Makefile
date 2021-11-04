@@ -9,8 +9,10 @@ SRCS = 	tokenizer/lexer.c \
 		tokenizer/lex_functions2.c \
 		tokenizer/token_utils.c \
 		tokenizer/variable_expansion.c \
+		tokenizer/variable_expansion2.c \
 		tokenizer/buffers.c \
 		tokenizer/debug.c \
+		tokenizer/error_message.c \
 		parser/parser.c \
 		parser/debug.c \
 		parser/array_utils.c \
