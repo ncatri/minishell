@@ -30,9 +30,6 @@ int	allpipes_action(int pipesfd[][2], int nb_pipes, t_pipes action)
 
 int	build_exec(t_command *cmd, char **env)
 {
-	struct stat	stat_ret;
-
-	stat(cmd->executable, &stat_ret);
 	ft_pushfront_array((void ***)&cmd->args, cmd->executable, cmd->number_args);
 	cmd->number_args++;
 	ft_pushback_array((void ***)&cmd->args, NULL, cmd->number_args);
