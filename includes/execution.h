@@ -79,5 +79,5 @@ char		**sep_key_value(char *str, char c);
 //execution
 int			build_exec(t_command *cmd, char **env);
 int			child_stuff(int i, t_command **commands, int nb_pipes, int **pipesfd);
-
+pid_t		fork_and_wait_hd(t_command **commands, int i, t_pid *pids, int fork_res);
 #endif

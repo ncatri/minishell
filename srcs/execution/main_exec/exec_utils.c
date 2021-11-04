@@ -89,3 +89,14 @@ int	child_stuff(int i, t_command **commands, int nb_pipes, int **pipesfd)
 	}
 	return (SUCCESS);
 }
+
+pid_t	fork_and_wait_hd(t_command **commands, int i, t_pid *pids, int fork_res)
+{
+	wait_previous_heredoc(commands[i]->input_redir, pids, i);
+	if (is_heredoc(commands[i]->input_redir) == 1)
+		g_global.heredoc = TRUE;
+	fork_res = fork();
+	g_global.pid = fork_res;
+	tcsetattr(STDIN_FILENO, TCSANOW, &g_global.term_save);
+	return (fork_res);
+}
