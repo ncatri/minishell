@@ -18,7 +18,10 @@ int main(int argc, char **argv, char **envp)
 		return (printf("\x1B[31mToo much args\n\033[0m"));
 	while (1)
 	{
+		setup_terminal();
+		g_global.pid = 0;
 		setup_main_signals();
+		g_global.heredoc = FALSE;
 		line = readline("\033[0;32mminishell ===> \033[0m");
 		if (line == NULL)
 		{

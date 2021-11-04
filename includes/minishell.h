@@ -19,6 +19,8 @@ struct s_global{
 	int		ret;
 	char 	**envp;
 	struct termios term_save;
+	pid_t	pid;
+	t_bool	heredoc;
 };
 
 struct s_global g_global;
