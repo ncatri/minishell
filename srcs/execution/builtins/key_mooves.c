@@ -29,11 +29,11 @@ int	delete_key(int index)
 	return (0);
 }
 
-char **sep_key_value(char *str, char c)
+char	**sep_key_value(char *str, char c)
 {
-	char *equal;
-	char *term;
-	char **ret;
+	char	*equal;
+	char	*term;
+	char	**ret;
 
 	equal = ft_strchr(str, c);
 	if (equal == NULL)

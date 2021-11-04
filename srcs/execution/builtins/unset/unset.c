@@ -1,9 +1,9 @@
 #include "execution.h"
 
-static int export_call(int id, t_command *cmd)
+static int	export_call(int id, t_command *cmd)
 {
-	int index;
-	char **split;
+	int		index;
+	char	**split;
 
 	if (id != -1)
 	{

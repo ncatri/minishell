@@ -21,7 +21,6 @@ int	is_builtin(t_command *cmd)
 	return (0);
 }
 
-
 int	check_builtin(t_command *cmd)
 {
 	if (!cmd->executable)

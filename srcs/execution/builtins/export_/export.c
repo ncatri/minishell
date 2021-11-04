@@ -1,6 +1,6 @@
 #include "execution.h"
 
-static void push_var(t_command *cmd, int i, char **split)
+static void	push_var(t_command *cmd, int i, char **split)
 {
 	if (find_key_index(g_global.envp, split[0]) >= 0)
 	{
@@ -15,7 +15,7 @@ static void push_var(t_command *cmd, int i, char **split)
 
 static int	check_if_arg(t_command *cmd)
 {
-	char **sorted_env;
+	char	**sorted_env;
 
 	if (cmd->number_args == 0)
 	{
@@ -40,8 +40,8 @@ int	export(t_command *cmd)
 		split = ft_split(cmd->args[i], "=");
 		if (split[0] == 0 || !valid_env_var(split[0]))
 		{
-			free_splits(split, number_of_split(split)); //delete this line if bugs
-			return(ret_msg("bad identifier in the var\n", 1));
+			free_splits(split, number_of_split(split));
+			return (ret_msg("bad identifier in the var\n", 1));
 		}
 		push_var(cmd, i, split);
 		i++;

@@ -21,10 +21,9 @@ int	check_n(char *arg)
 
 int	exit_check(t_command *cmd)
 {
-	int ret;
+	int	ret;
 
 	ret = 0;
-	
 	if (full_digits(cmd->args[0]) == 0)
 	{
 		ret_msg("Exit : need numerics args\n", FAIL);
@@ -42,9 +41,9 @@ int	exit_check(t_command *cmd)
 	return (ret);
 }
 
-int valid_env_var(char *str)
+int	valid_env_var(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i])
@@ -58,7 +57,7 @@ int valid_env_var(char *str)
 
 int	full_digits(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i])

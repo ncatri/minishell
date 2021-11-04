@@ -2,7 +2,7 @@
 
 static int	heredoc_type(t_redir_in *input, t_list *cursor)
 {
-	int fd;
+	int	fd;
 
 	fd = 0;
 	fd = heredoc(input->name_delim, fd);
