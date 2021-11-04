@@ -45,12 +45,11 @@ char	**alphasort(char **env)
 	char	**copy;
 
 	copy = malloc(number_of_split(env) * (sizeof(char *) + 1));
-	i = 0;
-	while (env[i])
-	{
+	if (copy == NULL)
+		return (NULL);
+	i = -1;
+	while (env[++i])
 		copy[i] = env[i];
-		i++;
-	}
 	copy[i] = 0;
 	i = 0;
 	while (i < number_of_split(env) - 1)
