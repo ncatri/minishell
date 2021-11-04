@@ -29,6 +29,7 @@ void	handler(int signal)
 			rl_on_new_line();
 			rl_replace_line("", 0);
 			rl_redisplay();
+			g_global.ret = 1;
 		}
 		if (signal == SIGQUIT)
 		{
@@ -48,7 +49,13 @@ void	process(int signal)
 		if (signal == SIGQUIT && g_global.heredoc == FALSE)
 			ft_putstr_fd("Quit: 3\n", 1);
 		if (open("heredoc.txt", O_RDONLY, 0644) >= 0)
+		{
 			unlink("heredoc.txt");
+			if (signal == SIGINT)
+				g_global.ret = 1;
+		}
+		else
+			g_global.ret = 128 + signal;
 	}
 	else if (signal == SIGINT)
 	{
