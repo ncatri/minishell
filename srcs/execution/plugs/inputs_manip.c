@@ -1,8 +1,21 @@
 #include "execution.h"
 
+static int	heredoc_type(t_redir_in *input, t_list *cursor)
+{
+	int fd;
+
+	fd = 0;
+	fd = heredoc(input->name_delim, fd);
+	if (fd == FAIL)
+		return (FAIL);
+	if (cursor->next == NULL)
+		dup2(fd, STDIN_FILENO);
+	unlink("heredoc.txt");
+	return (SUCCESS);
+}
+
 t_error	browse_inputs(t_list *input_list)
 {
-	int			fd;
 	t_list		*cursor;
 	t_redir_in	*input;
 
@@ -12,12 +25,8 @@ t_error	browse_inputs(t_list *input_list)
 		input = cursor->content;
 		if (input->type == HERE_DOC)
 		{
-			fd = heredoc(input->name_delim, fd);
-			if (fd == FAIL)
+			if (heredoc_type(input, cursor) == FAIL)
 				return (FAIL);
-			if (cursor->next == NULL)
-				dup2(fd, STDIN_FILENO);
-			unlink("heredoc.txt");
 		}
 		else
 		{
