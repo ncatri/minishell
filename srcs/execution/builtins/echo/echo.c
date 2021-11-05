@@ -9,7 +9,7 @@ int	echo(t_command *cmd)
 	newline = 0;
 	if (cmd->number_args == 0)
 		return (printf("\n"));
-	while (check_n(cmd->args[i]) != -1)
+	while (i < cmd->number_args && check_n(cmd->args[i]) != -1)
 		i++;
 	if (i > 0)
 		newline = 1;
