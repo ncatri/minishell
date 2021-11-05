@@ -44,7 +44,7 @@ OBJS = $(addprefix $(OBJS_FOLDER)/, $(SRCS:.c=.o))
 NAME = minishell
 INCLUDES = includes
 
-HEADERS_LIST= $(addprefix $(INCLUDES)/, $(SRCS_LIST:.c=.h))
+HEADERS_LIST = $(addprefix $(INCLUDES)/, minishell.h execution.h lexer.h parser.h signals.h)
 # La liste des .h marche comme ca, mais c'est pas opti. Faudrait que seul le .o correspondant
 # au .h modifie soit recompile.
 
@@ -56,7 +56,7 @@ LIBFT	= libft
 LDFLAGS="-L$(HOME)/.brew/opt/readline/lib"
 CPPFLAGS="-I$(HOME)/.brew/opt/readline/include"
 
-$(OBJS_FOLDER)/%.o: $(SRCS_FOLDER)/%.c $(INCLUDES)/minishell.h $(HEADERS_LIST) $(LIBFT)/$(LIBFT).a
+$(OBJS_FOLDER)/%.o: $(SRCS_FOLDER)/%.c $(HEADERS_LIST) $(LIBFT)/$(LIBFT).a
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
