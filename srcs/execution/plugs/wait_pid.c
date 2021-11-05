@@ -9,7 +9,7 @@ void	wait_childs(void)
 	while (wait_return > 0)
 	{
 		wait_return = wait(&status);
-		if (WEXITSTATUS(status) >= 0)
+		if (WIFEXITED(status))
 			g_global.ret = WEXITSTATUS(status);
 	}
 }
