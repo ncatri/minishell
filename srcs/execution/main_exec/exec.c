@@ -48,7 +48,10 @@ int	before_loop(t_pid *pids, int **pipesfd, int nb_pipes, t_command **commands)
 	if (allpipes_action(pipesfd, nb_pipes, INITIALIZE) == FAIL)
 		return (FAIL);
 	if (single_builtin(pids, commands) == SUCCESS)
+	{
+		allpipes_action(pipesfd, nb_pipes, DESTROY);
 		return (0);
+	}
 	return (1);
 }
 
