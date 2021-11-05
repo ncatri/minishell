@@ -37,6 +37,8 @@ int	export(t_command *cmd)
 	i = 0;
 	while (i < cmd->number_args)
 	{
+		if (cmd->args[i][0] == '=')
+			return (ret_msg("bad identifier in the var\n", 1));
 		split = ft_split(cmd->args[i], "=");
 		if (split[0] == 0 || !valid_env_var(split[0]))
 		{
