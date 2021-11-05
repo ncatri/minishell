@@ -53,6 +53,7 @@ t_error	parse_redirection(t_list **tok_cursor, t_command *cmd_to_build, \
 	tok = (*tok_cursor)->next->content;
 	if (tok->type != WORD)
 	{
+		g_global.ret = 258;
 		printf("\x1B[31m error: unexpected token after file redirection\x1B[0m\n");
 		*state = ERROR;
 		return (FAIL);
