@@ -8,6 +8,8 @@ int	delete_key(int index)
 
 	i = -1;
 	j = 0;
+	if (index == -1)
+		return (0);
 	new = malloc(sizeof(char *) * (number_of_split(g_global.envp)));
 	if (new == NULL)
 		return (-1);

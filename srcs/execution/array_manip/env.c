@@ -44,7 +44,9 @@ char	**alphasort(char **env)
 	char	*temp;
 	char	**copy;
 
-	copy = malloc(number_of_split(env) * (sizeof(char *) + 1));
+	if (!env || !*env)
+		return (NULL);
+	copy = malloc(number_of_split(env) * (sizeof(char *) + sizeof(char *)));
 	if (copy == NULL)
 		return (NULL);
 	i = -1;
