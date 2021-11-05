@@ -25,10 +25,15 @@ int	exit_check(t_command *cmd)
 
 	ret = 0;
 	if (!cmd->args)
+	{
+		printf("exit\n");
 		return (ret);
+	}
+	if (g_global.num_cmds < 2)
+		printf("exit\n");
 	if (full_digits(cmd->args[0]) == 0)
 	{
-		ret_msg("Exit : need numerics args\n", FAIL);
+		ret_msg("exit : need numerics args\n", FAIL);
 		g_global.ret = 255;
 	}
 	else if (cmd->number_args == 1)
@@ -36,10 +41,8 @@ int	exit_check(t_command *cmd)
 	else if (cmd->number_args > 1)
 	{
 		g_global.ret = 1;
-		ret = ret_msg("Exit : too many arguments\n", 1);
+		ret = ret_msg("exit : too many arguments\n", 1);
 	}
-	else if (g_global.num_cmds < 2)
-		printf("exit\n");
 	return (ret);
 }
 
