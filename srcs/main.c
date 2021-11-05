@@ -31,14 +31,10 @@ int main(int argc, char **argv, char **envp)
 		}
 		add_history(line);
 		token_list = tokenizer(line);
-		//print_token_list(token_list);
 		cmd_array = parser(token_list);
-		//print_command_array(cmd_array, g_global.num_cmds);
 		if (cmd_array)
 			execution(cmd_array);
 		ft_lstclear(&token_list, free_token);
-		
-		//ft_lstclear(&token_list, free_token); --> crash with [ls | rev | rev | cat -e]
 		free_loop(line, cmd_array);
 		tcsetattr(STDIN_FILENO, TCSANOW, &g_global.term_save);
 	}

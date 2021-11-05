@@ -49,7 +49,7 @@ HEADERS_LIST= $(addprefix $(INCLUDES)/, $(SRCS_LIST:.c=.h))
 
 RM = rm -f
 CC = clang
-CFLAGS = -Werror -Wall -Wextra -I$(INCLUDES) -I$(LIBFT)/includes -g3 -fsanitize=address
+CFLAGS = -Werror -Wall -Wextra -I$(INCLUDES) -I$(LIBFT)/includes -g3 #-fsanitize=address
 LIBFT	= libft
 #readline stuffs:
 LDFLAGS="-L$(HOME)/.brew/opt/readline/lib"

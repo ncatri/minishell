@@ -15,7 +15,9 @@ int	allpipes_action(int **pipesfd, int nb_pipes, t_pipes action)
 				return (FAIL);
 			if (close(pipesfd[i][WRITE]) == -1)
 				return (FAIL);
+			free(pipesfd[i]);
 		}
+		free(pipesfd);
 	}
 	else
 	{
