@@ -32,7 +32,7 @@ void	print_command(t_command *cmds)
 void	print_redirout_list(t_list *redir_list)
 {
 	t_redir_out	*elt;
-	t_list 		*cursor;
+	t_list		*cursor;
 	char		*mode;
 
 	cursor = redir_list;
@@ -52,7 +52,7 @@ void	print_redirout_list(t_list *redir_list)
 void	print_redirin_list(t_list *redir_list)
 {
 	t_redir_in	*elt;
-	t_list 		*cursor;
+	t_list		*cursor;
 	char		*type;
 
 	cursor = redir_list;

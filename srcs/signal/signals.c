@@ -1,8 +1,8 @@
 #include "signals.h"
 
-void	setup_terminal()
+void	setup_terminal(void)
 {
-	struct termios term_buff;
+	struct termios	term_buff;
 
 	if (tcgetattr(STDIN_FILENO, &g_global.term_save) == -1)
 		printf("error tcgetattr\n");
@@ -25,10 +25,7 @@ void	handler(int signal)
 	{
 		if (signal == SIGINT)
 		{
-			ft_putchar_fd('\n', STDIN_FILENO);
-			rl_on_new_line();
-			rl_replace_line("", 0);
-			rl_redisplay();
+			new_prompt('\n', STDIN_FILENO);
 			g_global.ret = 1;
 		}
 		if (signal == SIGQUIT)
@@ -58,16 +55,19 @@ void	process(int signal)
 			g_global.ret = 128 + signal;
 	}
 	else if (signal == SIGINT)
-	{
-		ft_putchar_fd('\n', STDIN_FILENO);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
+		new_prompt('\n', STDIN_FILENO);
 	else if (signal == SIGQUIT)
 	{
 		ft_putchar_fd('\n', 1);
 		rl_on_new_line();
 		rl_redisplay();
 	}
+}
+
+void	new_prompt(char c, int fd)
+{
+	ft_putchar_fd(c, fd);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }

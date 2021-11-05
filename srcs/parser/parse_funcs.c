@@ -1,18 +1,18 @@
 #include "parser.h"
 #include "lexer.h"
 
-t_error	parse_word(t_token *tok, t_command ***cmd_array, t_command *cmd_to_build,
-		enum e_parser_state *state)
+t_error	parse_word(t_token *tok, t_command ***cmd_array, \
+		t_command *cmd_to_build, enum e_parser_state *state)
 {
-	(void)cmd_array;
 	t_error	ret;
 
+	(void)cmd_array;
 	ret = SUCCESS;
 	if (cmd_to_build->executable == NULL)
 		cmd_to_build->executable = tok->data;
 	else
 	{
-		ret = ft_pushback_array((void***)&cmd_to_build->args, tok->data,
+		ret = ft_pushback_array((void ***)&cmd_to_build->args, tok->data,
 				cmd_to_build->number_args);
 		cmd_to_build->number_args++;
 	}
@@ -20,11 +20,12 @@ t_error	parse_word(t_token *tok, t_command ***cmd_array, t_command *cmd_to_build
 	return (ret);
 }
 
-t_error	parse_pipe(t_list *tok_cursor, t_command ***cmd_array, t_command *cmd_to_build, enum e_parser_state *state)
+t_error	parse_pipe(t_list *tok_cursor, t_command ***cmd_array, \
+		t_command *cmd_to_build, enum e_parser_state *state)
 {
 	t_error	ret;
 
-	if (*state != COMMAND_IN_PROGRESS || tok_cursor->next == NULL)	
+	if (*state != COMMAND_IN_PROGRESS || tok_cursor->next == NULL)
 	{
 		printf("\x1B[31mpipe: parsing error\x1B[0m\n");
 		ret = FAIL;
@@ -38,8 +39,7 @@ t_error	parse_pipe(t_list *tok_cursor, t_command ***cmd_array, t_command *cmd_to
 	return (ret);
 }
 
-
-t_error	parse_redirection(t_list **tok_cursor, t_command *cmd_to_build, 
+t_error	parse_redirection(t_list **tok_cursor, t_command *cmd_to_build, \
 		enum e_parser_state *state)
 {
 	t_token	*tok;
@@ -83,16 +83,17 @@ t_error	parse_output_redir(t_list **tok_cursor, t_command *cmd_to_build)
 	*tok_cursor = (*tok_cursor)->next;
 	tok = (*tok_cursor)->content;
 	redir_out->filename = tok->data;
-	if (add_redir_to_list(&cmd_to_build->output_redir, (void*)redir_out) == FAIL)
+	if (add_redir_to_list(&cmd_to_build->output_redir,
+			(void *)redir_out) == FAIL)
 		return (FAIL);
 	return (SUCCESS);
 }
 
-t_error	parse_input_redir(t_list **tok_cursor, t_command *cmd_to_build) 
+t_error	parse_input_redir(t_list **tok_cursor, t_command *cmd_to_build)
 {
 	t_redir_in	*redir_in;	
 	t_token		*tok;
-	
+
 	tok = (*tok_cursor)->content;
 	redir_in = malloc(sizeof(t_redir_in));
 	if (!redir_in)
@@ -104,18 +105,7 @@ t_error	parse_input_redir(t_list **tok_cursor, t_command *cmd_to_build)
 	*tok_cursor = (*tok_cursor)->next;
 	tok = (*tok_cursor)->content;
 	redir_in->name_delim = tok->data;
-	if (add_redir_to_list(&cmd_to_build->input_redir, (void*)redir_in) == FAIL)
+	if (add_redir_to_list(&cmd_to_build->input_redir, (void *)redir_in) == FAIL)
 		return (FAIL);
-	return (SUCCESS);
-}
-
-t_error	add_redir_to_list(t_list **redir_list, void *redir)
-{
-	t_list	*new_elt;
-
-	new_elt = ft_lstnew(redir);
-	if (!new_elt)
-		return (FAIL);
-	ft_lstadd_back(redir_list, new_elt);
 	return (SUCCESS);
 }
