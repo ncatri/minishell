@@ -6,14 +6,13 @@
 
 t_list	*tokenizer(char *line)
 {
-	char	*cursor;
-	t_list	*token_list;
+	char					*cursor;
+	t_list					*token_list;
 	enum e_machine_states	state;
-	t_buffer	buffer;
-	int		i;
+	t_buffer				buffer;
+	int						i;
 
-	state = ST_TRANSITION;
-	token_list = NULL;
+	initialize_variables(&state, &token_list);
 	initialize_buffer(&buffer);
 	if (line == NULL || buffer.buf == NULL)
 		return (FAIL);
@@ -26,7 +25,7 @@ t_list	*tokenizer(char *line)
 			ft_lstclear(&token_list, free_token);
 			g_global.ret = 258;
 			token_list = NULL;
-			break;
+			break ;
 		}
 		cursor++;
 	}
@@ -34,12 +33,13 @@ t_list	*tokenizer(char *line)
 	return (token_list);
 }
 
-t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list, t_buffer *buffer)
+t_error	analyzer(char cursor, enum e_machine_states *state, \
+		t_list **token_list, t_buffer *buffer)
 {
-	t_error	(*f[NUM_OF_STATES])(char cursor, \
-			enum e_machine_states *state, t_list** token_list, t_buffer *buffer);
-	t_error check;
+	t_error	check;
 
+	t_error (*f[NUM_OF_STATES])(char cursor, enum e_machine_states * state, \
+		 t_list **token_list, t_buffer * buffer);
 	if (!state || !token_list || !buffer)
 		return (FAIL);
 	f[ST_TRANSITION] = f_transition;
@@ -50,7 +50,6 @@ t_error	analyzer(char cursor, enum e_machine_states *state, t_list **token_list,
 	f[ST_GREAT] = f_great;
 	f[ST_SUBSTITUTION] = f_var_substitution;
 	f[ST_SUBSTIT_DQUOTE] = f_var_substit_dquote;
-
 	check = (*f[*state])(cursor, state, token_list, buffer);
 	return (check);
 }
@@ -73,4 +72,12 @@ void	set_machine_state(char cursor, enum e_machine_states *state)
 		*state = ST_SUBSTITUTION;
 	else
 		*state = ST_IN_WORD;
+}
+
+void	initialize_variables(enum e_machine_states *state, t_list **token_list)
+{
+	if (!state || !token_list)
+		return ;
+	*state = ST_TRANSITION;
+	*token_list = NULL;
 }

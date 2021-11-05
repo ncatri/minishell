@@ -4,15 +4,12 @@
 t_error	f_var_substitution(char cursor, enum e_machine_states *state,
 		t_list **token_list, t_buffer *buffer)
 {
-	char			*str;
 	static t_buffer	var_buf = {NULL, 0, 0};
 
 	if (cursor == '?')
 	{
-		str = ft_itoa(g_global.ret);
-		tokenize_variable(str, buffer, token_list);
-		free(str);
-		*state = ST_IN_WORD;
+		if (deal_exitcode(buffer, token_list, state) == FAIL)
+			return (FAIL);
 	}
 	else if (ft_isalnum(cursor) || cursor == '_')
 		append_buffer(&var_buf, cursor);
@@ -31,6 +28,19 @@ t_error	f_var_substitution(char cursor, enum e_machine_states *state,
 			append_buffer(buffer, cursor);
 		set_machine_state(cursor, state);
 	}
+	return (SUCCESS);
+}
+
+t_error	deal_exitcode(t_buffer *buffer, t_list **token_list, \
+		enum e_machine_states *state)
+{
+	char	*str;
+
+	str = ft_itoa(g_global.ret);
+	if (tokenize_variable(str, buffer, token_list) == FAIL)
+		return (FAIL);
+	free(str);
+	*state = ST_IN_WORD;
 	return (SUCCESS);
 }
 
@@ -67,43 +77,6 @@ t_error	tokenize_variable(char *expanded_var, t_buffer *buffer,
 		else
 			append_buffer(buffer, *str);
 		str++;
-	}
-	return (SUCCESS);
-}
-
-t_error	f_var_substit_dquote(char cursor, enum e_machine_states *state,
-		t_list **token_list, t_buffer *buffer)
-{
-	char		*str;
-	static t_buffer var_buf = {NULL, 0, 0};
-	(void)token_list;
-
-	if (cursor == '?')
-	{
-		str = ft_itoa(g_global.ret);
-		append_str_to_buffer(buffer, str);	
-		free(str);
-		*state = ST_OPEN_DQUOTE;
-	}
-	else if (ft_isalnum(cursor) || cursor == '_')
-		append_buffer(&var_buf, cursor);
-	else
-	{
-		append_buffer(&var_buf, '\0');
-		str = my_getenv(var_buf.buf);
-		free(var_buf.buf);
-		initialize_buffer(&var_buf);
-		append_str_to_buffer(buffer, str);
-		free(str);
-		if (cursor == '\"')
-			*state = ST_IN_WORD;
-		else if (cursor == '$')
-			;
-		else
-		{
-			append_buffer(buffer, cursor);
-			*state = ST_OPEN_DQUOTE;
-		}
 	}
 	return (SUCCESS);
 }

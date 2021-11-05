@@ -1,8 +1,8 @@
 #include "lexer.h"
 
-t_token *new_token(enum e_token_types type, char *buf)
+t_token	*new_token(enum e_token_types type, char *buf)
 {
-	t_token *token;
+	t_token	*token;
 
 	token = malloc(sizeof(t_token));
 	if (token)
@@ -17,16 +17,16 @@ t_token *new_token(enum e_token_types type, char *buf)
 
 void	free_token(void *token)
 {
-	t_token *tok;
+	t_token	*tok;
 
-	tok = (t_token*)token;
+	tok = (t_token *)token;
 	free(tok->data);
 	free(tok);
 }
 
 t_error	add_token_to_list(t_list **token_list, int token_type, char *data)
 {
-	t_token *token;
+	t_token	*token;
 	t_list	*node;
 
 	token = new_token(token_type, data);
@@ -39,7 +39,8 @@ t_error	add_token_to_list(t_list **token_list, int token_type, char *data)
 	return (SUCCESS);
 }
 
-t_error	push_buf_to_toklist(t_buffer *buffer, t_list **token_list, enum e_token_types tok_type)
+t_error	push_buf_to_toklist(t_buffer *buffer, t_list **token_list, \
+		enum e_token_types tok_type)
 {
 	if (buffer->pos == 0)
 		return (SUCCESS);
@@ -49,18 +50,4 @@ t_error	push_buf_to_toklist(t_buffer *buffer, t_list **token_list, enum e_token_
 	free(buffer->buf);
 	initialize_buffer(buffer);
 	return (SUCCESS);
-}
-
-t_error	syntax_error(char c)
-{
-	ft_putstr_fd("syntax error near unexpected token ", 2);
-	write(2, &c, 1);
-	write(2, "\n", 1);
-	return (FAIL);
-}
-
-t_error	error_message(char* message)
-{
-	ft_putstr_fd(message, 2);
-	return (FAIL);
 }

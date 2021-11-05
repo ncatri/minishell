@@ -10,15 +10,14 @@ void	print_token_list(t_list *token_list)
 	while (cursor)
 	{
 		printf("--- token %d ---\n", counter++);
-		print_token((t_token*)(cursor->content));
+		print_token((t_token *)(cursor->content));
 		cursor = cursor->next;
 	}
 }
 
-
 void	print_token(t_token *token)
 {
-	int t;
+	int		t;
 	char	*str;
 
 	str = NULL;
