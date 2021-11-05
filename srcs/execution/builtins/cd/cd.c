@@ -10,7 +10,7 @@ int	cd(t_command *cmd)
 			replace_pwd(OLDPWD);
 		stat(cmd->args[0], &stat_ret);
 		if (!S_ISDIR(stat_ret.st_mode))
-			return (printf("Directory doesn't exists\n"));
+			return (ret_msg("Directory doesn't exist\n", 0));
 		chdir(cmd->args[0]);
 		if (find_key_index(g_global.envp, "PWD") != -1)
 			replace_pwd(PWD);

@@ -79,16 +79,7 @@ int	child_stuff(int i, t_command **commands, int nb_pipes, int **pipesfd)
 		build_exec(commands[i], g_global.envp);
 	if (allpipes_action(pipesfd, nb_pipes, DESTROY) == FAIL)
 		return (FAIL);
-	if (is_builtin(commands[i]))
-	{
-		check_builtin(commands[i]);
-		exit(1);
-	}
-	else
-	{
-		execve(commands[i]->executable, commands[i]->args, g_global.envp);
-		exit(34);
-	}
+	final_exec(commands, i);
 	return (SUCCESS);
 }
 

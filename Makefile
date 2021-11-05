@@ -20,6 +20,7 @@ SRCS = 	tokenizer/lexer.c \
 		signal/signals.c \
 		execution/free.c \
 		execution/main_exec/exec.c \
+		execution/main_exec/final_exec.c \
 		execution/main_exec/exec_utils.c \
 		execution/plugs/heredocs.c \
 		execution/plugs/wait_pid.c \
