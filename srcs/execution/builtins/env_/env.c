@@ -22,6 +22,8 @@ int	env(char **envp, t_env_status status)
 	char	**export_print;
 
 	i = 0;
+	if (!envp || !*envp)
+		return (1);
 	while (envp[i])
 	{
 		if (status == EXPORT)
