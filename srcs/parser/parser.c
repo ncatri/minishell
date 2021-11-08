@@ -23,7 +23,8 @@ t_command	**parser(t_list *token_list)
 		if (parse_analyzer(&tok_cursor, &cmd_array, \
 					&cmd_to_build, &state) == FAIL)
 		{
-			parsing_error(cmd_array, &state);
+			parsing_error(&cmd_array, &state);
+			free_cmd(&cmd_to_build);
 			break ;
 		}
 		tok_cursor = tok_cursor->next;
@@ -50,22 +51,29 @@ t_error	parse_analyzer(t_list **tok_cursor, t_command ***cmd_array, \
 		return (parse_pipe(*tok_cursor, cmd_array, cmd_to_build, state));
 }
 
-void	parsing_error(t_command **cmd_array, enum e_parser_state *state)
+void	free_cmd(t_command *cmd)
+{
+	ft_lstclear(&cmd->input_redir, free);
+	ft_lstclear(&cmd->output_redir, free);
+	free(cmd->args);
+}
+
+void	parsing_error(t_command ***cmd_array, enum e_parser_state *state)
 {
 	int	i;
 
 	i = 0;
 	while (i < g_global.num_cmds)
 	{
-		ft_lstclear(&cmd_array[i]->input_redir, free);
-		ft_lstclear(&cmd_array[i]->output_redir, free);
-		free(cmd_array[i]->args);
-		free(cmd_array[i]);
+		ft_lstclear(&(*cmd_array)[i]->input_redir, free);
+		ft_lstclear(&(*cmd_array)[i]->output_redir, free);
+		free((*cmd_array)[i]->args);
+		free((*cmd_array)[i]);
 		i++;
 	}
-	if (cmd_array)
+	if (*cmd_array)
 	{
-		free(cmd_array);
+		free(*cmd_array);
 		*cmd_array = NULL;
 	}
 	g_global.num_cmds = 0;
