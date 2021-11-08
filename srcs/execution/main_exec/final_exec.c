@@ -2,6 +2,15 @@
 #include "minishell.h"
 #include "parser.h"
 
+t_bool is_executable(char *cmd_exec)
+{
+	struct stat file;
+
+	if (stat(cmd_exec, &file) == 0 && file.st_mode & S_IXUSR)
+		return (TRUE);
+	return (FALSE);
+}
+
 void	final_exec(t_command **commands, int i)
 {
 	if (is_builtin(commands[i]))

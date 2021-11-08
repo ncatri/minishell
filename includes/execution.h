@@ -76,6 +76,7 @@ int			full_digits(char *str);
 int			exit_check(t_command *cmd);
 int			valid_env_var(char *str);
 char		**sep_key_value(char *str, char c);
+t_bool		is_executable(char *cmd_exec);
 //execution
 void		final_exec(t_command **commands, int i);
 int			build_exec(t_command *cmd, char **env);

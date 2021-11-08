@@ -35,7 +35,7 @@ int	build_exec(t_command *cmd, char **env)
 	ft_pushfront_array((void ***)&cmd->args, cmd->executable, cmd->number_args);
 	cmd->number_args++;
 	ft_pushback_array((void ***)&cmd->args, NULL, cmd->number_args);
-	if (open(cmd->executable, O_RDONLY) == -1)
+	if (open(cmd->executable, O_RDONLY) == -1 || !is_executable(cmd->executable))
 		cmd->executable = create_command_path(env, cmd->executable);
 	if (open(cmd->executable, O_DIRECTORY) >= 0)
 		cmd->executable = NULL;
