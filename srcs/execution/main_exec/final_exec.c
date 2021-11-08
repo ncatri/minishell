@@ -2,9 +2,9 @@
 #include "minishell.h"
 #include "parser.h"
 
-t_bool is_executable(char *cmd_exec)
+t_bool	is_executable(char *cmd_exec)
 {
-	struct stat file;
+	struct stat	file;
 
 	if (stat(cmd_exec, &file) == 0 && file.st_mode & S_IXUSR)
 		return (TRUE);
@@ -29,16 +29,18 @@ void	final_exec(t_command **commands, int i)
 
 void	verif_exec(t_command *cmd, char **env)
 {
-
-	if (open(cmd->executable, O_RDONLY) == -1 && !ft_strchr(cmd->executable, '/')) 
+	if (open(cmd->executable, O_RDONLY) == -1 && \
+		 !ft_strchr(cmd->executable, '/'))
 		cmd->executable = create_command_path(env, cmd->executable);
-	else if (open(cmd->executable, O_RDONLY) != -1 && ft_strchr(cmd->executable, '/')) 
+	else if (open(cmd->executable, O_RDONLY) != -1 \
+		 && ft_strchr(cmd->executable, '/'))
 		;
 	else
 		cmd->executable = NULL;
 	if (open(cmd->executable, O_DIRECTORY) >= 0)
 		cmd->executable = NULL;
-	if (cmd->executable != NULL && (open(cmd->executable, O_RDONLY) == -1 || !is_executable(cmd->executable)))
+	if (cmd->executable != NULL && \
+	 (open(cmd->executable, O_RDONLY) == -1 || !is_executable(cmd->executable)))
 	{
 		g_global.ret = 126;
 		ft_putstr_fd("\x1B[31mPermission denied\n\033[0m", 2);

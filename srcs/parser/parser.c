@@ -51,7 +51,7 @@ t_error	parse_analyzer(t_list **tok_cursor, t_command ***cmd_array, \
 
 void	parsing_error(t_command **cmd_array)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < g_global.num_cmds)

@@ -19,6 +19,7 @@ int	cd(t_command *cmd)
 {
 	int			home_index;
 	char		**split;
+
 	if (cmd->number_args > 0)
 	{
 		cd_with_args(cmd);
