@@ -21,7 +21,10 @@ t_command	**parser(t_list *token_list)
 	{
 		if (parse_analyzer(&tok_cursor, &cmd_array, \
 					&cmd_to_build, &state) == FAIL)
+		{
+			parsing_error(cmd_array);
 			break ;
+		}
 		tok_cursor = tok_cursor->next;
 	}
 	if (state == COMMAND_IN_PROGRESS)
@@ -44,6 +47,24 @@ t_error	parse_analyzer(t_list **tok_cursor, t_command ***cmd_array, \
 		return (parse_redirection(tok_cursor, cmd_to_build, state));
 	else
 		return (parse_pipe(*tok_cursor, cmd_array, cmd_to_build, state));
+}
+
+void	parsing_error(t_command **cmd_array)
+{
+	int i;
+
+	i = 0;
+	while (i < g_global.num_cmds)
+	{
+		ft_lstclear(&cmd_array[i]->input_redir, free);
+		ft_lstclear(&cmd_array[i]->output_redir, free);
+		free(cmd_array[i]->args);
+		free(cmd_array[i]);
+		i++;
+	}
+	free(cmd_array);
+	*cmd_array = NULL;
+	g_global.num_cmds = 0;
 }
 
 t_command	init_command(void)

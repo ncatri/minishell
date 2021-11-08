@@ -38,6 +38,7 @@ int	main(int argc, char **argv, char **envp)
 		add_history(line);
 		token_list = tokenizer(line);
 		cmd_array = parser(token_list);
+		////print_command_array(cmd_array, g_global.num_cmds);
 		if (cmd_array)
 			execution(cmd_array);
 		ft_lstclear(&token_list, free_token);
