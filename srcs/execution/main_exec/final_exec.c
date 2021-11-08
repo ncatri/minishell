@@ -26,3 +26,7 @@ void	final_exec(t_command **commands, int i)
 		exit(1);
 	}
 }
+
+void	verif_exec(t_command *cmd, char **env)
+{
+
