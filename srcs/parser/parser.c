@@ -1,5 +1,6 @@
 #include "parser.h"
 #include "lexer.h"
+#include "execution.h"
 
 /*	input: a list of tokens
  *	output: an array of pointer to commands
@@ -22,7 +23,7 @@ t_command	**parser(t_list *token_list)
 		if (parse_analyzer(&tok_cursor, &cmd_array, \
 					&cmd_to_build, &state) == FAIL)
 		{
-			parsing_error(cmd_array);
+			parsing_error(cmd_array, &state);
 			break ;
 		}
 		tok_cursor = tok_cursor->next;
@@ -49,7 +50,7 @@ t_error	parse_analyzer(t_list **tok_cursor, t_command ***cmd_array, \
 		return (parse_pipe(*tok_cursor, cmd_array, cmd_to_build, state));
 }
 
-void	parsing_error(t_command **cmd_array)
+void	parsing_error(t_command **cmd_array, enum e_parser_state *state)
 {
 	int	i;
 
@@ -62,9 +63,13 @@ void	parsing_error(t_command **cmd_array)
 		free(cmd_array[i]);
 		i++;
 	}
-	free(cmd_array);
-	*cmd_array = NULL;
+	if (cmd_array)
+	{
+		free(cmd_array);
+		*cmd_array = NULL;
+	}
 	g_global.num_cmds = 0;
+	*state = ERROR;
 }
 
 t_command	init_command(void)

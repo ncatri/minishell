@@ -28,7 +28,7 @@ t_error		parse_output_redir(t_list **tok_cursor, t_command *cmd_to_build);
 t_error		parse_input_redir(t_list **tok_cursor, t_command *cmd_to_build);
 t_error		add_redir_to_list(t_list **redir_list, void *redir);
 char		*last_elt_of_path(char *path);
-void		parsing_error(t_command **cmd_array);
+void		parsing_error(t_command **cmd_array, enum e_parser_state *state);
 
 /* debug */
 

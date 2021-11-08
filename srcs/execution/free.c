@@ -33,7 +33,8 @@ void	free_loop(char *line, t_command **cmd_array)
 		free(cmd_array[i]);
 		i++;
 	}
-	free(cmd_array);
+	if (cmd_array)
+		free(cmd_array);
 }
 
 int	ret_msg(char *message, int return_status)
