@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   array_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lfourmau <lfourmau@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/09 07:26:34 by lfourmau          #+#    #+#             */
+/*   Updated: 2021/11/09 07:26:36 by lfourmau         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parser.h"
 
 t_error	push_command_to_array(t_command ***cmd_array, t_command *cmd_to_build)

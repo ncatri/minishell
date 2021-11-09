@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lfourmau <lfourmau@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/09 07:24:33 by lfourmau          #+#    #+#             */
+/*   Updated: 2021/11/09 07:24:35 by lfourmau         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef EXECUTION_H
 # define EXECUTION_H
 
@@ -81,9 +93,9 @@ t_bool		is_executable(char *cmd_exec);
 void		final_exec(t_command **commands, int i);
 int			build_exec(t_command *cmd, char **env);
 int			child_stuff(int i, t_command **commands, \
-	 int nb_pipes, int **pipesfd);
+	int nb_pipes, int **pipesfd);
 pid_t		fork_and_wait_hd(t_command **commands, \
-	 int i, t_pid *pids, int fork_res);
+	int i, t_pid *pids, int fork_res);
 void		verif_exec(t_command *cmd, char **env);
 t_bool		is_executable(char *cmd_exec);
 #endif

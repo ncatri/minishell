@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lfourmau <lfourmau@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/09 07:24:17 by lfourmau          #+#    #+#             */
+/*   Updated: 2021/11/09 07:39:36 by lfourmau         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lexer.h"
 
 /* input: the command line, a char *.
@@ -38,8 +50,8 @@ t_error	analyzer(char cursor, enum e_machine_states *state, \
 {
 	t_error	check;
 
-	t_error (*f[NUM_OF_STATES])(char cursor, enum e_machine_states * state, \
-		 t_list **token_list, t_buffer * buffer);
+	t_error (*f[NUM_OF_STATES])(char cursor, enum e_machine_states *state, \
+		t_list **token_list, t_buffer *buffer);
 	if (!state || !token_list || !buffer)
 		return (FAIL);
 	f[ST_TRANSITION] = f_transition;
