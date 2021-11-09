@@ -81,7 +81,9 @@ int	full_digits(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (!ft_isdigit(str[i]))
+		if (ft_isspace(str[i]))
+			;
+		else if (!ft_isdigit(str[i]))
 			return (0);
 		i++;
 	}
