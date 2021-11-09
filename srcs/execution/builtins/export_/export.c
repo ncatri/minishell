@@ -6,7 +6,7 @@
 /*   By: lfourmau <lfourmau@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 07:25:34 by lfourmau          #+#    #+#             */
-/*   Updated: 2021/11/09 07:25:35 by lfourmau         ###   ########lyon.fr   */
+/*   Updated: 2021/11/09 08:57:49 by lfourmau         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,21 @@
 
 static void	push_var(t_command *cmd, int i, char **split)
 {
-	if (find_key_index(g_global.envp, split[0]) >= 0)
+	int index;
+	char **env_key_val;
+	char **arg_key_val;
+
+	index = find_key_index(g_global.envp, split[0]);
+	if (index >= 0)
 	{
-		unset(cmd, i);
-		pushback_env((void ***)&g_global.envp, ft_strdup(cmd->args[i]), \
-			number_of_split(g_global.envp));
+		env_key_val = sep_key_value(g_global.envp[index], '=');
+		arg_key_val = sep_key_value(cmd->args[i], '=');
+		if (!(number_of_split(env_key_val) == 2 && number_of_split(arg_key_val) <= 1))
+		{
+			unset(cmd, i);
+			pushback_env((void ***)&g_global.envp, ft_strdup(cmd->args[i]), \
+				number_of_split(g_global.envp));
+		}
 	}
 	else
 		pushback_env((void ***)&g_global.envp, ft_strdup(cmd->args[i]), \

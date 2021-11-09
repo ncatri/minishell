@@ -6,7 +6,7 @@
 /*   By: lfourmau <lfourmau@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 07:25:17 by lfourmau          #+#    #+#             */
-/*   Updated: 2021/11/09 07:25:19 by lfourmau         ###   ########lyon.fr   */
+/*   Updated: 2021/11/09 08:39:29 by lfourmau         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ int	cd(t_command *cmd)
 			if (find_key_index(g_global.envp, "PWD") != -1)
 				replace_pwd(PWD);
 		}
+		else
+			ret_msg("HOME not set\n", 1);
 	}
 	g_global.ret = 0;
 	return (1);
