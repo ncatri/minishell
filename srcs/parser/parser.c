@@ -91,14 +91,3 @@ t_command	init_command(void)
 	cmd.output_redir = NULL;
 	return (cmd);
 }
-
-t_error	add_redir_to_list(t_list **redir_list, void *redir)
-{
-	t_list	*new_elt;
-
-	new_elt = ft_lstnew(redir);
-	if (!new_elt)
-		return (FAIL);
-	ft_lstadd_back(redir_list, new_elt);
-	return (SUCCESS);
-}

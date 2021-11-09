@@ -22,3 +22,14 @@ void	free_array(void **ptr_array, int array_size)
 		free(ptr_array[array_size]);
 	free(ptr_array);
 }
+
+t_error	add_redir_to_list(t_list **redir_list, void *redir)
+{
+	t_list	*new_elt;
+
+	new_elt = ft_lstnew(redir);
+	if (!new_elt)
+		return (FAIL);
+	ft_lstadd_back(redir_list, new_elt);
+	return (SUCCESS);
+}
