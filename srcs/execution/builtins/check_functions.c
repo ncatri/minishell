@@ -6,7 +6,7 @@
 /*   By: lfourmau <lfourmau@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 07:25:49 by lfourmau          #+#    #+#             */
-/*   Updated: 2021/11/09 09:05:07 by lfourmau         ###   ########lyon.fr   */
+/*   Updated: 2021/11/09 09:22:41 by lfourmau         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,15 @@ int	valid_env_var(char *str)
 	while (str[i])
 	{
 		if (i == 0 && !isalpha(str[i]) && str[i] != '_')
+		{
+			g_global.ret = 1;
 			return (0);
+		}
 		if (!isalpha(str[i]) && !isdigit(str[i]) && str[i] != '_')
+		{
+			g_global.ret = 1;
 			return (0);
+		}
 		i++;
 	}
 	return (1);

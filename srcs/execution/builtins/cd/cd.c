@@ -6,7 +6,7 @@
 /*   By: lfourmau <lfourmau@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 07:25:17 by lfourmau          #+#    #+#             */
-/*   Updated: 2021/11/09 08:39:29 by lfourmau         ###   ########lyon.fr   */
+/*   Updated: 2021/11/09 09:20:20 by lfourmau         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,32 @@ int	cd_with_args(t_command *cmd)
 	return (1);
 }
 
-int	cd(t_command *cmd)
+int	cd_without_args()
 {
 	int			home_index;
 	char		**split;
 
+	if (find_key_index(g_global.envp, "OLDPWD") != -1)
+			replace_pwd(OLDPWD);
+	home_index = find_key_index(g_global.envp, "HOME");
+	if (home_index != -1)
+	{
+		split = ft_split(g_global.envp[home_index], "=");
+		chdir(split[1]);
+		free_splits(split, number_of_split(split));
+		if (find_key_index(g_global.envp, "PWD") != -1)
+			replace_pwd(PWD);
+		return (0);
+	}
+	else
+	{
+		g_global.ret = 1;
+		return (ret_msg("HOME not set\n", 1));
+	}
+}
+
+int	cd(t_command *cmd)
+{
 	if (cmd->number_args > 0)
 	{
 		cd_with_args(cmd);
@@ -39,19 +60,8 @@ int	cd(t_command *cmd)
 	}
 	else
 	{
-		if (find_key_index(g_global.envp, "OLDPWD") != -1)
-			replace_pwd(OLDPWD);
-		home_index = find_key_index(g_global.envp, "HOME");
-		if (home_index != -1)
-		{
-			split = ft_split(g_global.envp[home_index], "=");
-			chdir(split[1]);
-			free_splits(split, number_of_split(split));
-			if (find_key_index(g_global.envp, "PWD") != -1)
-				replace_pwd(PWD);
-		}
-		else
-			ret_msg("HOME not set\n", 1);
+		if (cd_without_args() == 1)
+			return (1);
 	}
 	g_global.ret = 0;
 	return (1);
