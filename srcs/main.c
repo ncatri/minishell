@@ -6,7 +6,7 @@
 /*   By: lfourmau <lfourmau@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 07:27:30 by lfourmau          #+#    #+#             */
-/*   Updated: 2021/11/09 07:27:32 by lfourmau         ###   ########lyon.fr   */
+/*   Updated: 2021/11/09 09:09:40 by lfourmau         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*main_loop(char **line)
 	{
 		tcsetattr(STDIN_FILENO, TCSANOW, &g_global.term_save);
 		printf("exit\n");
-		exit(0);
+		exit(g_global.ret);
 	}
 	return (*line);
 }
