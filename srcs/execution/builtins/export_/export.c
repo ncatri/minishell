@@ -6,7 +6,7 @@
 /*   By: lfourmau <lfourmau@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 07:25:34 by lfourmau          #+#    #+#             */
-/*   Updated: 2021/11/09 09:25:55 by lfourmau         ###   ########lyon.fr   */
+/*   Updated: 2021/11/09 14:20:20 by lfourmau         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ static void	push_var(t_command *cmd, int i, char **split)
 			pushback_env((void ***)&g_global.envp, ft_strdup(cmd->args[i]), \
 				number_of_split(g_global.envp));
 		}
+		free_splits(env_key_val, number_of_split(env_key_val));
+		free_splits(arg_key_val, number_of_split(arg_key_val));
 	}
 	else
 		pushback_env((void ***)&g_global.envp, ft_strdup(cmd->args[i]), \
