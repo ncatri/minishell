@@ -6,7 +6,7 @@
 /*   By: lfourmau <lfourmau@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 07:25:49 by lfourmau          #+#    #+#             */
-/*   Updated: 2021/11/09 08:42:53 by lfourmau         ###   ########lyon.fr   */
+/*   Updated: 2021/11/09 09:05:07 by lfourmau         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	exit_check(t_command *cmd)
 	int	ret;
 
 	ret = 0;
-	if (!cmd->args)
+	if (!cmd->args && g_global.num_cmds == 1)
 	{
 		printf("exit\n");
 		return (ret);
