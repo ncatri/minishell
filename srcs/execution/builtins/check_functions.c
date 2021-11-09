@@ -6,7 +6,7 @@
 /*   By: lfourmau <lfourmau@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 07:25:49 by lfourmau          #+#    #+#             */
-/*   Updated: 2021/11/09 07:25:50 by lfourmau         ###   ########lyon.fr   */
+/*   Updated: 2021/11/09 08:52:07 by ncatrien         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,9 @@ int	full_digits(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (!ft_isdigit(str[i]))
+		if (ft_isspace(str[i]))
+			;
+		else if (!ft_isdigit(str[i]))
 			return (0);
 		i++;
 	}
