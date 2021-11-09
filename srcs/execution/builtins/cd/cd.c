@@ -6,13 +6,13 @@
 /*   By: lfourmau <lfourmau@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 07:25:17 by lfourmau          #+#    #+#             */
-/*   Updated: 2021/11/09 09:20:20 by lfourmau         ###   ########lyon.fr   */
+/*   Updated: 2021/11/09 09:24:41 by lfourmau         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
-int	cd_with_args(t_command *cmd)
+static int	cd_with_args(t_command *cmd)
 {
 	struct stat	stat_ret;
 
@@ -27,13 +27,13 @@ int	cd_with_args(t_command *cmd)
 	return (1);
 }
 
-int	cd_without_args()
+static int	cd_without_args(void)
 {
 	int			home_index;
 	char		**split;
 
 	if (find_key_index(g_global.envp, "OLDPWD") != -1)
-			replace_pwd(OLDPWD);
+		replace_pwd(OLDPWD);
 	home_index = find_key_index(g_global.envp, "HOME");
 	if (home_index != -1)
 	{
